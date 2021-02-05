@@ -1,5 +1,6 @@
-package com.alipour.product.financialtracker.configs.models;
+package com.alipour.product.financialtracker.user.models;
 
+import com.alipour.product.financialtracker.common.ParentEntity;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,4 +1,4 @@
-package com.alipour.product.financialtracker.configs;
+package com.alipour.product.financialtracker.common;
 
 import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.identity.IdentityColumnSupport;

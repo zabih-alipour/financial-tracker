@@ -1,4 +1,4 @@
-package com.alipour.product.financialtracker.configs.models;
+package com.alipour.product.financialtracker.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

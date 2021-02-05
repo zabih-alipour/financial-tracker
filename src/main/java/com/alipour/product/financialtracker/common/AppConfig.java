@@ -1,4 +1,4 @@
-package com.alipour.product.financialtracker.configs;
+package com.alipour.product.financialtracker.common;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

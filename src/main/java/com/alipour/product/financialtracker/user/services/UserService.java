@@ -1,7 +1,7 @@
-package com.alipour.product.financialtracker.configs.services;
+package com.alipour.product.financialtracker.user.services;
 
-import com.alipour.product.financialtracker.configs.models.User;
-import com.alipour.product.financialtracker.configs.repositories.UserRepository;
+import com.alipour.product.financialtracker.user.models.User;
+import com.alipour.product.financialtracker.user.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

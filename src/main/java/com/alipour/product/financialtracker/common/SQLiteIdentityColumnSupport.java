@@ -1,7 +1,6 @@
-package com.alipour.product.financialtracker.configs;
+package com.alipour.product.financialtracker.common;
 
 import org.hibernate.MappingException;
-import org.hibernate.dialect.identity.IdentityColumnSupport;
 import org.hibernate.dialect.identity.IdentityColumnSupportImpl;
 
 public class SQLiteIdentityColumnSupport extends IdentityColumnSupportImpl {
