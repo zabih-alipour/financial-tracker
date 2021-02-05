@@ -1,20 +1,24 @@
 package com.alipour.product.financialtracker.user.services;
 
+import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.user.models.User;
 import com.alipour.product.financialtracker.user.repositories.UserRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 @Service
-public class UserService {
+@Transactional
+public class UserService implements CRUDService<User> {
     private final UserRepository repository;
 
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
 
-    public List<User> findAll() {
-        return repository.findAll();
+    @Override
+    public JpaRepository<User, Long> getRepository() {
+        return repository;
     }
 }

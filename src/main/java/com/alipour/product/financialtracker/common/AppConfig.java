@@ -12,7 +12,7 @@ import java.util.Objects;
 @Configuration
 @ComponentScan(basePackages = "com.alipour.product.financialtracker")
 public class AppConfig {
-    private Environment env;
+    private final Environment env;
 
 
     public AppConfig(Environment environment) {
