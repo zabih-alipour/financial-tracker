@@ -1,11 +1,10 @@
-package com.alipour.product.financialtracker.payment.service;
+package com.alipour.product.financialtracker.payment_type.service;
 
 import com.alipour.product.financialtracker.common.CRUDService;
-import com.alipour.product.financialtracker.payment.models.PaymentType;
-import com.alipour.product.financialtracker.payment.repository.PaymentTypeRepository;
+import com.alipour.product.financialtracker.payment_type.models.PaymentType;
+import com.alipour.product.financialtracker.payment_type.repository.PaymentTypeRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 

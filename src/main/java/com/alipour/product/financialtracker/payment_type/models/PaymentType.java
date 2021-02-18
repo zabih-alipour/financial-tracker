@@ -1,4 +1,4 @@
-package com.alipour.product.financialtracker.payment.models;
+package com.alipour.product.financialtracker.payment_type.models;
 
 import com.alipour.product.financialtracker.common.ParentEntity;
 import lombok.Data;

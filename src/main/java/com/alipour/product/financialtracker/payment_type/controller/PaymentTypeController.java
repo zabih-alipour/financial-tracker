@@ -1,8 +1,8 @@
-package com.alipour.product.financialtracker.payment.controller;
+package com.alipour.product.financialtracker.payment_type.controller;
 
 import com.alipour.product.financialtracker.common.CRUDController;
-import com.alipour.product.financialtracker.payment.models.PaymentType;
-import com.alipour.product.financialtracker.payment.service.PaymentTypeService;
+import com.alipour.product.financialtracker.payment_type.models.PaymentType;
+import com.alipour.product.financialtracker.payment_type.service.PaymentTypeService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

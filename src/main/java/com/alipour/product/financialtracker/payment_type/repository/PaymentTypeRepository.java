@@ -1,6 +1,6 @@
-package com.alipour.product.financialtracker.payment.repository;
+package com.alipour.product.financialtracker.payment_type.repository;
 
-import com.alipour.product.financialtracker.payment.models.PaymentType;
+import com.alipour.product.financialtracker.payment_type.models.PaymentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
