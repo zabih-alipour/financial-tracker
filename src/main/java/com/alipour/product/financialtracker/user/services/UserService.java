@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 
 @Service
 @Transactional
-public class UserService implements CRUDService<User> {
+public class UserService extends CRUDService<User> {
     private final UserRepository repository;
 
     public UserService(UserRepository repository) {

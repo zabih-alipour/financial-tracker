@@ -1,5 +1,8 @@
 package com.alipour.product.financialtracker.common;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +17,16 @@ import java.util.Objects;
 public class AppConfig {
     private final Environment env;
 
-
     public AppConfig(Environment environment) {
         this.env = environment;
     }
 
+    @Bean
+    public ObjectMapper objectMapper(){
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        return mapper;
+    }
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

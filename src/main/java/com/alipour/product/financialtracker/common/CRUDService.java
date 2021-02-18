@@ -5,30 +5,30 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface CRUDService<T> {
-    JpaRepository<T, Long> getRepository();
+public abstract class CRUDService<T> {
+    protected abstract JpaRepository<T, Long> getRepository();
 
-    default T add(T t) {
+    public T add(T t) {
         return getRepository().save(t);
     }
 
-    default T edit(T t) {
+    public T edit(T t) {
         return getRepository().save(t);
     }
 
-    default Optional<T> get(Long id) {
+    public Optional<T> get(Long id) {
         return getRepository().findById(id);
     }
 
-    default void delete(T t) {
+    public void delete(T t) {
         getRepository().delete(t);
     }
 
-    default void delete(Long id) {
+    public void delete(Long id) {
         getRepository().deleteById(id);
     }
 
-    default List<T> findAll() {
+    public List<T> findAll() {
         return getRepository().findAll();
     }
 
