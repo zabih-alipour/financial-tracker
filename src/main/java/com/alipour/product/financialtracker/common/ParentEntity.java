@@ -1,8 +1,6 @@
 package com.alipour.product.financialtracker.common;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.GeneratedValue;
@@ -14,12 +12,15 @@ import java.io.Serializable;
 @MappedSuperclass
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ParentEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    public ParentEntity(Long id) {
+        this.id = id;
+    }
 
+    public ParentEntity() {
+    }
 }

@@ -27,4 +27,12 @@ public class PaymentType extends ParentEntity {
 
     @Column(name = "parent_path")
     private String path;
+
+    public PaymentType(Long id) {
+        super(id);
+    }
+
+    public PaymentType() {
+        super();
+    }
 }

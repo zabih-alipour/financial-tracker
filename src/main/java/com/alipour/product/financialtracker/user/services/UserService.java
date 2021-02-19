@@ -21,4 +21,9 @@ public class UserService extends CRUDService<User> {
     public JpaRepository<User, Long> getRepository() {
         return repository;
     }
+
+    @Override
+    public User add(User user) {
+        return super.add(user);
+    }
 }

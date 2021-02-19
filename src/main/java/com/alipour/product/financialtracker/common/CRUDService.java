@@ -12,6 +12,10 @@ public abstract class CRUDService<T> {
         return getRepository().save(t);
     }
 
+    public T add(ParentDto t) {
+        throw new NotSupportException();
+    }
+
     public T edit(T t) {
         return getRepository().save(t);
     }
@@ -30,6 +34,10 @@ public abstract class CRUDService<T> {
 
     public List<T> findAll() {
         return getRepository().findAll();
+    }
+
+    public Long count() {
+        return getRepository().count();
     }
 
 }

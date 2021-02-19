@@ -20,9 +20,19 @@ import javax.persistence.Table;
 @Table(name = "investment_type")
 public class InvestmentType extends ParentEntity {
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "code", nullable = false)
+    private String code;
 
     @Column(name = "latest_price")
     private Float latestPrice;
+
+    public InvestmentType(Long id) {
+        super(id);
+    }
+
+    public InvestmentType() {
+    }
 }

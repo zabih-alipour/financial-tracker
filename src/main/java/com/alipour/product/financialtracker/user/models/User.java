@@ -13,4 +13,11 @@ import javax.persistence.Table;
 @Setter
 public class User extends ParentEntity {
     private String name;
+
+    public User(Long id) {
+        super(id);
+    }
+
+    public User() {
+    }
 }
