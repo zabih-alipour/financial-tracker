@@ -101,55 +101,15 @@ public class InvestmentService extends CRUDService<Investment> {
     }
 
     @Override
+    public void delete(Long id) {
+        repository.getByParentId(id).forEach(repository::delete);
+        super.delete(id);
+    }
+
+    @Override
     public Investment add(Investment investment) {
         throw new NotSupportException();
-        /*StringBuilder description = new StringBuilder("");
-        InvestmentType investmentType = typeRepository.getOne(investment.getInvestmentType().getId());
 
-
-        if (investmentType.getCode().equals("RIAL")) {
-            if (investment.getAmount() > 0) {
-                description.append("پس انداز ریالی");
-                investment.setDescription(description.toString());
-            }
-            repository.save(investment);
-        } else {
-            Investment parent = investment.getParent();
-            if (parent != null) {
-                parent = repository.getOne(investment.getParent().getId());
-                String parentTypeName = parent.getInvestmentType().getName();
-                description.append("خرید ")
-                        .append(investment.getAmount())
-                        .append(" ")
-                        .append(investmentType.getName())
-                        .append(" از محل دارایی  ")
-                        .append(parentTypeName)
-                        .append(" به ارزش ")
-                        .append(investment.getAmount() * investment.getExecutedPrice())
-                        .append(" دلار.");
-                investment.setDescription(description.toString());
-                investment = repository.saveAndFlush(investment);
-
-                Investment reverse = parent.clone();
-                reverse.setAmount(-investment.getSpendAmount());
-                description = new StringBuilder("");
-                description.append("تهاتر ")
-                        .append(investment.getSpendAmount())
-                        .append(" ")
-                        .append(parent.getInvestmentType().getName())
-                        .append(" بعد از خرید  ")
-                        .append(investment.getAmount())
-                        .append(" ")
-                        .append(investmentType.getName())
-                        .append(" به ارزش ")
-                        .append(investment.getAmount() * investment.getExecutedPrice())
-                        .append(" دلار.");
-                reverse.setDescription(description.toString());
-                repository.save(reverse);
-
-            }
-        }
-        return investment;*/
     }
 
     private String thousandFormat(Float number) {
