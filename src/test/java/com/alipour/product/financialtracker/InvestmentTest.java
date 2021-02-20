@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {FinancialTrackerApplication.class, H2Config.class})
 @ActiveProfiles("test")
-class InstrumentTest {
+class InvestmentTest {
     @Autowired
     private DataUtil dataUtil;
     @Autowired
@@ -189,5 +189,46 @@ class InstrumentTest {
                                 " " +
                                 litcoin.getInvestmentType().getName()))
                         .containsSubsequence(p.getDescription()));
+    }
+
+    @Test
+    public void delete_2_step_investment() {
+        long size_before = investmentService.count();
+
+        InvestmentDto investment_rial_dto = new InvestmentDto();
+        investment_rial_dto.setUser(dataUtil.getUser(true));
+        investment_rial_dto.setShamsiDate("1399/11/01");
+        InvestmentDto.Coin rial = new InvestmentDto.Coin();
+        rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
+        rial.setAmount(800_000F);
+        rial.setExecutedPrice(1F);
+        investment_rial_dto.setChange(rial);
+        Investment investment_rial = investmentService.add(investment_rial_dto);
+        assertThat(investment_rial.getId()).isGreaterThan(0);
+        assertThat(investment_rial.getDescription()).isEqualTo("پس انداز ریالی");
+        assertThat(investmentService.count()).isEqualTo(size_before + 1);
+        size_before = investmentService.count();
+
+        InvestmentDto investment_bitcoin_dto = new InvestmentDto();
+        investment_bitcoin_dto.setUser(dataUtil.getUser(true));
+        investment_bitcoin_dto.setShamsiDate("1399/11/02");
+        investment_bitcoin_dto.setParent(investment_rial);
+        InvestmentDto.Coin bitcoin = new InvestmentDto.Coin();
+        bitcoin.setInvestmentType(dataUtil.getInvestmentType("BITCOIN"));
+        bitcoin.setAmount(0.002F);
+        bitcoin.setExecutedPrice(9_010F);
+        investment_bitcoin_dto.setChange(bitcoin);
+        InvestmentDto.Coin subtract = new InvestmentDto.Coin();
+        subtract.setInvestmentType(investment_rial.getInvestmentType());
+        subtract.setAmount(26_245_010F);
+        subtract.setExecutedPrice(1F);
+        investment_bitcoin_dto.setSubtract(subtract);
+        Investment investment_bitcoin = investmentService.add(investment_bitcoin_dto);
+        assertThat(investment_bitcoin.getId()).isGreaterThan(0);
+        assertThat(investmentService.count()).isEqualTo(size_before + 2);
+
+        size_before = investmentService.count();
+        investmentService.delete(investment_rial.getId());
+        assertThat(investmentService.count()).isEqualTo(size_before - 3);
     }
 }

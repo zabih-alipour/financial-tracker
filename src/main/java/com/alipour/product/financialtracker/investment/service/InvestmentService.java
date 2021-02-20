@@ -107,6 +107,11 @@ public class InvestmentService extends CRUDService<Investment> {
     }
 
     @Override
+    public void delete(Investment investment) {
+        throw new NotSupportException();
+    }
+
+    @Override
     public Investment add(Investment investment) {
         throw new NotSupportException();
 
