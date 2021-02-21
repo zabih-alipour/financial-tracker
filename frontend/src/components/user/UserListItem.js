@@ -1,15 +1,12 @@
 import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
-  Grid,
-  Paper,
   Divider,
   BottomNavigation,
   BottomNavigationAction,
 } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 import EditIcon from "@material-ui/icons/Edit";
@@ -64,6 +61,7 @@ function UserListItem(props) {
             icon={<EditIcon color="primary" />}
           />
           <BottomNavigationAction
+            onClick={onDelete}
             label="Nearby"
             value="nearby"
             icon={<DeleteSweepIcon color="secondary" />}

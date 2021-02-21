@@ -1,47 +1,102 @@
 import React from "react";
-import {
-  Grid,
-  Typography,
-  TextField,
-  IconButton,
-  Paper,
-} from "@material-ui/core";
+import { Grid, Typography, TextField, IconButton } from "@material-ui/core";
 import UserListItem from "./UserListItem";
-import { yellow, grey } from '@material-ui/core/colors';
-import Container from "@material-ui/core/Container";
+import { yellow, grey } from "@material-ui/core/colors";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import "./UserList.css";
+import AlertDialogSlide from "../dialog/ConfirmationDialog";
 
 export default class UserList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       users: [],
+      filteredUsers: [],
+      deleteUser: {
+        user: null,
+        openDialog: false,
+      },
     };
   }
 
   componentDidMount = () => {
+    this.fetchData();
+  };
+
+  fetchData = () => {
     fetch("/api/users")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        this.setState({ users: data });
+        this.setState({ users: data, filteredUsers: data });
       });
   };
-  onDelete = () => {
-    console.log("OnDelete()");
+
+  onChange = (event) => {
+    this.setState({
+      filteredUsers: this.state.users.filter((p) =>
+        p.name.startsWith(event.target.value)
+      ),
+    });
+  };
+
+  onDelete = (user) => {
+    this.setState({
+      deleteUser: {
+        user: user,
+        openDialog: true,
+      },
+    });
+  };
+
+  deletUser = (user) => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch("/api/users/" + user.id, requestOptions).then((res) =>
+      console.log(res)
+    );
+    this.fetchData();
+
+    this.setState({
+      deleteUser: {
+        user: null,
+        openDialog: false,
+      },
+    });
+  };
+  onReject = () => {
+    this.setState({
+      deleteUser: {
+        user: null,
+        openDialog: false,
+      },
+    });
   };
   onEdit = () => {
     console.log("OnEdit()");
   };
+
+  showDialog = (deleteUser) => {
+    if (deleteUser.user != null) {
+      return (
+        <AlertDialogSlide
+          user={deleteUser.user}
+          openDialog={deleteUser.openDialog}
+          onAccept={() => this.deletUser(deleteUser.user)}
+          onReject={() => this.onReject()}
+        />
+      );
+    }
+  };
   render() {
-    const { users } = this.state;
-    const userItems = users.map((user) => {
+    const { filteredUsers, deleteUser } = this.state;
+    const userItems = filteredUsers.map((user) => {
       return (
         <UserListItem
           key={user.id}
           user={user}
-          onDelete={() => this.onDelete()}
+          onDelete={() => this.onDelete(user)}
           onEdit={() => this.onEdit()}
         />
       );
@@ -56,7 +111,11 @@ export default class UserList extends React.Component {
           alignItems="center"
         >
           <Grid item xs>
-            <Typography variant="h6" dir="rtl" style={{ color: grey[300], fontSize: 30 }}>
+            <Typography
+              variant="h6"
+              dir="rtl"
+              style={{ color: grey[300], fontSize: 30 }}
+            >
               کاربران
             </Typography>
           </Grid>
@@ -67,16 +126,17 @@ export default class UserList extends React.Component {
               id="standard-basic"
               variant="standard"
               placeholder="جستجو"
+              onChange={(event) => this.onChange(event)}
             />
           </Grid>
           <Grid item xs>
-            <IconButton >
+            <IconButton>
               <PersonAddIcon style={{ color: yellow[500], fontSize: 40 }} />
             </IconButton>
           </Grid>
         </Grid>
-
         {userItems}
+        {this.showDialog(deleteUser)}
       </div>
     );
   }
