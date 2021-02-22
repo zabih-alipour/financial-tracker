@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, TextField, IconButton } from "@material-ui/core";
+import { Grid, Typography, TextField, IconButton, Button } from "@material-ui/core";
 import UserListItem from "./UserListItem";
 import { yellow, grey } from "@material-ui/core/colors";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -56,14 +56,15 @@ export default class UserList extends React.Component {
     fetch("/api/users/" + user.id, requestOptions).then((res) =>
       console.log(res)
     );
-    this.fetchData();
-
     this.setState({
       deleteUser: {
         user: null,
         openDialog: false,
       },
     });
+    this.fetchData();
+
+    
   };
   onReject = () => {
     this.setState({
@@ -130,7 +131,7 @@ export default class UserList extends React.Component {
             />
           </Grid>
           <Grid item xs>
-            <IconButton>
+            <IconButton >
               <PersonAddIcon style={{ color: yellow[500], fontSize: 40 }} />
             </IconButton>
           </Grid>

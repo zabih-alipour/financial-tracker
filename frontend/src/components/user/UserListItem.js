@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 import EditIcon from "@material-ui/icons/Edit";
 import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
+import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +59,7 @@ function UserListItem(props) {
           <BottomNavigationAction
             label="Favorites"
             value="favorites"
-            icon={<EditIcon color="primary" />}
+            icon={<EditIcon style={{color: green[300]}} />}
           />
           <BottomNavigationAction
             onClick={onDelete}
