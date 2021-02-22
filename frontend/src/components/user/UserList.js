@@ -1,10 +1,11 @@
 import React from "react";
-import { Grid, Typography, TextField, IconButton, Button } from "@material-ui/core";
+import { Grid, Typography, TextField, IconButton } from "@material-ui/core";
 import UserListItem from "./UserListItem";
 import { yellow, grey } from "@material-ui/core/colors";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import "./UserList.css";
 import AlertDialogSlide from "../dialog/ConfirmationDialog";
+import UserForm from "./UserForm";
 
 export default class UserList extends React.Component {
   constructor(props) {
@@ -12,10 +13,8 @@ export default class UserList extends React.Component {
     this.state = {
       users: [],
       filteredUsers: [],
-      deleteUser: {
-        user: null,
-        openDialog: false,
-      },
+      dialog: "",
+      selectedUser: null,
     };
   }
 
@@ -39,13 +38,18 @@ export default class UserList extends React.Component {
     });
   };
 
-  onDelete = (user) => {
-    this.setState({
-      deleteUser: {
-        user: user,
-        openDialog: true,
-      },
-    });
+  persistUser = (user) => {
+    const requestOptions = {
+      method: user.id == null ? "POST" : "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user),
+    };
+    fetch("/api/users", requestOptions)
+      .then((res) => {
+        console.log(res);
+        this.fetchData();
+      })
+      .catch((res) => console.log(res));
   };
 
   deletUser = (user) => {
@@ -53,52 +57,66 @@ export default class UserList extends React.Component {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
-    fetch("/api/users/" + user.id, requestOptions).then((res) =>
-      console.log(res)
-    );
-    this.setState({
-      deleteUser: {
-        user: null,
-        openDialog: false,
-      },
+    fetch("/api/users/" + user.id, requestOptions).then((res) => {
+      console.log(res);
+      this.fetchData();
     });
-    this.fetchData();
-
-    
   };
   onReject = () => {
     this.setState({
-      deleteUser: {
-        user: null,
-        openDialog: false,
-      },
+      dialog: "",
+      selectedUser: null,
     });
   };
-  onEdit = () => {
-    console.log("OnEdit()");
-  };
 
-  showDialog = (deleteUser) => {
-    if (deleteUser.user != null) {
-      return (
-        <AlertDialogSlide
-          user={deleteUser.user}
-          openDialog={deleteUser.openDialog}
-          onAccept={() => this.deletUser(deleteUser.user)}
-          onReject={() => this.onReject()}
-        />
-      );
+  showDialog = (user) => {
+    const { dialog } = this.state;
+    if (dialog === "USER_FORM") {
+      if (user != null) {
+        return (
+          <UserForm
+            user={user}
+            openDialog={true}
+            onAccept={this.persistUser}
+            onReject={this.onReject}
+          />
+        );
+      } else {
+        return (
+          <UserForm
+            user={user}
+            openDialog={true}
+            onAccept={this.persistUser}
+            onReject={this.onReject}
+          />
+        );
+      }
+    } else if (dialog === "DELETE_USER") {
+      if (user != null) {
+        return (
+          <AlertDialogSlide
+            data={user}
+            openDialog={true}
+            onAccept={this.deletUser}
+            onReject={this.onReject}
+          />
+        );
+      }
     }
   };
+
+  dialogHandler = (dialog, user) => {
+    this.setState({ dialog: dialog, selectedUser: user });
+  };
+
   render() {
-    const { filteredUsers, deleteUser } = this.state;
+    const { filteredUsers, selectedUser } = this.state;
     const userItems = filteredUsers.map((user) => {
       return (
         <UserListItem
           key={user.id}
           user={user}
-          onDelete={() => this.onDelete(user)}
-          onEdit={() => this.onEdit()}
+          dialogHandler={this.dialogHandler}
         />
       );
     });
@@ -131,13 +149,16 @@ export default class UserList extends React.Component {
             />
           </Grid>
           <Grid item xs>
-            <IconButton >
-              <PersonAddIcon style={{ color: yellow[500], fontSize: 40 }} />
+            <IconButton>
+              <PersonAddIcon
+                onClick={() => this.dialogHandler("USER_FORM", null)}
+                style={{ color: yellow[500], fontSize: 40 }}
+              />
             </IconButton>
           </Grid>
         </Grid>
         {userItems}
-        {this.showDialog(deleteUser)}
+        {this.showDialog(selectedUser)}
       </div>
     );
   }

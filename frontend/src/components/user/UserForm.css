@@ -1,0 +1,18 @@
+.appBar {
+  position: relative !important;
+  direction: rtl;
+  /* background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%); */
+}
+.title {
+  margin-right: 5px;
+  flex: 1;
+  color: gold;
+}
+.saveButton {
+  letter-spacing: 2px;
+  font-weight: bolder;
+  font-size: 14px;
+  background-color: turquoise;
+  border-radius: 10px;
+  padding: 5px 20px;
+}

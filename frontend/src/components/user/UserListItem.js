@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserListItem(props) {
-  const { user, onDelete, onEdit } = props;
+  const { user, dialogHandler } = props;
   const classes = useStyles();
 
   return (
@@ -57,12 +57,13 @@ function UserListItem(props) {
             icon={<ViewHeadlineIcon color="primary" />}
           />
           <BottomNavigationAction
+            onClick={() => dialogHandler("USER_FORM", user)}
             label="Favorites"
             value="favorites"
-            icon={<EditIcon style={{color: green[300]}} />}
+            icon={<EditIcon style={{ color: green[300] }} />}
           />
           <BottomNavigationAction
-            onClick={onDelete}
+            onClick={() => dialogHandler("DELETE_USER", user)}
             label="Nearby"
             value="nearby"
             icon={<DeleteSweepIcon color="secondary" />}

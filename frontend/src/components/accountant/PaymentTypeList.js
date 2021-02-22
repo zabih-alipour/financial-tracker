@@ -16,12 +16,14 @@ import React from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
 import ReceiptIcon from "@material-ui/icons/Receipt";
+import ConfirmationDialog from "../dialog/ConfirmationDialog";
 
 export default class PaymentTypeList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       paymentTypes: [],
+      openDialog: false,
     };
   }
 
@@ -48,13 +50,13 @@ export default class PaymentTypeList extends React.Component {
           <TableCell align="center">{row.name}</TableCell>
           <TableCell align="center">
             <IconButton>
-              <ReceiptIcon color="primary"/>
+              <ReceiptIcon color="primary" />
             </IconButton>
             <IconButton>
-              <EditIcon style={{color: green[300]}}/>
+              <EditIcon style={{ color: green[300] }} />
             </IconButton>
             <IconButton>
-              <DeleteForeverIcon color="secondary"/>
+              <DeleteForeverIcon color="secondary" />
             </IconButton>
           </TableCell>
         </TableRow>
@@ -110,6 +112,7 @@ export default class PaymentTypeList extends React.Component {
             <TableBody>{rows}</TableBody>
           </Table>
         </TableContainer>
+        {/* <ConfirmationDialog /> */}
       </div>
     );
   }

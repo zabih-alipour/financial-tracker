@@ -12,7 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function AlertDialogSlide(props) {
-  const { user, openDialog, onAccept, onReject } = props;
+  const { data, openDialog, onAccept, onReject } = props;
   const [open, setOpen] = React.useState(openDialog);
 
   const handleClose = () => {
@@ -22,7 +22,7 @@ export default function AlertDialogSlide(props) {
 
   const accept = () => {
     handleClose();
-    onAccept(user);
+    onAccept(data);
   };
 
   return (
@@ -37,7 +37,7 @@ export default function AlertDialogSlide(props) {
       <DialogTitle id="alert-dialog-slide-title">{"حذف کاربر"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
-          آیا مطمغن هستین که میخواید کاربر {user.name} را حذف کنید؟
+          آیا مطمغن هستین که میخواید کاربر {data.name} را حذف کنید؟
         </DialogContentText>
       </DialogContent>
       <DialogActions>
