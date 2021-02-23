@@ -20,6 +20,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import PaymentTypeForm from "./PaymentTypeForm";
+import PaymentTypePopup from "./PaymentTypePopup";
 
 export default class PaymentTypeList extends React.Component {
   constructor(props) {
@@ -74,10 +75,15 @@ export default class PaymentTypeList extends React.Component {
       selectedType: null,
     });
   };
+  onSelected = (type)=>{
+    console.log(type)
+  }
 
   showDialog = () => {
     const { dialog, selectedType, paymentTypes } = this.state;
-    if (dialog === "TYPE_FORM") {
+    if (dialog === "TYPE_SELECTION") {
+      return <PaymentTypePopup openDialog={true} onSelected = {this.onSelected} onReject = {this.onReject} types={paymentTypes} />;
+    } else if (dialog === "TYPE_FORM") {
       return (
         <PaymentTypeForm
           openDialog={true}
@@ -116,9 +122,9 @@ export default class PaymentTypeList extends React.Component {
 
   render() {
     const { paymentTypes } = this.state;
-
+    console.log(paymentTypes);
     const rows = paymentTypes.map((row) => {
-      const parentName = row.parent != null?row.parent.name:' ';
+      const parentName = row.parent != null ? row.parent.name : " ";
       return (
         <TableRow key={row.id}>
           <TableCell component="th" scope="row" align="center">
@@ -182,6 +188,7 @@ export default class PaymentTypeList extends React.Component {
               جــدیــد
             </Button>
           </Grid>
+          
         </Grid>
         <TableContainer component={Paper}>
           <Table>

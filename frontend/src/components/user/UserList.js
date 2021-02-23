@@ -144,7 +144,7 @@ export default class UserList extends React.Component {
           </Grid>
           <Grid item xs={6}>
             <TextField
-              fullWidth="true"
+              fullWidth
               inputProps={{ min: 0, style: { textAlign: "center" } }}
               id="standard-basic"
               variant="standard"

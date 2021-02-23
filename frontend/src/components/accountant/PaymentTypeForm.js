@@ -4,6 +4,7 @@ import {
   Container,
   Dialog,
   IconButton,
+  MenuItem,
   Slide,
   TextField,
   Toolbar,
@@ -25,7 +26,8 @@ export default class PaymentTypeForm extends React.Component {
       onAccept: props.onAccept,
       onReject: props.onReject,
       types: props.types,
-      type: props.type != null ? props.type : { id: null, name: "" },
+      type:
+        props.type != null ? props.type : { id: null, name: "", parent: null },
     };
   }
 
@@ -41,10 +43,19 @@ export default class PaymentTypeForm extends React.Component {
   onChange = (event) => {
     this.setState({ type: { ...this.state.type, name: event.target.value } });
   };
+
+  handleChange = (event) => {
+    const parentName =event.target.value;
+    const parent = this.state.types.filter(p=>p.name === parentName)
+    this.setState({ type: { ...this.state.type, parent: parent[0] } });
+  };
+
   render() {
     const { open, type } = this.state;
     const title =
       type.id == null ? " تعریف دسته بندی جدید" : " ویرایش دسته بندی";
+      console.log(type.parent)
+    const parentName = type.parent == null ? "" : type.parent.name;
     return (
       <Dialog
         // fullScreen
@@ -77,6 +88,24 @@ export default class PaymentTypeForm extends React.Component {
             value={type.name}
             onChange={(event) => this.onChange(event)}
           />
+          <TextField
+            fullWidth
+            inputProps={{ min: 0, style: { textAlign: "center" } }}
+            id="standard-select-currency"
+            select
+            label="انتخاب"
+            value={parentName}
+            onChange={this.handleChange}
+            
+            variant="standard"
+          >
+            {this.state.types.map((option) => (
+              <MenuItem key={option.id} value={option.name}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+
           <Button
             fullWidth
             autoFocus
