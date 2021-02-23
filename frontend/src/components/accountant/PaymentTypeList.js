@@ -1,5 +1,7 @@
 import {
   Button,
+  DialogContentText,
+  DialogTitle,
   Grid,
   IconButton,
   Paper,
@@ -17,17 +19,23 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
+import PaymentTypeForm from "./PaymentTypeForm";
 
 export default class PaymentTypeList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       paymentTypes: [],
-      openDialog: false,
+      dialog: "",
+      selectedType: null,
     };
   }
 
   componentDidMount = () => {
+    this.fetchData();
+  };
+
+  fetchData = () => {
     fetch("/api/paymentTypes")
       .then((response) => response.json())
       .then((data) => {
@@ -38,25 +46,101 @@ export default class PaymentTypeList extends React.Component {
       })
       .catch((e) => console.log(e));
   };
+
+  deleteType = (type) => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch("/api/paymentTypes/" + type.id, requestOptions).then((res) => {
+      this.fetchData();
+    });
+  };
+
+  persistType = (type) => {
+    const requestOptions = {
+      method: type.id == null ? "POST" : "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(type),
+    };
+    fetch("/api/paymentTypes", requestOptions).then((res) => {
+      this.fetchData();
+    });
+  };
+
+  onReject = () => {
+    this.setState({
+      dialog: "",
+      selectedType: null,
+    });
+  };
+
+  showDialog = () => {
+    const { dialog, selectedType, paymentTypes } = this.state;
+    if (dialog === "TYPE_FORM") {
+      return (
+        <PaymentTypeForm
+          openDialog={true}
+          types={paymentTypes}
+          type={selectedType}
+          onAccept={this.persistType}
+          onReject={this.onReject}
+        />
+      );
+    } else if (dialog === "DELETE_TYPE") {
+      return (
+        <ConfirmationDialog
+          data={selectedType}
+          openDialog={true}
+          headerComponent={
+            <DialogTitle id="alert-dialog-slide-title">
+              {"حذف دسته بندی"}
+            </DialogTitle>
+          }
+          bodyComponent={
+            <DialogContentText id="alert-dialog-slide-description">
+              آیا مطمغن هستین که میخواید دسته یندی {selectedType.name} را حذف
+              کنید؟
+            </DialogContentText>
+          }
+          onAccept={this.deleteType}
+          onReject={this.onReject}
+        />
+      );
+    }
+  };
+
+  dialogHandler = (dialog, type) => {
+    this.setState({ dialog: dialog, selectedType: type });
+  };
+
   render() {
     const { paymentTypes } = this.state;
 
     const rows = paymentTypes.map((row) => {
+      const parentName = row.parent != null?row.parent.name:' ';
       return (
         <TableRow key={row.id}>
           <TableCell component="th" scope="row" align="center">
             {row.id}
           </TableCell>
           <TableCell align="center">{row.name}</TableCell>
+          <TableCell align="center">{parentName}</TableCell>
           <TableCell align="center">
             <IconButton>
               <ReceiptIcon color="primary" />
             </IconButton>
             <IconButton>
-              <EditIcon style={{ color: green[300] }} />
+              <EditIcon
+                onClick={() => this.dialogHandler("TYPE_FORM", row)}
+                style={{ color: green[300] }}
+              />
             </IconButton>
             <IconButton>
-              <DeleteForeverIcon color="secondary" />
+              <DeleteForeverIcon
+                onClick={() => this.dialogHandler("DELETE_TYPE", row)}
+                color="secondary"
+              />
             </IconButton>
           </TableCell>
         </TableRow>
@@ -90,6 +174,7 @@ export default class PaymentTypeList extends React.Component {
 
           <Grid item xs justify="alignContent">
             <Button
+              onClick={() => this.dialogHandler("TYPE_FORM", null)}
               variant="outlined"
               fullWidth
               style={{ backgroundColor: "white" }}
@@ -103,8 +188,11 @@ export default class PaymentTypeList extends React.Component {
             <TableHead style={{ backgroundColor: "orange" }}>
               <TableRow>
                 <TableCell align="center">ردیف</TableCell>
-                <TableCell align="center" style={{ width: "70%" }}>
+                <TableCell align="center" style={{ width: "50%" }}>
                   عنوان
+                </TableCell>
+                <TableCell align="center" style={{ width: "20%" }}>
+                  سرگروه
                 </TableCell>
                 <TableCell align="center">اکشن</TableCell>
               </TableRow>
@@ -112,7 +200,7 @@ export default class PaymentTypeList extends React.Component {
             <TableBody>{rows}</TableBody>
           </Table>
         </TableContainer>
-        {/* <ConfirmationDialog /> */}
+        {this.showDialog()}
       </div>
     );
   }

@@ -1,5 +1,12 @@
 import React from "react";
-import { Grid, Typography, TextField, IconButton } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  TextField,
+  IconButton,
+  DialogTitle,
+  DialogContentText,
+} from "@material-ui/core";
 import UserListItem from "./UserListItem";
 import { yellow, grey } from "@material-ui/core/colors";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -72,36 +79,33 @@ export default class UserList extends React.Component {
   showDialog = (user) => {
     const { dialog } = this.state;
     if (dialog === "USER_FORM") {
-      if (user != null) {
-        return (
-          <UserForm
-            user={user}
-            openDialog={true}
-            onAccept={this.persistUser}
-            onReject={this.onReject}
-          />
-        );
-      } else {
-        return (
-          <UserForm
-            user={user}
-            openDialog={true}
-            onAccept={this.persistUser}
-            onReject={this.onReject}
-          />
-        );
-      }
+      return (
+        <UserForm
+          user={user}
+          openDialog={true}
+          onAccept={this.persistUser}
+          onReject={this.onReject}
+        />
+      );
     } else if (dialog === "DELETE_USER") {
-      if (user != null) {
-        return (
-          <AlertDialogSlide
-            data={user}
-            openDialog={true}
-            onAccept={this.deletUser}
-            onReject={this.onReject}
-          />
-        );
-      }
+      return (
+        <AlertDialogSlide
+          data={user}
+          openDialog={true}
+          headerComponent={
+            <DialogTitle id="alert-dialog-slide-title">
+              {"حذف کاربر"}
+            </DialogTitle>
+          }
+          bodyComponent={
+            <DialogContentText id="alert-dialog-slide-description">
+              آیا مطمغن هستین که میخواید کاربر {user.name} را حذف کنید؟
+            </DialogContentText>
+          }
+          onAccept={this.deletUser}
+          onReject={this.onReject}
+        />
+      );
     }
   };
 

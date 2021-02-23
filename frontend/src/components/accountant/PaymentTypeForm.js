@@ -11,20 +11,21 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import CloseIcon from "@material-ui/icons/Close";
-import "./UserForm.css";
+import "./PaymentTypeForm.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default class UserForm extends React.Component {
+export default class PaymentTypeForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       open: props.openDialog,
       onAccept: props.onAccept,
       onReject: props.onReject,
-      user: props.user != null ? props.user : { id: null, name: "" },
+      types: props.types,
+      type: props.type != null ? props.type : { id: null, name: "" },
     };
   }
 
@@ -35,16 +36,15 @@ export default class UserForm extends React.Component {
 
   accept = () => {
     this.handleClose();
-    this.state.onAccept(this.state.user);
+    this.state.onAccept(this.state.type);
   };
-  onChange = (event)=>{
-    this.setState({user:{...this.state.user, name: event.target.value}})
-    
-  }
+  onChange = (event) => {
+    this.setState({ type: { ...this.state.type, name: event.target.value } });
+  };
   render() {
-    const { open, user } = this.state;
+    const { open, type } = this.state;
     const title =
-      user.id == null ? " تعریف کاربر جدید" : " ویرایش کاربر";
+      type.id == null ? " تعریف دسته بندی جدید" : " ویرایش دسته بندی";
     return (
       <Dialog
         // fullScreen
@@ -73,8 +73,8 @@ export default class UserForm extends React.Component {
             inputProps={{ min: 0, style: { textAlign: "center" } }}
             id="standard-basic"
             variant="standard"
-            placeholder="نام کاربر"
-            value={user.name}
+            placeholder="نام دسته بندی"
+            value={type.name}
             onChange={(event) => this.onChange(event)}
           />
           <Button
@@ -82,12 +82,11 @@ export default class UserForm extends React.Component {
             autoFocus
             className="saveButton"
             onClick={this.accept}
-            style={{marginTop:'30px'}}
+            style={{ marginTop: "30px" }}
           >
             ذخــیره
           </Button>
         </Container>
-        
       </Dialog>
     );
   }
