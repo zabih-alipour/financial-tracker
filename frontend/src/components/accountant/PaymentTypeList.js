@@ -40,12 +40,10 @@ export default class PaymentTypeList extends React.Component {
     fetch("/api/paymentTypes")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         this.setState({
           paymentTypes: data,
         });
       })
-      .catch((e) => console.log(e));
   };
 
   deleteType = (type) => {
@@ -76,7 +74,6 @@ export default class PaymentTypeList extends React.Component {
     });
   };
   onSelected = (type)=>{
-    console.log(type)
   }
 
   showDialog = () => {
@@ -122,7 +119,6 @@ export default class PaymentTypeList extends React.Component {
 
   render() {
     const { paymentTypes } = this.state;
-    console.log(paymentTypes);
     const rows = paymentTypes.map((row) => {
       const parentName = row.parent != null ? row.parent.name : " ";
       return (
