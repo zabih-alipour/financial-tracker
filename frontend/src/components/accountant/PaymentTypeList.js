@@ -132,15 +132,15 @@ export default class PaymentTypeList extends React.Component {
             <IconButton>
               <ReceiptIcon color="primary" />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={() => this.dialogHandler("TYPE_FORM", row)}>
               <EditIcon
-                onClick={() => this.dialogHandler("TYPE_FORM", row)}
+                
                 style={{ color: green[300] }}
               />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={() => this.dialogHandler("DELETE_TYPE", row)}>
               <DeleteForeverIcon
-                onClick={() => this.dialogHandler("DELETE_TYPE", row)}
+                
                 color="secondary"
               />
             </IconButton>
@@ -161,7 +161,6 @@ export default class PaymentTypeList extends React.Component {
         <Grid
           className="header"
           container
-          justifyContent="space-between"
           alignItems="center"
         >
           <Grid item xs={11}>
@@ -174,7 +173,7 @@ export default class PaymentTypeList extends React.Component {
             </Typography>
           </Grid>
 
-          <Grid item xs justify="alignContent">
+          <Grid item xs>
             <Button
               onClick={() => this.dialogHandler("TYPE_FORM", null)}
               variant="outlined"

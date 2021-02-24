@@ -4,7 +4,6 @@ import {
   Container,
   Dialog,
   IconButton,
-  MenuItem,
   Slide,
   TextareaAutosize,
   TextField,
@@ -14,6 +13,8 @@ import {
 import React from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import "./PaymentForm.css";
+import PaymentTypeAutoComplete from "./PaymentTypeAutoComplete";
+import UserAutoComplete from "../user/UserAutoComplete";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,6 +33,7 @@ export default class PaymentForm extends React.Component {
           : { id: null, paymentType: null, user: null },
     };
   }
+  componentDidMount = () => {};
 
   handleClose = () => {
     this.setState({ open: false });
@@ -44,18 +46,12 @@ export default class PaymentForm extends React.Component {
   };
 
   onChange = (event) => {
-    this.setState({
+    this.setState((state) => ({
       payment: {
-        ...this.state.payment,
+        ...state.payment,
         [event.target.name]: [event.target.value],
       },
-    });
-  };
-
-  handleChange = (event) => {
-    const parentName = event.target.value;
-    const parent = this.state.payments.filter((p) => p.name === parentName);
-    this.setState({ payment: { ...this.state.payment, parent: parent[0] } });
+    }));
   };
 
   render() {
@@ -84,34 +80,23 @@ export default class PaymentForm extends React.Component {
           </Toolbar>
         </AppBar>
         <Container style={{ padding: "20px" }}>
-          <TextField
-            fullWidth
-            inputProps={{ min: 0, style: { textAlign: "center" } }}
-            id="standard-basic"
-            variant="standard"
-            select
-            placeholder="کاربر"
-            value={payment.user.get("name")}
-            onChange={(event) => this.onChange(event)}
+          <UserAutoComplete
+            user={payment.user}
+            users={[]}
+            onchange={this.onChange}
+            fieldName="user"
           />
+          
+          <PaymentTypeAutoComplete
+            type={payment.paymentType}
+            types={[]}
+            onchange={this.onChange}
+            fieldName="paymentType"
+          />
+
           <TextField
             fullWidth
-            inputProps={{ min: 0, style: { textAlign: "center" } }}
-            id="standard-select-currency"
-            select
-            placeholder="نوع پرداخت"
-            value={payment.paymentType.name}
-            onChange={this.handleChange}
-            variant="standard"
-          >
-            {/* {this.state.payments.map((option) => (
-              <MenuItem key={option.id} value={option.name}>
-                {option.name}
-              </MenuItem>
-            ))} */}
-          </TextField>
-          <TextField
-            fullWidth
+            
             inputProps={{ min: 0, style: { textAlign: "center" } }}
             id="standard-basic"
             variant="standard"
@@ -129,7 +114,7 @@ export default class PaymentForm extends React.Component {
             value={payment.amount}
             onChange={(event) => this.onChange(event)}
           />
-         <TextareaAutosize
+          <TextareaAutosize
             fullWidth
             inputProps={{ min: 0, style: { textAlign: "center" } }}
             id="standard-basic"

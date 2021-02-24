@@ -38,7 +38,6 @@ export default class PaymentList extends React.Component {
     fetch("/api/payments")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         this.setState({
           payments: data,
         });
@@ -125,17 +124,13 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">{row.amount}</TableCell>
           <TableCell align="center">{row.description}</TableCell>
           <TableCell align="center">
-            <IconButton>
-              <EditIcon
-                onClick={() => this.dialogHandler("PAYMENT_FORM", row)}
-                style={{ color: green[300] }}
-              />
+            <IconButton onClick={() => this.dialogHandler("PAYMENT_FORM", row)}>
+              <EditIcon style={{ color: green[300] }} />
             </IconButton>
-            <IconButton>
-              <DeleteForeverIcon
-                onClick={() => this.dialogHandler("DELETE_PAYMENT", row)}
-                color="secondary"
-              />
+            <IconButton
+              onClick={() => this.dialogHandler("DELETE_PAYMENT", row)}
+            >
+              <DeleteForeverIcon color="secondary" />
             </IconButton>
           </TableCell>
         </TableRow>
@@ -151,12 +146,7 @@ export default class PaymentList extends React.Component {
           flex: "row",
         }}
       >
-        <Grid
-          className="header"
-          container
-          justifyContent="space-between"
-          alignItems="center"
-        >
+        <Grid className="header" container alignItems="center">
           <Grid item xs={11}>
             <Typography
               variant="h6"
@@ -167,7 +157,7 @@ export default class PaymentList extends React.Component {
             </Typography>
           </Grid>
 
-          <Grid item xs justify="alignContent">
+          <Grid item xs>
             <Button
               onClick={() => this.dialogHandler("PAYMENT_FORM", null)}
               variant="outlined"

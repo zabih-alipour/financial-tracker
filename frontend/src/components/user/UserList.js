@@ -130,7 +130,6 @@ export default class UserList extends React.Component {
           className="header"
           container
           direction="row-reverse"
-          justifyContent="space-between"
           alignItems="center"
         >
           <Grid item xs>
@@ -153,9 +152,9 @@ export default class UserList extends React.Component {
             />
           </Grid>
           <Grid item xs>
-            <IconButton>
+            <IconButton onClick={() => this.dialogHandler("USER_FORM", null)}>
               <PersonAddIcon
-                onClick={() => this.dialogHandler("USER_FORM", null)}
+                
                 style={{ color: yellow[500], fontSize: 40 }}
               />
             </IconButton>

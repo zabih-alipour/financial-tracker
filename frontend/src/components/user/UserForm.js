@@ -37,14 +37,17 @@ export default class UserForm extends React.Component {
     this.handleClose();
     this.state.onAccept(this.state.user);
   };
-  onChange = (event)=>{
-    this.setState({user:{...this.state.user, name: event.target.value}})
-    
-  }
+  onChange = (event) => {
+    this.setState((state) => ({
+      user: {
+        ...state.user,
+        name: event.target.value,
+      },
+    }));
+  };
   render() {
     const { open, user } = this.state;
-    const title =
-      user.id == null ? " تعریف کاربر جدید" : " ویرایش کاربر";
+    const title = user.id == null ? " تعریف کاربر جدید" : " ویرایش کاربر";
     return (
       <Dialog
         // fullScreen
@@ -82,12 +85,11 @@ export default class UserForm extends React.Component {
             autoFocus
             className="saveButton"
             onClick={this.accept}
-            style={{marginTop:'30px'}}
+            style={{ marginTop: "30px" }}
           >
             ذخــیره
           </Button>
         </Container>
-        
       </Dialog>
     );
   }
