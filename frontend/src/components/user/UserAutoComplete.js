@@ -26,7 +26,6 @@ export default function UserAutoComplete(props) {
       fullWidth
       value={user}
       options={users}
-      getOptionLabel={(option) => option.name}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -35,7 +34,12 @@ export default function UserAutoComplete(props) {
           margin="normal"
         />
       )}
-      getOptionSelected={(option, value) => option.name === value.name}
+      getOptionLabel={(option) => {
+        return option.name;
+      }}
+      getOptionSelected={(option, value) => {
+        return option.name === value.name;
+      }}
       renderOption={(option, { inputValue }) => {
         const matches = match(option.name, inputValue);
         const parts = parse(option.name, matches);

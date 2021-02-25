@@ -13,12 +13,13 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { green, grey } from "@material-ui/core/colors";
+import { green, grey, yellow } from "@material-ui/core/colors";
 import React from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import PaymentForm from "./PaymentForm";
+import TuneIcon from "@material-ui/icons/Tune";
 
 export default class PaymentList extends React.Component {
   constructor(props) {
@@ -66,6 +67,18 @@ export default class PaymentList extends React.Component {
     });
   };
 
+  settlementPayment = (payment) => {
+    const settlenemt = { id: payment.id, amount: null };
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settlenemt),
+    };
+    fetch("/api/payments/settlement", requestOptions).then((res) => {
+      this.fetchData();
+    });
+  };
+
   onReject = () => {
     this.setState({
       dialog: "",
@@ -103,6 +116,25 @@ export default class PaymentList extends React.Component {
           onReject={this.onReject}
         />
       );
+    } else if (dialog === "SETTLEMENT_PAYMENT") {
+      return (
+        <ConfirmationDialog
+          data={selectedPayment}
+          openDialog={true}
+          headerComponent={
+            <DialogTitle id="alert-dialog-slide-title">
+              {"تسویه پرداخت"}
+            </DialogTitle>
+          }
+          bodyComponent={
+            <DialogContentText id="alert-dialog-slide-description">
+              آیا پرداخت با کد {selectedPayment.code} تسویه شود؟
+            </DialogContentText>
+          }
+          onAccept={this.settlementPayment}
+          onReject={this.onReject}
+        />
+      );
     }
   };
 
@@ -114,20 +146,45 @@ export default class PaymentList extends React.Component {
     const { payments } = this.state;
     const rows = payments.map((row, idx) => {
       return (
-        <TableRow key={row.id}>
+        <TableRow key={idx + 1}>
           <TableCell component="th" scope="row" align="center">
             {idx + 1}
           </TableCell>
           <TableCell align="center">{row.user.name}</TableCell>
           <TableCell align="center">{row.paymentType.name}</TableCell>
+          <TableCell align="center">{row.code}</TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">{row.amount}</TableCell>
-          <TableCell align="center">{row.description}</TableCell>
+          <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">
-            <IconButton onClick={() => this.dialogHandler("PAYMENT_FORM", row)}>
+            <p style={{ overflowWrap: "break-word" }}>{row.description}</p>
+          </TableCell>
+
+          <TableCell align="center">
+            {row.amount > 0 ? (
+              <IconButton
+                title="تسویه"
+                onClick={() => this.dialogHandler("SETTLEMENT_PAYMENT", row)}
+              >
+                <TuneIcon color="primary" />
+              </IconButton>
+            ) : (
+              <IconButton disabled
+                title="تسویه"
+                onClick={() => this.dialogHandler("SETTLEMENT_PAYMENT", row)}
+              >
+                <TuneIcon style={{ color: grey[400] }} />
+              </IconButton>
+            )}
+
+            <IconButton
+              onClick={() => this.dialogHandler("PAYMENT_FORM", row)}
+              title="ویرایش"
+            >
               <EditIcon style={{ color: green[300] }} />
             </IconButton>
             <IconButton
+              title="حذف"
               onClick={() => this.dialogHandler("DELETE_PAYMENT", row)}
             >
               <DeleteForeverIcon color="secondary" />
@@ -142,7 +199,7 @@ export default class PaymentList extends React.Component {
         style={{
           marginTop: "20px",
           margin: "10px auto ",
-          width: "60%",
+          width: "70%",
           flex: "row",
         }}
       >
@@ -175,8 +232,10 @@ export default class PaymentList extends React.Component {
                 <TableCell align="center">ردیف</TableCell>
                 <TableCell align="center"> کاربر </TableCell>
                 <TableCell align="center">نوع پرداخت</TableCell>
+                <TableCell align="center">کد پرداخت</TableCell>
                 <TableCell align="center">تاریخ</TableCell>
                 <TableCell align="center">مبلغ</TableCell>
+                <TableCell align="center">تاریخ ایجاد</TableCell>
                 <TableCell align="center">توضیحات</TableCell>
                 <TableCell align="center">اکشن</TableCell>
               </TableRow>

@@ -4,13 +4,13 @@ import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 
 export default function PaymentTypeAutoComplete(props) {
-  const { type, types, onChange, fieldName} = props;
+  const { type, types, onChange, fieldName } = props;
 
   const onAutoCompleteChange = (event, value, reason) => {
     event = {
       target: {
         name: [fieldName],
-        value: value,
+        value: Array.isArray(value) ? value[0] : value,
       },
     };
 
@@ -26,7 +26,10 @@ export default function PaymentTypeAutoComplete(props) {
       fullWidth
       value={type}
       options={types}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) => {
+        if (Array.isArray(option)) return option[0].name;
+        else return option.name;
+      }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -35,7 +38,10 @@ export default function PaymentTypeAutoComplete(props) {
           margin="normal"
         />
       )}
-      getOptionSelected={(option, value) => option.name === value.name}
+      getOptionSelected={(option, value) => {
+        if (Array.isArray(value)) return option.name === value[0].name;
+        else return option.name === value.name;
+      }}
       renderOption={(option, { inputValue }) => {
         const matches = match(option.name, inputValue);
         const parts = parse(option.name, matches);

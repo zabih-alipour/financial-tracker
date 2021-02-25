@@ -3,6 +3,7 @@ import { Paper, Tabs, Tab, makeStyles } from "@material-ui/core";
 import TabPanel from "../utils/TabPanel";
 import PaymentList from "./PaymentList";
 import PaymentTypeList from "./PaymentTypeList";
+import AccountReport from "./AccountReport";
 
 const useStyles = makeStyles({
   content: {
@@ -29,10 +30,12 @@ export default function PersonalAccountant(props) {
         >
           <Tab label="دسته بندی " />
           <Tab label="پرداخت ها" />
+          <Tab label="گزارش" />
         </Tabs>
       </Paper>
       <TabPanel value={value} index={0} component={<PaymentTypeList />} />
       <TabPanel value={value} index={1} component={<PaymentList />} />
+      <TabPanel value={value} index={2} component={<AccountReport />} />
     </div>
   );
 }
