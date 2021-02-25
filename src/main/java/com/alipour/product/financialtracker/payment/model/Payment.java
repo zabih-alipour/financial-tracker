@@ -1,5 +1,6 @@
 package com.alipour.product.financialtracker.payment.model;
 
+import com.alipour.product.financialtracker.common.DateUtils;
 import com.alipour.product.financialtracker.common.ParentEntity;
 import com.alipour.product.financialtracker.payment_type.models.PaymentType;
 import com.alipour.product.financialtracker.user.models.User;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "payment")
@@ -36,9 +38,27 @@ public class Payment extends ParentEntity implements Serializable {
     @Column(name = "shamsi_date", nullable = false)
     private String shamsiDate;
 
+    @Column(name = "code", nullable = false)
+    private Long code;
+
     @CreationTimestamp
     private LocalDateTime created_at;
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    public Payment copy() {
+        Payment payment = new Payment();
+        payment.setPaymentType(this.getPaymentType());
+        payment.setAmount(this.getAmount().negate());
+        payment.setUser(this.getUser());
+        payment.setShamsiDate(DateUtils.getTodayJalali());
+        payment.setDescription(
+                "تسویه "
+                        .concat(this.getPaymentType().getName())
+                        .concat("\n")
+                        .concat("کد:")
+                        .concat(getCode() + ""));
+        return payment;
+    }
 }
