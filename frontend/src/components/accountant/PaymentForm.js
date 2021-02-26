@@ -5,7 +5,6 @@ import {
   Dialog,
   IconButton,
   Slide,
-  TextareaAutosize,
   TextField,
   Toolbar,
   Typography,
@@ -15,7 +14,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import "./PaymentForm.css";
 import PaymentTypeAutoComplete from "./PaymentTypeAutoComplete";
 import UserAutoComplete from "../user/UserAutoComplete";
-import getPaymentTypes from "../utils/apis";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

@@ -13,7 +13,7 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { green, grey, yellow } from "@material-ui/core/colors";
+import { green, grey } from "@material-ui/core/colors";
 import React from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";

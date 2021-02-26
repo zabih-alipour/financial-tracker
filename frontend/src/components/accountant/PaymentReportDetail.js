@@ -18,6 +18,7 @@ import { green, grey, indigo } from "@material-ui/core/colors";
 export default class PaymentReportDetail extends React.Component {
   constructor(props) {
     super(props);
+    this.onDetailClick = props.onDetailClick;
     this.state = {
       data: props.data,
     };
@@ -26,12 +27,15 @@ export default class PaymentReportDetail extends React.Component {
   render() {
     const { data } = this.state;
     const rows = data.details.map((p) => {
+      const row = { user: data.user, type: p.type };
       return (
         <TableRow>
           <TableCell align="center">{p.type.name}</TableCell>
-          <TableCell align="center">{p.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</TableCell>
           <TableCell align="center">
-            <IconButton>
+            {p.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          </TableCell>
+          <TableCell align="center">
+            <IconButton onClick={() => this.onDetailClick(row)}>
               <ReceiptIcon style={{ color: green[500] }} />
             </IconButton>
           </TableCell>
@@ -61,7 +65,9 @@ export default class PaymentReportDetail extends React.Component {
                   <Typography align="center">مجموع</Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography align="center">{data.sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
+                  <Typography align="center">
+                    {data.sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center"></TableCell>
               </TableRow>
