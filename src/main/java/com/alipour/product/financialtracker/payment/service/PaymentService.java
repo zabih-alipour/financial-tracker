@@ -1,15 +1,19 @@
 package com.alipour.product.financialtracker.payment.service;
 
 import com.alipour.product.financialtracker.common.CRUDService;
-import com.alipour.product.financialtracker.common.ParentDto;
+import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
+import com.alipour.product.financialtracker.payment.repository.PaymentReportRepository;
 import com.alipour.product.financialtracker.payment.repository.PaymentRepository;
-import com.alipour.product.financialtracker.payment_type.repository.PaymentTypeRepository;
+import com.alipour.product.financialtracker.payment.views.PaymentReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Service：
@@ -21,11 +25,11 @@ import java.util.UUID;
 public class PaymentService extends CRUDService<Payment> {
 
     private final PaymentRepository repository;
-    private final PaymentTypeRepository typeRepository;
+    private final PaymentReportRepository reportRepository;
 
-    public PaymentService(PaymentRepository repository, PaymentTypeRepository typeRepository) {
+    public PaymentService(PaymentRepository repository, PaymentReportRepository reportRepository) {
         this.repository = repository;
-        this.typeRepository = typeRepository;
+        this.reportRepository = reportRepository;
     }
 
     @Override
@@ -48,5 +52,18 @@ public class PaymentService extends CRUDService<Payment> {
         Payment copy = repository.getOne(paymentId).copy();
         copy.setAmount(copy.getAmount().abs().subtract(amount));
         return add(copy);
+    }
+
+    public Set<PaymentReportDto> reports() {
+        return reportRepository.findAll().stream()
+                .collect(Collectors.groupingBy(PaymentReport::getUser))
+                .entrySet().stream()
+                .map(p -> {
+                    List<PaymentReportDto.Detail> details = p.getValue().stream()
+                            .map(val -> new PaymentReportDto.Detail(val.getType(), val.getAmount()))
+                            .collect(Collectors.toList());
+                    return new PaymentReportDto(p.getKey(), details);
+                })
+                .collect(Collectors.toSet());
     }
 }

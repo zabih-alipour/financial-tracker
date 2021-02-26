@@ -1,10 +1,14 @@
 package com.alipour.product.financialtracker.payment.controller;
 
 import com.alipour.product.financialtracker.common.CRUDController;
+import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
 import com.alipour.product.financialtracker.payment.dtos.PaymentSettlementDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Controller：
@@ -26,6 +30,12 @@ public class PaymentController extends CRUDController<Payment> {
         if (dto.getAmount() == null)
             return ((PaymentService) service).settlement(dto.getId());
         else return ((PaymentService) service).settlement(dto.getId(), dto.getAmount());
+    }
+
+    @GetMapping("/reports")
+    @ResponseBody
+    public Set<PaymentReportDto> reports() {
+        return ((PaymentService) service).reports();
     }
 
 }
