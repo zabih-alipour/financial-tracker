@@ -5,6 +5,7 @@ import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
 import com.alipour.product.financialtracker.payment.dtos.PaymentSettlementDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.service.PaymentService;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,4 +39,9 @@ public class PaymentController extends CRUDController<Payment> {
         return ((PaymentService) service).reports();
     }
 
+    @GetMapping("/{userId}/{typeId}")
+    @ResponseBody
+    public List<Payment> findByUserAndType(@PathVariable("userId") Long userId, @PathVariable("typeId") Long typeId) {
+        return ((PaymentService) service).findByUserAndType(userId, typeId);
+    }
 }

@@ -1,18 +1,18 @@
 package com.alipour.product.financialtracker.payment.service;
 
 import com.alipour.product.financialtracker.common.CRUDService;
+import com.alipour.product.financialtracker.common.DateUtils;
 import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.repository.PaymentReportRepository;
 import com.alipour.product.financialtracker.payment.repository.PaymentRepository;
 import com.alipour.product.financialtracker.payment.views.PaymentReport;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,8 +33,15 @@ public class PaymentService extends CRUDService<Payment> {
     }
 
     @Override
+    public List<Payment> findAll() {
+        return repository.findAll(Sort.by(Sort.Order.desc("shamsiDate")));
+    }
+
+    @Override
     public Payment add(Payment payment) {
         payment.setCode(UUID.randomUUID().getMostSignificantBits());
+        if (payment.getShamsiDate() == null || payment.getShamsiDate().isEmpty())
+            payment.setShamsiDate(DateUtils.getTodayJalali());
         return super.add(payment);
     }
 
@@ -64,6 +71,11 @@ public class PaymentService extends CRUDService<Payment> {
                             .collect(Collectors.toList());
                     return new PaymentReportDto(p.getKey(), details);
                 })
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(PaymentReportDto::getSum).reversed())
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public List<Payment> findByUserAndType(Long userId, Long typeId) {
+        return repository.findByUserAndType(userId, typeId);
     }
 }

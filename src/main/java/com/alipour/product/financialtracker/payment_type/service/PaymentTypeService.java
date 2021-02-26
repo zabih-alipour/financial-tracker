@@ -6,6 +6,7 @@ import com.alipour.product.financialtracker.payment_type.repository.PaymentTypeR
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
@@ -15,6 +16,7 @@ import java.util.Optional;
  * @date 2021-02-18 16:41:23
  */
 @Service
+@Transactional
 public class PaymentTypeService extends CRUDService<PaymentType> {
 
     private final PaymentTypeRepository repository;
