@@ -154,7 +154,7 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">{row.paymentType.name}</TableCell>
           <TableCell align="center">{row.code}</TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
-          <TableCell align="center">{row.amount}</TableCell>
+          <TableCell align="center">{row.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">
             <p style={{ overflowWrap: "break-word" }}>{row.description}</p>

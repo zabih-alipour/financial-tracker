@@ -134,13 +134,11 @@ export default class PaymentTypeList extends React.Component {
             </IconButton>
             <IconButton onClick={() => this.dialogHandler("TYPE_FORM", row)}>
               <EditIcon
-                
                 style={{ color: green[300] }}
               />
             </IconButton>
             <IconButton onClick={() => this.dialogHandler("DELETE_TYPE", row)}>
               <DeleteForeverIcon
-                
                 color="secondary"
               />
             </IconButton>
