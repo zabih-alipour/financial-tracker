@@ -52,6 +52,7 @@ function UserListItem(props) {
         <Divider light variant="fullWidth" textalign="center" />
         <BottomNavigation>
           <BottomNavigationAction
+          onClick={() => dialogHandler("USER_PAYMENT", user)}
             label="Recents"
             value="recents"
             icon={<ViewHeadlineIcon color="primary" />}

@@ -14,9 +14,6 @@ import {
 import React, { createRef } from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import "./PaymentTypeForm.css";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import parse from "autosuggest-highlight/parse";
-import match from "autosuggest-highlight/match";
 import SaveIcon from "@material-ui/icons/Save";
 import PaymentTypeAutoComplete from "./PaymentTypeAutoComplete";
 
@@ -28,25 +25,31 @@ export default class PaymentTypeForm extends React.Component {
   constructor(props) {
     super(props);
     this.transition = createRef(Transition);
+    this.onClose = props.onClose;
     this.state = {
       open: props.openDialog,
-      onAccept: props.onAccept,
-      onReject: props.onReject,
       types: props.types,
       type:
         props.type != null ? props.type : { id: null, name: "", parent: null },
     };
   }
+  persistType = () => {
+    const { type } = this.state;
+    const requestOptions = {
+      method: type.id == null ? "POST" : "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(type),
+    };
+    fetch("/api/paymentTypes", requestOptions).then((res) => {
+      this.handleClose("SUCCESSFUL");
+    });
+  };
 
-  handleClose = () => {
+  handleClose = (status = "NO_ACTION") => {
     this.setState({ open: false });
-    this.state.onReject();
+    this.onClose(status);
   };
 
-  accept = () => {
-    this.handleClose();
-    this.state.onAccept(this.state.type);
-  };
   onChange = (event) => {
     this.setState((state) => ({
       type: { ...state.type, [event.target.name]: event.target.value },
@@ -104,7 +107,7 @@ export default class PaymentTypeForm extends React.Component {
             autoFocus
             color="primary"
             size="large"
-            onClick={this.accept}
+            onClick={this.persistType}
             startIcon={<SaveIcon />}
             style={{ marginTop: "30px" }}
           >

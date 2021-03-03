@@ -13,6 +13,7 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import "./UserList.css";
 import AlertDialogSlide from "../dialog/ConfirmationDialog";
 import UserForm from "./UserForm";
+import PaymentListPopup from "../accountant/PaymentListPopup";
 
 export default class UserList extends React.Component {
   constructor(props) {
@@ -45,52 +46,41 @@ export default class UserList extends React.Component {
     });
   };
 
-  persistUser = (user) => {
-    const requestOptions = {
-      method: user.id == null ? "POST" : "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    };
-    fetch("/api/users", requestOptions)
-      .then((res) => {
-        console.log(res);
-        this.fetchData();
-      })
-      .catch((res) => console.log(res));
-  };
-
-  deletUser = (user) => {
+  deletUser = () => {
+    const { selectedUser } = this.state;
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
-    fetch("/api/users/" + user.id, requestOptions).then((res) => {
-      console.log(res);
+    fetch("/api/users/" + selectedUser.id, requestOptions).then((res) => {
       this.fetchData();
     });
   };
-  onReject = () => {
+  onClose = (status) => {
     this.setState({
       dialog: "",
       selectedUser: null,
     });
+
+    if (status === "SUCCESSFUL") {
+      this.fetchData();
+    }
   };
 
-  showDialog = (user) => {
-    const { dialog } = this.state;
+  showDialog = () => {
+    const { selectedUser, dialog } = this.state;
     if (dialog === "USER_FORM") {
       return (
         <UserForm
-          user={user}
+          user={selectedUser}
           openDialog={true}
-          onAccept={this.persistUser}
-          onReject={this.onReject}
+          onClose={this.onClose}
         />
       );
     } else if (dialog === "DELETE_USER") {
       return (
         <AlertDialogSlide
-          data={user}
+          data={selectedUser}
           openDialog={true}
           headerComponent={
             <DialogTitle id="alert-dialog-slide-title">
@@ -99,11 +89,20 @@ export default class UserList extends React.Component {
           }
           bodyComponent={
             <DialogContentText id="alert-dialog-slide-description">
-              آیا مطمغن هستین که میخواید کاربر {user.name} را حذف کنید؟
+              آیا مطمغن هستین که میخواید کاربر {selectedUser.name} را حذف کنید؟
             </DialogContentText>
           }
           onAccept={this.deletUser}
-          onReject={this.onReject}
+          onClose={this.onClose}
+        />
+      );
+    } else if (dialog === "USER_PAYMENT") {
+      return (
+        <PaymentListPopup
+          openDialog={true}
+          user={selectedUser}
+          type={null}
+          onClose={this.onClose}
         />
       );
     }
@@ -114,7 +113,7 @@ export default class UserList extends React.Component {
   };
 
   render() {
-    const { filteredUsers, selectedUser } = this.state;
+    const { filteredUsers } = this.state;
     const userItems = filteredUsers.map((user) => {
       return (
         <UserListItem
@@ -153,15 +152,12 @@ export default class UserList extends React.Component {
           </Grid>
           <Grid item xs>
             <IconButton onClick={() => this.dialogHandler("USER_FORM", null)}>
-              <PersonAddIcon
-                
-                style={{ color: yellow[500], fontSize: 40 }}
-              />
+              <PersonAddIcon style={{ color: yellow[500], fontSize: 40 }} />
             </IconButton>
           </Grid>
         </Grid>
         {userItems}
-        {this.showDialog(selectedUser)}
+        {this.showDialog()}
       </div>
     );
   }

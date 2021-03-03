@@ -24,8 +24,7 @@ export default class PaymentForm extends React.Component {
     super(props);
     this.state = {
       open: props.openDialog,
-      onAccept: props.onAccept,
-      onReject: props.onReject,
+      onClose: props.onClose,
       types: [],
       users: [],
       payment:
@@ -54,14 +53,21 @@ export default class PaymentForm extends React.Component {
       });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
-    this.state.onReject();
+  persistPayment = () => {
+    const { payment } = this.state;
+    const requestOptions = {
+      method: payment.id == null ? "POST" : "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payment),
+    };
+    fetch("/api/payments", requestOptions).then((res) => {
+      this.handleClose("SUCCESS");
+    });
   };
 
-  accept = () => {
-    this.handleClose();
-    this.state.onAccept(this.state.payment);
+  handleClose = (status = "NO_ACTION") => {
+    this.setState({ open: false });
+    this.state.onClose(status);
   };
 
   onChange = (event) => {
@@ -155,7 +161,7 @@ export default class PaymentForm extends React.Component {
             margin="dense"
             autoFocus
             className="saveButton"
-            onClick={this.accept}
+            onClick={this.persistPayment}
             style={{ marginTop: "30px" }}
           >
             ذخــیره

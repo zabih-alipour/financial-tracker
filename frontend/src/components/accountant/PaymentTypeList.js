@@ -21,6 +21,7 @@ import ReceiptIcon from "@material-ui/icons/Receipt";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import PaymentTypeForm from "./PaymentTypeForm";
 import PaymentTypePopup from "./PaymentTypePopup";
+import PaymentListPopup from "./PaymentListPopup";
 
 export default class PaymentTypeList extends React.Component {
   constructor(props) {
@@ -43,51 +44,40 @@ export default class PaymentTypeList extends React.Component {
         this.setState({
           paymentTypes: data,
         });
-      })
+      });
   };
 
-  deleteType = (type) => {
+  deleteType = () => {
+    const { selectedType } = this.state;
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
-    fetch("/api/paymentTypes/" + type.id, requestOptions).then((res) => {
+    fetch("/api/paymentTypes/" + selectedType.id, requestOptions).then((res) => {
       this.fetchData();
     });
   };
 
-  persistType = (type) => {
-    const requestOptions = {
-      method: type.id == null ? "POST" : "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(type),
-    };
-    fetch("/api/paymentTypes", requestOptions).then((res) => {
-      this.fetchData();
-    });
-  };
-
-  onReject = () => {
+  onClose = (status) => {
     this.setState({
       dialog: "",
       selectedType: null,
     });
+    if (status === "SUCCESSFUL") {
+      this.fetchData();
+    }
   };
-  onSelected = (type)=>{
-  }
+  onSelected = (type) => {};
 
   showDialog = () => {
     const { dialog, selectedType, paymentTypes } = this.state;
-    if (dialog === "TYPE_SELECTION") {
-      return <PaymentTypePopup openDialog={true} onSelected = {this.onSelected} onReject = {this.onReject} types={paymentTypes} />;
-    } else if (dialog === "TYPE_FORM") {
+    if (dialog === "TYPE_FORM") {
       return (
         <PaymentTypeForm
           openDialog={true}
           types={paymentTypes}
           type={selectedType}
-          onAccept={this.persistType}
-          onReject={this.onReject}
+          onClose={this.onClose}
         />
       );
     } else if (dialog === "DELETE_TYPE") {
@@ -107,7 +97,16 @@ export default class PaymentTypeList extends React.Component {
             </DialogContentText>
           }
           onAccept={this.deleteType}
-          onReject={this.onReject}
+          onClose={this.onClose}
+        />
+      );
+    } else if (dialog === "TYPE_PAYMENT") {
+      return (
+        <PaymentListPopup
+          openDialog={true}
+          user={null}
+          type={selectedType}
+          onClose={this.onClose}
         />
       );
     }
@@ -129,18 +128,14 @@ export default class PaymentTypeList extends React.Component {
           <TableCell align="center">{row.name}</TableCell>
           <TableCell align="center">{parentName}</TableCell>
           <TableCell align="center">
-            <IconButton>
+            <IconButton onClick={() => this.dialogHandler("TYPE_PAYMENT", row)}>
               <ReceiptIcon color="primary" />
             </IconButton>
             <IconButton onClick={() => this.dialogHandler("TYPE_FORM", row)}>
-              <EditIcon
-                style={{ color: green[300] }}
-              />
+              <EditIcon style={{ color: green[300] }} />
             </IconButton>
             <IconButton onClick={() => this.dialogHandler("DELETE_TYPE", row)}>
-              <DeleteForeverIcon
-                color="secondary"
-              />
+              <DeleteForeverIcon color="secondary" />
             </IconButton>
           </TableCell>
         </TableRow>
@@ -156,11 +151,7 @@ export default class PaymentTypeList extends React.Component {
           flex: "row",
         }}
       >
-        <Grid
-          className="header"
-          container
-          alignItems="center"
-        >
+        <Grid className="header" container alignItems="center">
           <Grid item xs={11}>
             <Typography
               variant="h6"
@@ -181,7 +172,6 @@ export default class PaymentTypeList extends React.Component {
               جــدیــد
             </Button>
           </Grid>
-          
         </Grid>
         <TableContainer component={Paper}>
           <Table>

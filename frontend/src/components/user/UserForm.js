@@ -20,23 +20,32 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default class UserForm extends React.Component {
   constructor(props) {
     super(props);
+    this.onClose = props.onClose;
     this.state = {
       open: props.openDialog,
-      onAccept: props.onAccept,
-      onReject: props.onReject,
       user: props.user != null ? props.user : { id: null, name: "" },
     };
   }
 
-  handleClose = () => {
-    this.setState({ open: false });
-    this.state.onReject();
+  persistUser = () => {
+    const { user } = this.state;
+    const requestOptions = {
+      method: user.id == null ? "POST" : "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user),
+    };
+    fetch("/api/users", requestOptions)
+      .then((res) => {
+        this.handleClose("SUCCESSFUL")
+      })
+      .catch((res) => console.log(res));
   };
 
-  accept = () => {
-    this.handleClose();
-    this.state.onAccept(this.state.user);
+  handleClose = (status = "NO_ACTION") => {
+    this.setState({ open: false });
+    this.onClose(status);
   };
+
   onChange = (event) => {
     this.setState((state) => ({
       user: {
@@ -84,7 +93,7 @@ export default class UserForm extends React.Component {
             fullWidth
             autoFocus
             className="saveButton"
-            onClick={this.accept}
+            onClick={this.persistUser}
             style={{ marginTop: "30px" }}
           >
             ذخــیره

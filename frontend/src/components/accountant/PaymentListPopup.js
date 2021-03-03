@@ -18,7 +18,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default class PaymentList extends React.Component {
   constructor(props) {
     super(props);
-    this.onClose = props.onClose
+    this.onClose = props.onClose;
     this.state = {
       open: props.openDialog,
       user: props.user,
@@ -29,19 +29,26 @@ export default class PaymentList extends React.Component {
 
   handleClose = () => {
     this.setState({ open: false });
-    this.onClose()
+    this.onClose();
   };
 
   componentDidMount = () => {
     const { user, type } = this.state;
-    console.log(this.state);
-    fetch("/api/payments/" + user.id + "/" + type.id)
-    .then(res=>res.json())
-    .then((res) => {
-      this.setState({
-        payments: res,
+    var url = "";
+    if (user != null && type != null) {
+      url = "/api/payments/" + user.id + "/" + type.id;
+    } else if (user != null) {
+      url = "/api/payments/by-user/" + user.id;
+    } else if (type != null) {
+      url = "/api/payments/by-type/" + type.id;
+    }
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        this.setState({
+          payments: res,
+        });
       });
-    });
   };
 
   render() {
@@ -74,8 +81,8 @@ export default class PaymentList extends React.Component {
         TransitionComponent={Transition}
         onClose={this.handleClose}
       >
-        <TableContainer component={Paper} style={{direction:"rtl"}}>
-          <Table >
+        <TableContainer component={Paper} style={{ direction: "rtl" }}>
+          <Table>
             <TableHead style={{ backgroundColor: "orange" }}>
               <TableRow>
                 <TableCell align="center">ردیف</TableCell>

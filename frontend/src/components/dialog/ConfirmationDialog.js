@@ -10,17 +10,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function ConfirmationDialog(props) {
-  const { data, openDialog, onAccept, onReject, headerComponent, bodyComponent} = props;
+  const {
+    data,
+    openDialog,
+    onAccept,
+    onClose,
+    headerComponent,
+    bodyComponent,
+  } = props;
   const [open, setOpen] = React.useState(openDialog);
 
   const handleClose = () => {
     setOpen(false);
-    onReject()
+    onClose();
   };
 
   const accept = () => {
+    onAccept();
     handleClose();
-    onAccept(data);
   };
 
   return (
@@ -33,9 +40,7 @@ export default function ConfirmationDialog(props) {
       aria-describedby="alert-dialog-slide-description"
     >
       {headerComponent}
-      <DialogContent>
-        {bodyComponent}
-      </DialogContent>
+      <DialogContent>{bodyComponent}</DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>انصراف</Button>
         <Button onClick={accept}>تایید</Button>

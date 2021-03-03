@@ -25,13 +25,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function PaymentTypePopup(props) {
   const classes = useStyles();
-  const { openDialog, types, onReject, onSelected } = props;
+  const { openDialog, types, onSelected } = props;
   const [open, setOpen] = React.useState(openDialog);
   const [filteredTypes, setFilteredTypes] = React.useState(types);
 
   const handleClose = () => {
     setOpen(false);
-    onReject();
   };
   const onChange = (event) => {
     const val = event.target.value;

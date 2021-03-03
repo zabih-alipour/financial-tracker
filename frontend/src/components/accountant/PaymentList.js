@@ -46,23 +46,13 @@ export default class PaymentList extends React.Component {
       .catch((e) => console.log(e));
   };
 
-  deletePayment = (payment) => {
+  deletePayment = () => {
+    const { payment } = this.state;
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
     fetch("/api/payments/" + payment.id, requestOptions).then((res) => {
-      this.fetchData();
-    });
-  };
-
-  persistPayment = (payment) => {
-    const requestOptions = {
-      method: payment.id == null ? "POST" : "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payment),
-    };
-    fetch("/api/payments", requestOptions).then((res) => {
       this.fetchData();
     });
   };
@@ -79,11 +69,14 @@ export default class PaymentList extends React.Component {
     });
   };
 
-  onReject = () => {
+  onClose = (status = "NO_ACTION") => {
     this.setState({
       dialog: "",
       selectedPayment: null,
     });
+    if (status === "SUCCESS") {
+      this.fetchData();
+    }
   };
 
   showDialog = () => {
@@ -93,8 +86,7 @@ export default class PaymentList extends React.Component {
         <PaymentForm
           openDialog={true}
           payment={selectedPayment}
-          onAccept={this.persistPayment}
-          onReject={this.onReject}
+          onClose={this.onClose}
         />
       );
     } else if (dialog === "DELETE_PAYMENT") {
@@ -113,7 +105,7 @@ export default class PaymentList extends React.Component {
             </DialogContentText>
           }
           onAccept={this.deletePayment}
-          onReject={this.onReject}
+          onClose={this.onClose}
         />
       );
     } else if (dialog === "SETTLEMENT_PAYMENT") {
@@ -132,7 +124,7 @@ export default class PaymentList extends React.Component {
             </DialogContentText>
           }
           onAccept={this.settlementPayment}
-          onReject={this.onReject}
+          onClose={this.onClose}
         />
       );
     }
@@ -154,7 +146,9 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">{row.paymentType.name}</TableCell>
           <TableCell align="center">{row.code}</TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
-          <TableCell align="center">{row.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</TableCell>
+          <TableCell align="center">
+            {row.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          </TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">
             <p style={{ overflowWrap: "break-word" }}>{row.description}</p>
@@ -169,7 +163,8 @@ export default class PaymentList extends React.Component {
                 <TuneIcon color="primary" />
               </IconButton>
             ) : (
-              <IconButton disabled
+              <IconButton
+                disabled
                 title="تسویه"
                 onClick={() => this.dialogHandler("SETTLEMENT_PAYMENT", row)}
               >
