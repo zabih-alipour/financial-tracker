@@ -1,5 +1,7 @@
 package com.alipour.product.financialtracker;
 
+import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
+import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.service.PaymentService;
 import com.alipour.product.financialtracker.payment_type.models.PaymentType;
@@ -22,16 +24,19 @@ public class Migration implements CommandLineRunner {
     private UserService userService;
     private PaymentService paymentService;
     private PaymentTypeService paymentTypeService;
+    private InvestmentTypeService investmentTypeService;
 
 
     public Migration(ObjectMapper mapper,
                      UserService userService,
                      PaymentService paymentService,
-                     PaymentTypeService paymentTypeService) {
+                     PaymentTypeService paymentTypeService,
+                     InvestmentTypeService investmentTypeService) {
         this.mapper = mapper;
         this.userService = userService;
         this.paymentService = paymentService;
         this.paymentTypeService = paymentTypeService;
+        this.investmentTypeService = investmentTypeService;
     }
 
     @Override
@@ -39,6 +44,22 @@ public class Migration implements CommandLineRunner {
         importUsers();
         importPaymentTypes();
         importPayment();
+        importInvestmentTypes();
+    }
+
+    private void importInvestmentTypes() throws Exception {
+        if (investmentTypeService.count() == 0) {
+            try (FileReader reader = new FileReader(ResourceUtils.getFile("classpath:migration/investment_type.json"))) {
+                JsonNode tree = mapper.readTree(reader);
+                tree.forEach(node -> {
+                    InvestmentType investmentType = new InvestmentType();
+                    investmentType.setName(node.get("name").asText());
+                    investmentType.setLatestPrice(node.get("latest_price").asDouble());
+                    investmentType.setCode(node.get("name").asText());
+                    investmentTypeService.add(investmentType);
+                });
+            }
+        }
     }
 
     private void importPayment() throws IOException {

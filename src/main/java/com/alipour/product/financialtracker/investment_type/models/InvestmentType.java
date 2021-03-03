@@ -27,7 +27,7 @@ public class InvestmentType extends ParentEntity {
     private String code;
 
     @Column(name = "latest_price")
-    private Float latestPrice;
+    private Double latestPrice;
 
     public InvestmentType(Long id) {
         super(id);
