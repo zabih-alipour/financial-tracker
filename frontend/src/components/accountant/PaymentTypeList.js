@@ -20,7 +20,6 @@ import EditIcon from "@material-ui/icons/Edit";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import PaymentTypeForm from "./PaymentTypeForm";
-import PaymentTypePopup from "./PaymentTypePopup";
 import PaymentListPopup from "./PaymentListPopup";
 
 export default class PaymentTypeList extends React.Component {
