@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "latest_price": 1,
+        "name": "پس انداز ریالی"
+    },
+    {
+        "id": 2,
+        "latest_price": 27000,
+        "name": "بیت کوین"
+    },
+    {
+        "id": 3,
+        "latest_price": 135,
+        "name": "لایت کوین"
+    },
+    {
+        "id": 4,
+        "latest_price": 110,
+        "name": "دش"
+    },
+    {
+        "id": 5,
+        "latest_price": 1400,
+        "name": "طلا"
+    },
+    {
+        "id": 6,
+        "latest_price": 650,
+        "name": "اتریوم"
+    },
+    {
+        "id": 7,
+        "latest_price": 6000000,
+        "name": "واحد صندوق سرمایه گذاری"
+    },
+    {
+        "id": 8,
+        "latest_price": 26000,
+        "name": "دلار"
+    },
+    {
+        "id": 9,
+        "latest_price": 8.2,
+        "name": "پولکات"
+    },
+    {
+        "id": 10,
+        "latest_price": 11.65,
+        "name": "لینک"
+    },
+    {
+        "id": 11,
+        "latest_price": 19,
+        "name": "یونی سواپ"
+    }
+]

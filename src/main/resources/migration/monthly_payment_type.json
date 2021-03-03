@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "خرید برنج",
+        "repetation": 5,
+        "start_month_id": 8
+    },
+    {
+        "id": 2,
+        "name": "اقساط خرید تلویزیون و عیره برای روستا",
+        "repetation": 12,
+        "start_month_id": 10
+    }
+]

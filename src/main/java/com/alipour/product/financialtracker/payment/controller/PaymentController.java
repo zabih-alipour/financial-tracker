@@ -44,4 +44,16 @@ public class PaymentController extends CRUDController<Payment> {
     public List<Payment> findByUserAndType(@PathVariable("userId") Long userId, @PathVariable("typeId") Long typeId) {
         return ((PaymentService) service).findByUserAndType(userId, typeId);
     }
+
+    @GetMapping("/by-user/{userId}")
+    @ResponseBody
+    public List<Payment> findByUser(@PathVariable("userId") Long userId) {
+        return ((PaymentService) service).findByUser(userId);
+    }
+
+    @GetMapping("/by-type/{typeId}")
+    @ResponseBody
+    public List<Payment> findByType(@PathVariable("typeId") Long typeId) {
+        return ((PaymentService) service).findByType(typeId);
+    }
 }

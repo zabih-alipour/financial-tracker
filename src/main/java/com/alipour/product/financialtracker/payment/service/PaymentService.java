@@ -78,4 +78,12 @@ public class PaymentService extends CRUDService<Payment> {
     public List<Payment> findByUserAndType(Long userId, Long typeId) {
         return repository.findByUserAndType(userId, typeId);
     }
+
+    public List<Payment> findByType(Long typeId) {
+        return repository.findByTypeId(typeId);
+    }
+
+    public List<Payment> findByUser(Long userId) {
+        return repository.findByUserId(userId);
+    }
 }

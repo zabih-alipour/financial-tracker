@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "name": "قرض",
+        "transaction_type_id": 1
+    },
+    {
+        "id": 2,
+        "name": "خرید ماشین",
+        "transaction_type_id": 1
+    },
+    {
+        "id": 3,
+        "name": "اقساط خانه روستا",
+        "transaction_type_id": 1
+    },
+    {
+        "id": 4,
+        "name": "اقساط برنج",
+        "transaction_type_id": 1
+    },
+    {
+        "id": 5,
+        "name": "Coinex",
+        "transaction_type_id": 2
+    },
+    {
+        "id": 6,
+        "name": "Wallex",
+        "transaction_type_id": 2
+    },
+    {
+        "id": 7,
+        "name": "Dollor",
+        "transaction_type_id": 2
+    },
+    {
+        "id": 8,
+        "name": "مخارج خونه تهران",
+        "transaction_type_id": 1
+    },
+    {
+        "id": 9,
+        "name": "مخارج خونه روستا",
+        "transaction_type_id": 1
+    }
+]
