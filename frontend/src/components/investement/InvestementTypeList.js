@@ -77,7 +77,7 @@ export default class InvestementTypeList extends React.Component {
           <TableCell align="center">{"20%"}</TableCell>
           <TableCell align="center">
             <IconButton onClick={() => this.dialogHandler("TYPE_FORM", type)}>
-              <EditIcon color="promary"/>
+              <EditIcon color="primary"/>
             </IconButton>
           </TableCell>
         </TableRow>

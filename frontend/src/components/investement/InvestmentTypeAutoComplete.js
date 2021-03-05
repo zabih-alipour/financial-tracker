@@ -4,20 +4,20 @@ import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import React from "react";
 
-export default function UserAutoComplete(props) {
-  const [users, setUsers] = React.useState(props.users ? props.users : []);
+export default function InvestmentTypeAutoComplete(props) {
+  const [types, setTypes] = React.useState(props.types ? props.types : []);
 
-  const { user, onChange, fieldName, style} = props;
+  const { type, onChange, fieldName, style } = props;
 
   React.useEffect(() => {
-    if (users.length === 0) {
-      fetch("/api/users")
+    if (types.length === 0) {
+      fetch("/api/investment_types")
         .then((response) => response.json())
         .then((data) => {
-          setUsers(data);
+          setTypes(data);
         });
     }
-  }, [users]);
+  }, [types]);
 
   const onAutoCompleteChange = (event, value, reason) => {
     event = {
@@ -32,19 +32,20 @@ export default function UserAutoComplete(props) {
 
   return (
     <Autocomplete
-      id="user-auto"
+      id="investment-type-auto"
       autoComplete
       onChange={onAutoCompleteChange}
       // autoHighlight
-      // fullWidth
-      value={user}
-      options={users}
+      
+      value={type}
+      options={types}
       renderInput={(params) => (
-        <TextField style={style}
+        <TextField
           {...params}
-          placeholder="کاربر"
+          placeholder="نوع سرمایه"
           variant="standard"
-          margin="dense"
+          margin="normal"
+          style={style}
         />
       )}
       getOptionLabel={(option) => {
