@@ -5,8 +5,10 @@ import com.alipour.product.financialtracker.investment_type.models.InvestmentTyp
 import com.alipour.product.financialtracker.user.models.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * 实体类： *
@@ -17,7 +19,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "Investment")
+@Table(name = "investment")
 public class Investment extends ParentEntity implements Cloneable {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,7 +32,6 @@ public class Investment extends ParentEntity implements Cloneable {
     @Column(name = "amount", nullable = false)
     private Float amount;
 
-
     @Column(name = "executed_price", nullable = false)
     private Float executedPrice;
 
@@ -39,11 +40,17 @@ public class Investment extends ParentEntity implements Cloneable {
     private InvestmentType investmentType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "psrent_id", foreignKey = @ForeignKey(name = "fk_parent_of_investment"))
+    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "fk_parent_of_investment"))
     private Investment parent;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "code", nullable = false)
+    private String code;
+
+    @CreationTimestamp
+    private LocalDateTime create_at;
 
     @Transient
     private Float spendAmount;

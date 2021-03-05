@@ -1,5 +1,7 @@
 package com.alipour.product.financialtracker;
 
+import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
+import com.alipour.product.financialtracker.investment.service.InvestmentService;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
 import com.alipour.product.financialtracker.payment.model.Payment;
@@ -25,18 +27,21 @@ public class Migration implements CommandLineRunner {
     private PaymentService paymentService;
     private PaymentTypeService paymentTypeService;
     private InvestmentTypeService investmentTypeService;
+    private InvestmentService investmentService;
 
 
     public Migration(ObjectMapper mapper,
                      UserService userService,
                      PaymentService paymentService,
                      PaymentTypeService paymentTypeService,
-                     InvestmentTypeService investmentTypeService) {
+                     InvestmentTypeService investmentTypeService,
+                     InvestmentService investmentService) {
         this.mapper = mapper;
         this.userService = userService;
         this.paymentService = paymentService;
         this.paymentTypeService = paymentTypeService;
         this.investmentTypeService = investmentTypeService;
+        this.investmentService = investmentService;
     }
 
     @Override
@@ -45,6 +50,11 @@ public class Migration implements CommandLineRunner {
         importPaymentTypes();
         importPayment();
         importInvestmentTypes();
+        importInvestments();
+    }
+
+    private void importInvestments() throws Exception {
+        //Done manually
     }
 
     private void importInvestmentTypes() throws Exception {
