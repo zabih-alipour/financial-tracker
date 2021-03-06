@@ -29,7 +29,6 @@ public class InvestmentDto extends ParentDto {
 
     public Investment getSubtractInvestment() {
         Coin subtract = this.getSubtract();
-        subtract.setAmount(-subtract.getAmount());
         return getInvestment(subtract);
     }
 

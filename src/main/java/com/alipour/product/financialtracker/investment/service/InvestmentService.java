@@ -3,7 +3,6 @@ package com.alipour.product.financialtracker.investment.service;
 import com.alipour.product.financialtracker.common.BusinessException;
 import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.common.NotSupportException;
-import com.alipour.product.financialtracker.common.ParentDto;
 import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.repository.InvestmentRepository;
@@ -14,11 +13,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -36,10 +33,12 @@ public class InvestmentService extends CRUDService<Investment> {
 
     private final InvestmentRepository repository;
     private final InvestmentTypeRepository typeRepository;
+    private final SecureRandom random;
 
-    public InvestmentService(InvestmentRepository repository, InvestmentTypeRepository typeRepository) {
+    public InvestmentService(InvestmentRepository repository, InvestmentTypeRepository typeRepository, SecureRandom random) {
         this.repository = repository;
         this.typeRepository = typeRepository;
+        this.random = random;
     }
 
     @Override
@@ -56,7 +55,7 @@ public class InvestmentService extends CRUDService<Investment> {
 
         if (dto.getParent() == null) {
             investment.setDescription("پس انداز ریالی");
-            investment.setCode(UUID.randomUUID().getMostSignificantBits() + "");
+            investment.setCode(generateCode());
             repository.save(investment);
         } else {
             Investment parent = repository.getOne(investment.getParent().getId());
@@ -74,11 +73,12 @@ public class InvestmentService extends CRUDService<Investment> {
                     thousandFormat(investment.getAmount() * investment.getExecutedPrice()) +
                     " دلار.";
             investment.setDescription(description);
-            repository.saveAndFlush(investment);
+            investment.setCode(generateCode());
+            repository.save(investment);
 
             Investment subtractInvestment = dto.getSubtractInvestment();
             description = "تهاتر " +
-                    thousandFormat(-subtractInvestment.getAmount()) +
+                    thousandFormat(subtractInvestment.getAmount()) +
                     " " +
                     parent.getInvestmentType().getName() +
                     " بعد از خرید " +
@@ -86,7 +86,10 @@ public class InvestmentService extends CRUDService<Investment> {
                     " " +
                     investmentType.getName();
 
+            Float amount = -1 * subtractInvestment.getAmount();
             subtractInvestment.setDescription(description);
+            subtractInvestment.setAmount(amount);
+            subtractInvestment.setCode(generateCode());
             repository.save(subtractInvestment);
         }
 
@@ -107,6 +110,9 @@ public class InvestmentService extends CRUDService<Investment> {
         }
     }
 
+    private String generateCode() {
+        return String.format("%d", random.nextInt(999999));
+    }
 
     @Override
     public void delete(Long id) {
@@ -134,12 +140,18 @@ public class InvestmentService extends CRUDService<Investment> {
         return formatter.format(number);
     }
 
-    public List<Investment> getByUserAndCode(Long userId, Long code) {
-        Specification<Investment> specification = (root, query, criteriaBuilder) ->
-                criteriaBuilder.and(
-                        criteriaBuilder.equal(root.get("user").get("id"), userId),
-                        criteriaBuilder.like(root.get("code"), code + "%")
-                );
+    public List<Investment> getByUserAndCode(Long userId, String code) {
+        Specification<Investment> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.isNotNull(root.get("user"));
+            if (code != null && !code.isEmpty())
+                predicate = criteriaBuilder.like(root.get("code"), code + "%");
+
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("user").get("id"), userId),
+                    criteriaBuilder.greaterThan(root.get("amount"), 0),
+                    predicate
+            );
+        };
 
         return repository.findAll(specification, Sort.by(Sort.Direction.ASC, "code"));
     }
@@ -168,5 +180,9 @@ public class InvestmentService extends CRUDService<Investment> {
 
 
         return repository.save(db_obj);
+    }
+
+    public List<Investment> getByUser(Long userId) {
+        return getByUserAndCode(userId, null);
     }
 }

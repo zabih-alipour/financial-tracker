@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -24,7 +25,12 @@ public class AppConfig {
     }
 
     @Bean
-    public ObjectMapper objectMapper(){
+    public SecureRandom random() {
+        return new SecureRandom();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -36,6 +42,7 @@ public class AppConfig {
 
         return mapper;
     }
+
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
