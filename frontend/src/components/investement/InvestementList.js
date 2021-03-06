@@ -18,6 +18,7 @@ import { grey, orange } from "@material-ui/core/colors";
 import { DeleteForever, Edit } from "@material-ui/icons";
 import React from "react";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
+import AmountDecorate from "../utils/AmountDecorate";
 import InvestmentForm from "./InvestmentForm";
 export default class InvestmentList extends React.Component {
   constructor(props) {
@@ -39,16 +40,18 @@ export default class InvestmentList extends React.Component {
       .then((data) => this.setState({ investments: data }));
   };
 
-  deleteInvestment=()=>{
-    const {selectedInvestment} = this.state;
+  deleteInvestment = () => {
+    const { selectedInvestment } = this.state;
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
-    fetch("/api/investments/" + selectedInvestment.id, requestOptions).then((res) => {
-      this.fetchData();
-    });
-  }
+    fetch("/api/investments/" + selectedInvestment.id, requestOptions).then(
+      (res) => {
+        this.fetchData();
+      }
+    );
+  };
 
   dialogHandler = (dialog, investment) => {
     this.setState({
@@ -66,7 +69,6 @@ export default class InvestmentList extends React.Component {
       this.fetchData();
     }
   };
-  
 
   showDialog = () => {
     const { dialog, selectedInvestment } = this.state;
@@ -91,7 +93,7 @@ export default class InvestmentList extends React.Component {
           onClose={this.onClose}
         />
       );
-    }else if (dialog === "DELETE_INVESTMENT") {
+    } else if (dialog === "DELETE_INVESTMENT") {
       return (
         <ConfirmationDialog
           data={selectedInvestment}
@@ -103,7 +105,8 @@ export default class InvestmentList extends React.Component {
           }
           bodyComponent={
             <DialogContentText id="alert-dialog-slide-description">
-              آیا مطمغن هستین که میخواید دارایی با کد {selectedInvestment.code} را حذف کنید؟
+              آیا مطمغن هستین که میخواید دارایی با کد {selectedInvestment.code}{" "}
+              را حذف کنید؟
             </DialogContentText>
           }
           onAccept={this.deleteInvestment}
@@ -112,6 +115,7 @@ export default class InvestmentList extends React.Component {
       );
     }
   };
+
   render() {
     const { investments } = this.state;
     const rows = investments.map((row, idx) => {
@@ -121,7 +125,10 @@ export default class InvestmentList extends React.Component {
           <TableCell align="center">{idx + 1}</TableCell>
           <TableCell align="center">{user.name}</TableCell>
           <TableCell align="center">{investmentType.name}</TableCell>
-          <TableCell align="center">{row.amount}</TableCell>
+          
+          <TableCell align="center">
+            <AmountDecorate amount={row.amount} />
+          </TableCell>
           <TableCell align="center">{row.executedPrice}</TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">{row.create_at}</TableCell>
@@ -130,8 +137,10 @@ export default class InvestmentList extends React.Component {
           </TableCell>
           <TableCell align="center">{row.description}</TableCell>
 
-          <TableCell alignItems="center">
-            <IconButton  onClick={() => this.dialogHandler("DELETE_INVESTMENT", row)}>
+          <TableCell align="center">
+            <IconButton
+              onClick={() => this.dialogHandler("DELETE_INVESTMENT", row)}
+            >
               <DeleteForever />
             </IconButton>
             <IconButton

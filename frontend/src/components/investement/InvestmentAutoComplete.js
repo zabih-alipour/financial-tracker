@@ -4,20 +4,21 @@ import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import React from "react";
 
-export default function InvestmentTypeAutoComplete(props) {
-  const [types, setTypes] = React.useState(props.types ? props.types : []);
-
-  const { type, onChange, fieldName, style } = props;
+export default function UserAutoComplete(props) {
+  const [investments, setInvestments] = React.useState(
+    props.investments ? props.investments : []
+  );
+  const { investment, onChange, fieldName, style, user } = props;
 
   React.useEffect(() => {
-    if (types.length === 0) {
-      fetch("/api/investment_types")
+    if (user) {
+      fetch("/api/investments/by-code/" + user.id)
         .then((response) => response.json())
         .then((data) => {
-          setTypes(data);
+          setInvestments(data);
         });
     }
-  }, [types, type]);
+  }, [user]);
 
   const onAutoCompleteChange = (event, value, reason) => {
     event = {
@@ -32,29 +33,31 @@ export default function InvestmentTypeAutoComplete(props) {
 
   return (
     <Autocomplete
-      id="investment-type-auto"
+      id="investment_type_auto"
       autoComplete
       onChange={onAutoCompleteChange}
-      value={type}
-      options={types}
+      // autoHighlight
+      fullWidth
+      value={investment}
+      options={investments}
       renderInput={(params) => (
         <TextField
-          {...params}
-          placeholder="نوع سرمایه"
-          variant="standard"
-          margin="normal"
           style={style}
+          {...params}
+          placeholder="دارایی"
+          variant="standard"
+          margin="dense"
         />
       )}
       getOptionLabel={(option) => {
-        return option.name;
+        return option.code;
       }}
       getOptionSelected={(option, value) => {
-        return option.name === value.name;
+        return option.code === value.code;
       }}
       renderOption={(option, { inputValue }) => {
-        const matches = match(option.name, inputValue);
-        const parts = parse(option.name, matches);
+        const matches = match(option.code, inputValue);
+        const parts = parse(option.code, matches);
         return (
           <Typography
             align="center"

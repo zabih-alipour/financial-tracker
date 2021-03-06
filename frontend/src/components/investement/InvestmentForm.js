@@ -3,10 +3,8 @@ import {
   Button,
   Container,
   Dialog,
-  Divider,
   Grid,
   IconButton,
-  Paper,
   Slide,
   TextField,
   Toolbar,
@@ -17,6 +15,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import SaveIcon from "@material-ui/icons/Save";
 import UserAutoComplete from "../user/UserAutoComplete";
 import InvestmentTypeAutoComplete from "./InvestmentTypeAutoComplete";
+import InvestmentAutoComplete from "./InvestmentAutoComplete";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -63,6 +62,21 @@ export default class InvestmentForm extends React.Component {
       },
     }));
   };
+  onParentChange = (event) => {
+    const parent = event.target.value;
+    this.setState((state) => ({
+      investment:{
+        ...state.investment,
+        parent: parent
+      },
+      subtract: {
+        ...state.subtract,
+        investmentType: parent.investmentType,
+        amount: parent.amount,
+      },
+    }));
+  };
+
   persistInvestment = () => {
     const { investment, change, subtract } = this.state;
     investment.change = change;
@@ -94,18 +108,22 @@ export default class InvestmentForm extends React.Component {
           <Grid item lg={12}>
             <Typography align="right">اطلاعات دارایی والد</Typography>
           </Grid>
+
           <Grid item sx={11}>
-            <InvestmentTypeAutoComplete
-              type={parent.investmentType}
-              fieldName={"investmentType"}
-              onChange={this.onSubtractChange}
-              style={{ width: "350px" }}
+            <TextField
+              inputProps={{ min: 0, style: { textAlign: "center" } }}
+              id="tf_parent_type"
+              variant="standard"
+              placeholder="نوغ والد"
+              margin="dense"
+              value={parent.investmentType ? parent.investmentType.name : ""}
+              disabled
             />
           </Grid>
           <Grid item sx>
             <TextField
               inputProps={{ min: 0, style: { textAlign: "center" } }}
-              id="tf_change_amount"
+              id="tf_subtract_amount"
               name="amount"
               variant="standard"
               placeholder="مقدار"
@@ -117,7 +135,7 @@ export default class InvestmentForm extends React.Component {
           <Grid item sx>
             <TextField
               inputProps={{ min: 0, style: { textAlign: "center" } }}
-              id="tf_change_executed_price"
+              id="subtract_executed_price"
               name="executedPrice"
               variant="standard"
               placeholder="قیمت اعمال شده"
@@ -235,6 +253,15 @@ export default class InvestmentForm extends React.Component {
                 margin="dense"
                 value={change ? change.executedPrice : ""}
                 onChange={(event) => this.onCoinChange(event)}
+              />
+            </Grid>
+            <Grid item sx>
+              <InvestmentAutoComplete
+                investment={investment.parent}
+                fieldName={"dummy"}
+                user={investment.user}
+                onChange={this.onParentChange}
+                style={{ width: "200px" }}
               />
             </Grid>
           </Grid>

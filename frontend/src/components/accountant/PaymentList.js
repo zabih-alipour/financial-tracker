@@ -20,6 +20,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import PaymentForm from "./PaymentForm";
 import TuneIcon from "@material-ui/icons/Tune";
+import AmountDecorate from "../utils/AmountDecorate";
 
 export default class PaymentList extends React.Component {
   constructor(props) {
@@ -147,7 +148,7 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">{row.code}</TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">
-            {row.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            <AmountDecorate amount = {row.amount} thousand={true}/>
           </TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">
