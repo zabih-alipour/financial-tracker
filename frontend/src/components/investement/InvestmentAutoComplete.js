@@ -42,6 +42,7 @@ export default function UserAutoComplete(props) {
       options={investments}
       renderInput={(params) => (
         <TextField
+          label="دارایی"
           style={style}
           {...params}
           placeholder="دارایی"

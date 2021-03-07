@@ -42,6 +42,7 @@ export default function UserAutoComplete(props) {
       renderInput={(params) => (
         <TextField style={style}
           {...params}
+          label="کاربر"
           placeholder="کاربر"
           variant="standard"
           margin="dense"

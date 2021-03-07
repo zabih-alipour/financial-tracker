@@ -20,6 +20,8 @@ import React from "react";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import AmountDecorate from "../utils/AmountDecorate";
 import InvestmentForm from "./InvestmentForm";
+import CircularProgressWithLabel from '../utils/CircularProgressWithLabel'
+
 export default class InvestmentList extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +37,7 @@ export default class InvestmentList extends React.Component {
   };
 
   fetchData = () => {
-    fetch("/api/investments")
+    fetch("/api/investments/v2")
       .then((response) => response.json())
       .then((data) => this.setState({ investments: data }));
   };
@@ -120,25 +122,25 @@ export default class InvestmentList extends React.Component {
     const { investments } = this.state;
     const rows = investments.map((row, idx) => {
       const { user, investmentType } = row;
+      const progress = row.spentAmount === null? 0 : (Math.abs(row.spentAmount)/ row.amount)*100;
       return (
         <TableRow key={idx}>
           <TableCell align="center">{idx + 1}</TableCell>
           <TableCell align="center">{user.name}</TableCell>
           <TableCell align="center">{investmentType.name}</TableCell>
-          
+          <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">
             <AmountDecorate amount={row.amount} />
           </TableCell>
           <TableCell align="center">{row.executedPrice}</TableCell>
-          <TableCell align="center">{row.shamsiDate}</TableCell>
-          <TableCell align="center">{row.create_at}</TableCell>
           <TableCell align="center">
-            {row.parent ? row.parent.code : ""}
+            <CircularProgressWithLabel value={progress} />
+           
           </TableCell>
-          <TableCell align="center">{row.description}</TableCell>
+          <TableCell align="center">{row.code}</TableCell>
 
           <TableCell align="center">
-            <IconButton
+            <IconButton disabled={row.spentAmount}
               onClick={() => this.dialogHandler("DELETE_INVESTMENT", row)}
             >
               <DeleteForever />
@@ -183,12 +185,11 @@ export default class InvestmentList extends React.Component {
                 <TableCell align="center">ردیف</TableCell>
                 <TableCell align="center">کاربر</TableCell>
                 <TableCell align="center">نوع سرمایه</TableCell>
+                <TableCell align="center">تاریخ</TableCell>
                 <TableCell align="center">مقدار</TableCell>
                 <TableCell align="center">قیمت خریداری شده</TableCell>
-                <TableCell align="center">تاریخ</TableCell>
-                <TableCell align="center">تاریخ ایجاد</TableCell>
-                <TableCell align="center">والد</TableCell>
-                <TableCell align="center">توضیحات</TableCell>
+                <TableCell align="center">مقدار مصرف شده</TableCell>
+                <TableCell align="center">کد</TableCell>
                 <TableCell align="center">فعالیت</TableCell>
               </TableRow>
             </TableHead>

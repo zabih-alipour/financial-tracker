@@ -73,6 +73,7 @@ export default class InvestmentForm extends React.Component {
         ...state.subtract,
         investmentType: parent.investmentType,
         amount: parent.amount,
+        remainAmount: parent.remain
       },
     }));
   };
@@ -97,7 +98,6 @@ export default class InvestmentForm extends React.Component {
       return (
         <Grid
           container
-          direction="row-reverse"
           spacing={3}
           style={{
             marginTop: "15px",
@@ -113,6 +113,7 @@ export default class InvestmentForm extends React.Component {
             <TextField
               inputProps={{ min: 0, style: { textAlign: "center" } }}
               id="tf_parent_type"
+              label="نوع والد"
               variant="standard"
               placeholder="نوغ والد"
               margin="dense"
@@ -123,12 +124,13 @@ export default class InvestmentForm extends React.Component {
           <Grid item sx>
             <TextField
               inputProps={{ min: 0, style: { textAlign: "center" } }}
+              label="مقدار"
               id="tf_subtract_amount"
               name="amount"
               variant="standard"
               placeholder="مقدار"
               margin="dense"
-              value={parent.amount}
+              value={parent.remainAmount}
               onChange={(event) => this.onSubtractChange(event)}
             />
           </Grid>
@@ -136,6 +138,7 @@ export default class InvestmentForm extends React.Component {
             <TextField
               inputProps={{ min: 0, style: { textAlign: "center" } }}
               id="subtract_executed_price"
+              label="قیمت اعمال شده"
               name="executedPrice"
               variant="standard"
               placeholder="قیمت اعمال شده"
@@ -178,7 +181,6 @@ export default class InvestmentForm extends React.Component {
         <Container style={{ padding: "20px" }}>
           <Grid
             container
-            direction="row-reverse"
             spacing={3}
             style={{
               marginTop: "5px",
@@ -201,6 +203,7 @@ export default class InvestmentForm extends React.Component {
               <TextField
                 inputProps={{ min: 0, style: { textAlign: "center" } }}
                 id="tf_shamsiDate"
+                label="تاریخ"
                 name="shamsiDate"
                 variant="standard"
                 placeholder="تاریخ"
@@ -212,7 +215,6 @@ export default class InvestmentForm extends React.Component {
           </Grid>
           <Grid
             container
-            direction="row-reverse"
             spacing={3}
             style={{
               marginTop: "15px",
@@ -235,6 +237,7 @@ export default class InvestmentForm extends React.Component {
               <TextField
                 inputProps={{ min: 0, style: { textAlign: "center" } }}
                 id="tf_coin_amount"
+                label="مقدار"
                 name="amount"
                 variant="standard"
                 placeholder="مقدار"
@@ -247,6 +250,7 @@ export default class InvestmentForm extends React.Component {
               <TextField
                 inputProps={{ min: 0, style: { textAlign: "center" } }}
                 id="tf_coin_executed_price"
+                label="قیمت اعمال شده"
                 name="executedPrice"
                 variant="standard"
                 placeholder="قیمت اعمال شده"
