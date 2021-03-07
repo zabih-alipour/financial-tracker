@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -70,7 +71,7 @@ class DataUtil {
         return all.stream().filter(p -> p.getCode().equals(code)).findFirst().orElse(null);
     }
 
-    public String thousandFormat(Float number) {
+    public String thousandFormat(BigDecimal number) {
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
 

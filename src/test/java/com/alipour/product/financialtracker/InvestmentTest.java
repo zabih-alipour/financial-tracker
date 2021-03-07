@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,8 +37,8 @@ class InvestmentTest {
         investment_rial_dto.setShamsiDate("1399/12/01");
         InvestmentDto.Coin rial = new InvestmentDto.Coin();
         rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
-        rial.setAmount(500_000F);
-        rial.setExecutedPrice(1F);
+        rial.setAmount(BigDecimal.valueOf(500_000F));
+        rial.setExecutedPrice(BigDecimal.valueOf(1F));
         investment_rial_dto.setChange(rial);
         Investment investment_rial = investmentService.add(investment_rial_dto);
         assertThat(investment_rial.getId()).isGreaterThan(0);
@@ -54,8 +55,8 @@ class InvestmentTest {
         investment_rial_dto.setShamsiDate("1399/12/01");
         InvestmentDto.Coin rial = new InvestmentDto.Coin();
         rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
-        rial.setAmount(50_000_000F);
-        rial.setExecutedPrice(1F);
+        rial.setAmount(BigDecimal.valueOf(50_000_000F));
+        rial.setExecutedPrice(BigDecimal.valueOf(1F));
         investment_rial_dto.setChange(rial);
         Investment investment_rial = investmentService.add(investment_rial_dto);
         assertThat(investment_rial.getId()).isGreaterThan(0);
@@ -69,13 +70,13 @@ class InvestmentTest {
         investment_bitcoin_dto.setParent(investment_rial);
         InvestmentDto.Coin bitcoin = new InvestmentDto.Coin();
         bitcoin.setInvestmentType(dataUtil.getInvestmentType("BITCOIN"));
-        bitcoin.setAmount(0.002F);
-        bitcoin.setExecutedPrice(9_010F);
+        bitcoin.setAmount(BigDecimal.valueOf(0.002F));
+        bitcoin.setExecutedPrice(BigDecimal.valueOf(9_010F));
         investment_bitcoin_dto.setChange(bitcoin);
         InvestmentDto.Coin subtract = new InvestmentDto.Coin();
         subtract.setInvestmentType(investment_rial.getInvestmentType());
-        subtract.setAmount(26_245_010F);
-        subtract.setExecutedPrice(1F);
+        subtract.setAmount(BigDecimal.valueOf(26_245_010F));
+        subtract.setExecutedPrice(BigDecimal.valueOf(1F));
         investment_bitcoin_dto.setSubtract(subtract);
         Investment investment_bitcoin = investmentService.add(investment_bitcoin_dto);
         assertThat(investment_bitcoin.getId()).isGreaterThan(0);
@@ -84,10 +85,10 @@ class InvestmentTest {
         List<Investment> children = investmentService.getByParent(investment_rial.getId());
         children.forEach(p -> {
             assertThat(Arrays.asList("خرید 0.002 بیت کوین از محل دارایی ریال به ارزش " +
-                            dataUtil.thousandFormat(p.getAmount() * p.getExecutedPrice()) +
+                            dataUtil.thousandFormat(p.getAmount().multiply(p.getExecutedPrice())) +
                             " دلار.",
                     "تهاتر " +
-                            dataUtil.thousandFormat(26245010F) +
+                            dataUtil.thousandFormat(BigDecimal.valueOf(26245010F)) +
                             " " +
                             subtract.getInvestmentType().getName() +
                             " بعد از خرید " +
@@ -107,8 +108,8 @@ class InvestmentTest {
         investment_rial_dto.setShamsiDate("1399/12/01");
         InvestmentDto.Coin rial = new InvestmentDto.Coin();
         rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
-        rial.setAmount(60_000_000F);
-        rial.setExecutedPrice(1F);
+        rial.setAmount(BigDecimal.valueOf(60_000_000F));
+        rial.setExecutedPrice(BigDecimal.valueOf(1F));
         investment_rial_dto.setChange(rial);
         Investment investment_rial = investmentService.add(investment_rial_dto);
         assertThat(investment_rial.getId()).isGreaterThan(0);
@@ -123,13 +124,13 @@ class InvestmentTest {
         investment_bitcoin_dto.setParent(investment_rial);
         InvestmentDto.Coin bitcoin = new InvestmentDto.Coin();
         bitcoin.setInvestmentType(dataUtil.getInvestmentType("BITCOIN"));
-        bitcoin.setAmount(0.002F);
-        bitcoin.setExecutedPrice(9_010F);
+        bitcoin.setAmount(BigDecimal.valueOf(0.002F));
+        bitcoin.setExecutedPrice(BigDecimal.valueOf(9_010F));
         investment_bitcoin_dto.setChange(bitcoin);
         InvestmentDto.Coin subtract_rial = new InvestmentDto.Coin();
         subtract_rial.setInvestmentType(investment_rial.getInvestmentType());
-        subtract_rial.setAmount(26_245_010F);
-        subtract_rial.setExecutedPrice(1F);
+        subtract_rial.setAmount(BigDecimal.valueOf(26_245_010F));
+        subtract_rial.setExecutedPrice(BigDecimal.valueOf(1F));
         investment_bitcoin_dto.setSubtract(subtract_rial);
         Investment investment_bitcoin = investmentService.add(investment_bitcoin_dto);
         assertThat(investment_bitcoin.getId()).isGreaterThan(0);
@@ -140,10 +141,10 @@ class InvestmentTest {
                 assertThat(Arrays.asList("خرید " +
                                 dataUtil.thousandFormat(bitcoin.getAmount()) +
                                 " بیت کوین از محل دارایی ریال به ارزش " +
-                                dataUtil.thousandFormat(p.getAmount() * p.getExecutedPrice()) +
+                                dataUtil.thousandFormat(p.getAmount() .multiply( p.getExecutedPrice())) +
                                 " دلار.",
                         "تهاتر " +
-                                dataUtil.thousandFormat(-subtract_rial.getAmount()) +
+                                dataUtil.thousandFormat(subtract_rial.getAmount().negate()) +
                                 " " +
                                 subtract_rial.getInvestmentType().getName() +
                                 " بعد از خرید " +
@@ -160,13 +161,13 @@ class InvestmentTest {
         investment_litcoin_dto.setParent(investment_bitcoin);
         InvestmentDto.Coin litcoin = new InvestmentDto.Coin();
         litcoin.setInvestmentType(dataUtil.getInvestmentType("LITCOIN"));
-        litcoin.setAmount(0.132142857F);
-        litcoin.setExecutedPrice(98F);
+        litcoin.setAmount(BigDecimal.valueOf(0.132142857F));
+        litcoin.setExecutedPrice(BigDecimal.valueOf(98F));
         investment_litcoin_dto.setChange(litcoin);
         InvestmentDto.Coin subtract_bitcoin = new InvestmentDto.Coin();
         subtract_bitcoin.setInvestmentType(investment_bitcoin.getInvestmentType());
-        subtract_bitcoin.setAmount(0.001F);
-        subtract_bitcoin.setExecutedPrice(12_950F);
+        subtract_bitcoin.setAmount(BigDecimal.valueOf(0.001F));
+        subtract_bitcoin.setExecutedPrice(BigDecimal.valueOf(12_950F));
         investment_litcoin_dto.setSubtract(subtract_bitcoin);
         Investment investment_litcoin = investmentService.add(investment_litcoin_dto);
         assertThat(investment_litcoin.getId()).isGreaterThan(0);
@@ -178,10 +179,10 @@ class InvestmentTest {
                         "خرید " +
                                 dataUtil.thousandFormat(litcoin.getAmount()) +
                                 " لایت کوین از محل دارایی بیت کوین به ارزش " +
-                                dataUtil.thousandFormat(p.getAmount() * p.getExecutedPrice()) +
+                                dataUtil.thousandFormat(p.getAmount().multiply( p.getExecutedPrice())) +
                                 " دلار.",
                         "تهاتر " +
-                                dataUtil.thousandFormat(-subtract_bitcoin.getAmount()) +
+                                dataUtil.thousandFormat(subtract_bitcoin.getAmount().negate()) +
                                 " " +
                                 subtract_bitcoin.getInvestmentType().getName() +
                                 " بعد از خرید " +
@@ -200,8 +201,8 @@ class InvestmentTest {
         investment_rial_dto.setShamsiDate("1399/11/01");
         InvestmentDto.Coin rial = new InvestmentDto.Coin();
         rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
-        rial.setAmount(800_000F);
-        rial.setExecutedPrice(1F);
+        rial.setAmount(BigDecimal.valueOf(800_000F));
+        rial.setExecutedPrice(BigDecimal.valueOf(1F));
         investment_rial_dto.setChange(rial);
         Investment investment_rial = investmentService.add(investment_rial_dto);
         assertThat(investment_rial.getId()).isGreaterThan(0);
@@ -215,13 +216,13 @@ class InvestmentTest {
         investment_bitcoin_dto.setParent(investment_rial);
         InvestmentDto.Coin bitcoin = new InvestmentDto.Coin();
         bitcoin.setInvestmentType(dataUtil.getInvestmentType("BITCOIN"));
-        bitcoin.setAmount(0.002F);
-        bitcoin.setExecutedPrice(9_010F);
+        bitcoin.setAmount(BigDecimal.valueOf(0.002F));
+        bitcoin.setExecutedPrice(BigDecimal.valueOf(9_010F));
         investment_bitcoin_dto.setChange(bitcoin);
         InvestmentDto.Coin subtract = new InvestmentDto.Coin();
         subtract.setInvestmentType(investment_rial.getInvestmentType());
-        subtract.setAmount(26_245_010F);
-        subtract.setExecutedPrice(1F);
+        subtract.setAmount(BigDecimal.valueOf(26_245_010F));
+        subtract.setExecutedPrice(BigDecimal.valueOf(1F));
         investment_bitcoin_dto.setSubtract(subtract);
         Investment investment_bitcoin = investmentService.add(investment_bitcoin_dto);
         assertThat(investment_bitcoin.getId()).isGreaterThan(0);
