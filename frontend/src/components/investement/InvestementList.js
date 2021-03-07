@@ -21,6 +21,7 @@ import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import AmountDecorate from "../utils/AmountDecorate";
 import InvestmentForm from "./InvestmentForm";
 import CircularProgressWithLabel from '../utils/CircularProgressWithLabel'
+import ListHeader from "../utils/ListHeader";
 
 export default class InvestmentList extends React.Component {
   constructor(props) {
@@ -156,28 +157,19 @@ export default class InvestmentList extends React.Component {
     });
     return (
       <Container component="div" fixed style={{ marginTop: "5px" }}>
-        <Grid className="header" container>
-          <Grid item xs={11}>
-            <Typography
-              variant="h6"
-              dir="rtl"
-              style={{ color: grey[300], fontSize: 30 }}
-            >
-              سرمایه گذاری ها
-            </Typography>
-          </Grid>
-
-          <Grid item xs>
+        <ListHeader
+          titleArea={"سرمایه گذاری ها"}
+          searchArea={<div></div>}
+          buttonAria={
             <Button
               onClick={() => this.dialogHandler("INVESTMENT_FORM", null)}
               variant="outlined"
-              fullWidth
               style={{ backgroundColor: "white" }}
             >
               جــدیــد
             </Button>
-          </Grid>
-        </Grid>
+          }
+        />
         <TableContainer component={Paper}>
           <Table>
             <TableHead style={{ backgroundColor: orange[200] }}>

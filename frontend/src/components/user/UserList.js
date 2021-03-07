@@ -6,6 +6,7 @@ import {
   IconButton,
   DialogTitle,
   DialogContentText,
+  Container
 } from "@material-ui/core";
 import UserListItem from "./UserListItem";
 import { yellow, grey } from "@material-ui/core/colors";
@@ -14,6 +15,7 @@ import "./UserList.css";
 import AlertDialogSlide from "../dialog/ConfirmationDialog";
 import UserForm from "./UserForm";
 import PaymentListPopup from "../accountant/PaymentListPopup";
+import ListHeader from "../utils/ListHeader";
 
 export default class UserList extends React.Component {
   constructor(props) {
@@ -124,23 +126,10 @@ export default class UserList extends React.Component {
       );
     });
     return (
-      <div style={{ width: "60%", margin: "auto" }}>
-        <Grid
-          className="header"
-          container
-          direction="row-reverse"
-          alignItems="center"
-        >
-          <Grid item xs>
-            <Typography
-              variant="h6"
-              dir="rtl"
-              style={{ color: grey[300], fontSize: 30 }}
-            >
-              کاربران
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
+      <Container>
+        <ListHeader
+          titleArea={"کاربران"}
+          searchArea={
             <TextField
               fullWidth
               inputProps={{ min: 0, style: { textAlign: "center" } }}
@@ -149,16 +138,17 @@ export default class UserList extends React.Component {
               placeholder="جستجو"
               onChange={(event) => this.onChange(event)}
             />
-          </Grid>
-          <Grid item xs>
+          }
+          buttonAria={
             <IconButton onClick={() => this.dialogHandler("USER_FORM", null)}>
               <PersonAddIcon style={{ color: yellow[500], fontSize: 40 }} />
             </IconButton>
-          </Grid>
-        </Grid>
+          }
+        />
+
         {userItems}
         {this.showDialog()}
-      </div>
+      </Container>
     );
   }
 }

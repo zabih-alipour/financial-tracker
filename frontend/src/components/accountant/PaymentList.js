@@ -1,5 +1,6 @@
 import {
   Button,
+  Container,
   DialogContentText,
   DialogTitle,
   Grid,
@@ -21,6 +22,7 @@ import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import PaymentForm from "./PaymentForm";
 import TuneIcon from "@material-ui/icons/Tune";
 import AmountDecorate from "../utils/AmountDecorate";
+import ListHeader from "../utils/ListHeader";
 
 export default class PaymentList extends React.Component {
   constructor(props) {
@@ -148,7 +150,7 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">{row.code}</TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">
-            <AmountDecorate amount = {row.amount} thousand={true}/>
+            <AmountDecorate amount={row.amount} thousand={true} />
           </TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">
@@ -191,36 +193,20 @@ export default class PaymentList extends React.Component {
     });
 
     return (
-      <div
-        style={{
-          marginTop: "20px",
-          margin: "10px auto ",
-          width: "70%",
-          flex: "row",
-        }}
-      >
-        <Grid className="header" container alignItems="center">
-          <Grid item xs={11}>
-            <Typography
-              variant="h6"
-              dir="rtl"
-              style={{ color: grey[300], fontSize: 30 }}
-            >
-              پرداخت ها
-            </Typography>
-          </Grid>
-
-          <Grid item xs>
+      <Container>
+        <ListHeader
+          titleArea={"پرداخت ها"}
+          searchArea={<div></div>}
+          buttonAria={
             <Button
               onClick={() => this.dialogHandler("PAYMENT_FORM", null)}
-              variant="outlined"
-              fullWidth
+              variant="contained"
               style={{ backgroundColor: "white" }}
             >
               جــدیــد
             </Button>
-          </Grid>
-        </Grid>
+          }
+        />
         <TableContainer component={Paper}>
           <Table>
             <TableHead style={{ backgroundColor: "orange" }}>
@@ -240,7 +226,7 @@ export default class PaymentList extends React.Component {
           </Table>
         </TableContainer>
         {this.showDialog()}
-      </div>
+      </Container>
     );
   }
 }

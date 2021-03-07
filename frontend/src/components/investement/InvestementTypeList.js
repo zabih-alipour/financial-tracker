@@ -16,6 +16,7 @@ import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import { grey } from "@material-ui/core/colors";
 import InvestmentTypeForm from "./InvestmentTypeForm";
+import ListHeader from "../utils/ListHeader";
 export default class InvestementTypeList extends React.Component {
   constructor(props) {
     super(props);
@@ -77,7 +78,7 @@ export default class InvestementTypeList extends React.Component {
           <TableCell align="center">{"20%"}</TableCell>
           <TableCell align="center">
             <IconButton onClick={() => this.dialogHandler("TYPE_FORM", type)}>
-              <EditIcon color="primary"/>
+              <EditIcon color="primary" />
             </IconButton>
           </TableCell>
         </TableRow>
@@ -85,28 +86,20 @@ export default class InvestementTypeList extends React.Component {
     });
     return (
       <Container>
-        <Grid className="header" container alignItems="center">
-          <Grid item xs={11}>
-            <Typography
-              variant="h6"
-              dir="rtl"
-              style={{ color: grey[300], fontSize: 30 }}
-            >
-              سبد سرمایه
-            </Typography>
-          </Grid>
-
-          <Grid item xs>
+        <ListHeader
+          titleArea={"سبد سرمایه"}
+          searchArea={<div></div>}
+          buttonAria={
             <Button
               onClick={() => this.dialogHandler("TYPE_FORM", null)}
               variant="outlined"
-              fullWidth
               style={{ backgroundColor: "white" }}
             >
               جــدیــد
             </Button>
-          </Grid>
-        </Grid>
+          }
+        />
+
         <TableContainer component={Paper}>
           <Table>
             <TableHead style={{ backgroundColor: "orange" }}>
