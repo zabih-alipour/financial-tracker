@@ -4,6 +4,7 @@ import com.alipour.product.financialtracker.common.CRUDController;
 import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.service.InvestmentService;
+import com.alipour.product.financialtracker.investment.views.VwInvestment;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,14 +34,21 @@ public class InvestmentController extends CRUDController<Investment> {
         return ((InvestmentService) service).edit(entity);
     }
 
+    @GetMapping("/v2")
+    @ResponseBody
+    public List<VwInvestment> search() {
+        return ((InvestmentService) service).search();
+    }
+
     @GetMapping("/by-code/{userId}")
     @ResponseBody
-    public List<Investment> getByUser(@PathVariable("userId") Long userId) {
+    public List<VwInvestment> getByUser(@PathVariable("userId") Long userId) {
         return ((InvestmentService) service).getByUser(userId);
     }
+
     @GetMapping("/by-code/{userId}/{code}")
     @ResponseBody
-    public List<Investment> getByCode(@PathVariable("userId") Long userId, @PathVariable("code") String code) {
+    public List<VwInvestment> getByCode(@PathVariable("userId") Long userId, @PathVariable("code") String code) {
         return ((InvestmentService) service).getByUserAndCode(userId, code);
     }
 }

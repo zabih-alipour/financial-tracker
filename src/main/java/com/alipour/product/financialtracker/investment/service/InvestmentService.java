@@ -6,6 +6,8 @@ import com.alipour.product.financialtracker.common.NotSupportException;
 import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.repository.InvestmentRepository;
+import com.alipour.product.financialtracker.investment.repository.VwInvestmentRepository;
+import com.alipour.product.financialtracker.investment.views.VwInvestment;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.repository.InvestmentTypeRepository;
 import org.springframework.data.domain.Sort;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -34,11 +38,14 @@ public class InvestmentService extends CRUDService<Investment> {
     private final InvestmentRepository repository;
     private final InvestmentTypeRepository typeRepository;
     private final SecureRandom random;
+    private final VwInvestmentRepository vwInvestmentRepository;
 
-    public InvestmentService(InvestmentRepository repository, InvestmentTypeRepository typeRepository, SecureRandom random) {
+
+    public InvestmentService(InvestmentRepository repository, InvestmentTypeRepository typeRepository, SecureRandom random, VwInvestmentRepository vwInvestmentRepository) {
         this.repository = repository;
         this.typeRepository = typeRepository;
         this.random = random;
+        this.vwInvestmentRepository = vwInvestmentRepository;
     }
 
     @Override
@@ -55,29 +62,14 @@ public class InvestmentService extends CRUDService<Investment> {
 
         if (dto.getParent() == null) {
             investment.setDescription("پس انداز ریالی");
-            investment.setCode(generateCode());
-            repository.save(investment);
         } else {
+            InvestmentType investmentType = typeRepository.getOne(investment.getInvestmentType().getId());
             Investment parent = repository.getOne(investment.getParent().getId());
             validate(dto, parent.getInvestmentType());
 
-            InvestmentType investmentType = typeRepository.getOne(investment.getInvestmentType().getId());
-            String parentTypeName = parent.getInvestmentType().getName();
-            String description = "خرید " +
-                    thousandFormat(investment.getAmount()) +
-                    " " +
-                    investmentType.getName() +
-                    " از محل دارایی " +
-                    parentTypeName +
-                    " به ارزش " +
-                    thousandFormat(investment.getAmount() * investment.getExecutedPrice()) +
-                    " دلار.";
-            investment.setDescription(description);
-            investment.setCode(generateCode());
-            repository.save(investment);
 
             Investment subtractInvestment = dto.getSubtractInvestment();
-            description = "تهاتر " +
+            String description = "تهاتر " +
                     thousandFormat(subtractInvestment.getAmount()) +
                     " " +
                     parent.getInvestmentType().getName() +
@@ -86,12 +78,30 @@ public class InvestmentService extends CRUDService<Investment> {
                     " " +
                     investmentType.getName();
 
-            Float amount = -1 * subtractInvestment.getAmount();
+            BigDecimal amount = subtractInvestment.getAmount().multiply(BigDecimal.valueOf(-1));
             subtractInvestment.setDescription(description);
             subtractInvestment.setAmount(amount);
             subtractInvestment.setCode(generateCode());
             repository.save(subtractInvestment);
+
+
+            String parentTypeName = parent.getInvestmentType().getName();
+            description = "خرید " +
+                    thousandFormat(investment.getAmount()) +
+                    " " +
+                    investmentType.getName() +
+                    " از محل دارایی " +
+                    parentTypeName +
+                    " به ارزش " +
+                    thousandFormat(investment.getAmount().multiply(investment.getExecutedPrice())) +
+                    " دلار.";
+            investment.setDescription(description);
+            investment.setParent(subtractInvestment);
+
+
         }
+        investment.setCode(generateCode());
+        repository.save(investment);
 
         return investment;
 
@@ -102,9 +112,9 @@ public class InvestmentService extends CRUDService<Investment> {
             Investment changeInvestment = dto.getChangeInvestment();
             Investment subtractInvestment = dto.getSubtractInvestment();
 
-            float exchange = Math.round(changeInvestment.getAmount() * changeInvestment.getExecutedPrice());
-            float subtract = Math.round(Math.abs(subtractInvestment.getAmount() * subtractInvestment.getExecutedPrice()));
-            if (exchange != subtract) {
+            BigDecimal exchange = changeInvestment.getAmount().multiply(changeInvestment.getExecutedPrice()).round(MathContext.DECIMAL64);
+            BigDecimal subtract = subtractInvestment.getAmount().multiply(subtractInvestment.getExecutedPrice()).abs();
+            if (exchange.equals(subtract)) {
                 throw new BusinessException(String.format("مقدار کوین دریافتی %f با مقدار کوین مصرفی %f همخوانی ندارد", exchange, subtract));
             }
         }
@@ -116,8 +126,12 @@ public class InvestmentService extends CRUDService<Investment> {
 
     @Override
     public void delete(Long id) {
+        Investment investment = repository.getOne(id);
+        Investment parent = investment.getParent();
         repository.getByParentId(id).forEach(repository::delete);
-        super.delete(id);
+        repository.delete(investment);
+        if (parent != null)
+            repository.delete(parent);
     }
 
     @Override
@@ -131,7 +145,7 @@ public class InvestmentService extends CRUDService<Investment> {
 
     }
 
-    private String thousandFormat(Float number) {
+    private String thousandFormat(BigDecimal number) {
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
 
@@ -140,8 +154,26 @@ public class InvestmentService extends CRUDService<Investment> {
         return formatter.format(number);
     }
 
-    public List<Investment> getByUserAndCode(Long userId, String code) {
+    public List<Investment> findAll(Long userId, String parentCode) {
         Specification<Investment> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.isNotNull(root.get("user"));
+            if (parentCode != null && !parentCode.isEmpty())
+                predicate = criteriaBuilder.like(root.get("parent").get("code"), parentCode + "%");
+
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("user").get("id"), userId),
+                    predicate
+            );
+        };
+        return repository.findAll(specification, Sort.by(Sort.Direction.ASC, "shamsiDate"));
+    }
+
+    public List<VwInvestment> search() {
+        return vwInvestmentRepository.findAll(Sort.by(Sort.Direction.DESC, "shamsiDate"));
+    }
+
+    public List<VwInvestment> getByUserAndCode(Long userId, String code) {
+        Specification<VwInvestment> specification = (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.isNotNull(root.get("user"));
             if (code != null && !code.isEmpty())
                 predicate = criteriaBuilder.like(root.get("code"), code + "%");
@@ -153,7 +185,7 @@ public class InvestmentService extends CRUDService<Investment> {
             );
         };
 
-        return repository.findAll(specification, Sort.by(Sort.Direction.ASC, "code"));
+        return vwInvestmentRepository.findAll(specification, Sort.by(Sort.Direction.ASC, "code"));
     }
 
     public Investment edit(InvestmentDto dto) {
@@ -175,14 +207,14 @@ public class InvestmentService extends CRUDService<Investment> {
                     " از محل دارایی " +
                     db_obj.getParent().getInvestmentType().getName() +
                     " به ارزش " +
-                    thousandFormat(investment.getAmount() * investment.getExecutedPrice()) +
+                    thousandFormat(investment.getAmount().multiply(investment.getExecutedPrice())) +
                     " دلار.");
 
 
         return repository.save(db_obj);
     }
 
-    public List<Investment> getByUser(Long userId) {
+    public List<VwInvestment> getByUser(Long userId) {
         return getByUserAndCode(userId, null);
     }
 }

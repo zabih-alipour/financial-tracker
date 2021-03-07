@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -30,10 +31,10 @@ public class Investment extends ParentEntity implements Cloneable {
     private String shamsiDate;
 
     @Column(name = "amount", nullable = false)
-    private Float amount;
+    private BigDecimal amount;
 
     @Column(name = "executed_price", nullable = false)
-    private Float executedPrice;
+    private BigDecimal executedPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "investment_type_id", nullable = false, foreignKey = @ForeignKey(name = "fk_type_of_investment"))
@@ -53,7 +54,7 @@ public class Investment extends ParentEntity implements Cloneable {
     private LocalDateTime create_at;
 
     @Transient
-    private Float spendAmount;
+    private BigDecimal spendAmount;
 
     public Investment(Long id) {
         super(id);

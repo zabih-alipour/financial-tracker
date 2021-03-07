@@ -7,6 +7,8 @@ import com.alipour.product.financialtracker.user.models.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class InvestmentDto extends ParentDto {
@@ -18,8 +20,8 @@ public class InvestmentDto extends ParentDto {
 
     @Data
     public static class Coin {
-        private Float amount;
-        private Float executedPrice;
+        private BigDecimal amount;
+        private BigDecimal executedPrice;
         private InvestmentType investmentType;
     }
 
