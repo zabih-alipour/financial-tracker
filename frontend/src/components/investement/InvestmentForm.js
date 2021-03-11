@@ -72,8 +72,7 @@ export default class InvestmentForm extends React.Component {
       subtract: {
         ...state.subtract,
         investmentType: parent.investmentType,
-        amount: parent.amount,
-        remainAmount: parent.remain
+        amount: parent.remain
       },
     }));
   };
@@ -93,7 +92,8 @@ export default class InvestmentForm extends React.Component {
     });
   };
 
-  parentpanel = (parent) => {
+  parentpanel = () => {
+    const parent = this.state.subtract;
     if (parent) {
       return (
         <Grid
@@ -130,7 +130,7 @@ export default class InvestmentForm extends React.Component {
               variant="standard"
               placeholder="مقدار"
               margin="dense"
-              value={parent.remainAmount}
+              value={parent.amount}
               onChange={(event) => this.onSubtractChange(event)}
             />
           </Grid>
@@ -153,7 +153,7 @@ export default class InvestmentForm extends React.Component {
   };
 
   render() {
-    const { open, investment, change, subtract } = this.state;
+    const { open, investment, change } = this.state;
     const title = investment.id == null ? " ثبت سرمایه" : " ویرایش  سرمایه";
 
     return (
@@ -261,15 +261,15 @@ export default class InvestmentForm extends React.Component {
             </Grid>
             <Grid item sx>
               <InvestmentAutoComplete
-                investment={investment.parent}
+                investment={investment.investment}
                 fieldName={"dummy"}
                 user={investment.user}
                 onChange={this.onParentChange}
-                style={{ width: "200px" }}
+                style={{ width: "300px" }}
               />
             </Grid>
           </Grid>
-          {this.parentpanel(subtract)}
+          {this.parentpanel()}
           <Button
             variant="contained"
             fullWidth

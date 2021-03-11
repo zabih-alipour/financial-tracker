@@ -14,14 +14,16 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { grey, orange } from "@material-ui/core/colors";
+import { blue, green, grey, orange, red } from "@material-ui/core/colors";
 import { DeleteForever, Edit } from "@material-ui/icons";
 import React from "react";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import AmountDecorate from "../utils/AmountDecorate";
 import InvestmentForm from "./InvestmentForm";
-import CircularProgressWithLabel from '../utils/CircularProgressWithLabel'
+import CircularProgressWithLabel from "../utils/CircularProgressWithLabel";
 import ListHeader from "../utils/ListHeader";
+import TuneIcon from "@material-ui/icons/Tune";
+import InvestmentDetail from "./InvestmentDetails";
 
 export default class InvestmentList extends React.Component {
   constructor(props) {
@@ -62,6 +64,7 @@ export default class InvestmentList extends React.Component {
       selectedInvestment: investment,
     });
   };
+
   onClose = (status) => {
     this.setState({
       dialog: "",
@@ -86,6 +89,11 @@ export default class InvestmentList extends React.Component {
             investmentType: selectedInvestment.investmentType,
             amount: selectedInvestment.amount,
             executedPrice: selectedInvestment.executedPrice,
+          },
+          subtract: {
+            investmentType: selectedInvestment.investment.investmentType,
+            amount: Math.abs(selectedInvestment.investment.amount),
+            executedPrice: selectedInvestment.investment.executedPrice,
           },
         };
       }
@@ -116,6 +124,14 @@ export default class InvestmentList extends React.Component {
           onClose={this.onClose}
         />
       );
+    } else if (dialog === "INVESTMENT_DETAIL") {
+      return (
+        <InvestmentDetail
+          openDialog={true}
+          investment={selectedInvestment}
+          onClose={this.onClose}
+        />
+      );
     }
   };
 
@@ -123,7 +139,10 @@ export default class InvestmentList extends React.Component {
     const { investments } = this.state;
     const rows = investments.map((row, idx) => {
       const { user, investmentType } = row;
-      const progress = row.spentAmount === null? 0 : (Math.abs(row.spentAmount)/ row.amount)*100;
+      const progress =
+        row.spentAmount === null
+          ? 0
+          : (Math.abs(row.spentAmount) / row.amount) * 100;
       return (
         <TableRow key={idx}>
           <TableCell align="center">{idx + 1}</TableCell>
@@ -136,20 +155,27 @@ export default class InvestmentList extends React.Component {
           <TableCell align="center">{row.executedPrice}</TableCell>
           <TableCell align="center">
             <CircularProgressWithLabel value={progress} />
-           
           </TableCell>
           <TableCell align="center">{row.code}</TableCell>
 
           <TableCell align="center">
-            <IconButton disabled={row.spentAmount}
-              onClick={() => this.dialogHandler("DELETE_INVESTMENT", row)}
+            <IconButton
+              onClick={() => this.dialogHandler("INVESTMENT_DETAIL", row)}
             >
-              <DeleteForever />
+              <TuneIcon style={{ color: blue[400] }} />
             </IconButton>
             <IconButton
               onClick={() => this.dialogHandler("INVESTMENT_FORM", row)}
             >
-              <Edit />
+              <Edit style={{ color: green[500] }} />
+            </IconButton>
+            <IconButton
+              disabled={row.spentAmount}
+              onClick={() => this.dialogHandler("DELETE_INVESTMENT", row)}
+            >
+              <DeleteForever
+                style={{ color: row.spentAmount ? grey[400] : red[400] }}
+              />
             </IconButton>
           </TableCell>
         </TableRow>

@@ -1,4 +1,4 @@
-import { Container, TextField, IconButton } from "@material-ui/core";
+import { Container, TextField, IconButton, Box } from "@material-ui/core";
 import React from "react";
 import ListHeader from "../utils/ListHeader";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -21,7 +21,7 @@ class Home extends React.Component {
             />
           }
           buttonAria={
-            <IconButton >
+            <IconButton>
               <PersonAddIcon style={{ color: yellow[500], fontSize: 40 }} />
             </IconButton>
           }

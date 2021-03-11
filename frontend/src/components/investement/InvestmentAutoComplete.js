@@ -1,4 +1,4 @@
-import { TextField, Typography } from "@material-ui/core";
+import { Box, TextField, Typography } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
@@ -57,30 +57,39 @@ export default function UserAutoComplete(props) {
         return option.code === value.code;
       }}
       renderOption={(option, { inputValue }) => {
-        const matches = match(option.code, inputValue);
-        const parts = parse(option.code, matches);
-        return (
-          <Typography
-            align="center"
-            style={{
-              width: "100%",
-              padding: "5px",
-              borderBottom: "1px dotted",
-            }}
-          >
-            {parts.map((part, index) => (
-              <Typography
-                key={index}
-                style={{
-                  display: "inline",
-                  fontWeight: part.highlight ? 700 : 400,
-                }}
-              >
-                {part.text}
-              </Typography>
-            ))}
-          </Typography>
-        );
+        console.log(option.id +" = " + investment );
+        if (true) {
+          const matches = match(option.code, inputValue);
+          const parts = parse(option.code, matches);
+          return (
+            <Box fontSize={12} borderBottom={1} width={1}>
+              <Box width={1} color="info.main" fontSize={15}>
+                {option.investmentType.name}
+              </Box>
+              <Box width={1} p={1}>
+                <Box display="inline-block" width="40%">
+                  {parts.map((part, index) => (
+                    <Typography
+                      key={index}
+                      style={{
+                        display: "inline",
+                        fontWeight: part.highlight ? 700 : 400,
+                      }}
+                    >
+                      {part.text}
+                    </Typography>
+                  ))}
+                </Box>
+                <Box display="inline-block" width="30%">
+                  {option.remain}
+                </Box>
+                <Box display="inline-block" width="30%">
+                  {option.shamsiDate}
+                </Box>
+              </Box>
+            </Box>
+          );
+        } else return null;
       }}
     />
   );
