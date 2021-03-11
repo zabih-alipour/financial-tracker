@@ -51,4 +51,10 @@ public class InvestmentController extends CRUDController<Investment> {
     public List<VwInvestment> getByCode(@PathVariable("userId") Long userId, @PathVariable("code") String code) {
         return ((InvestmentService) service).getByUserAndCode(userId, code);
     }
+
+    @GetMapping("/details/{id}")
+    @ResponseBody
+    public List<Investment> getByCode(@PathVariable("id") Long id) {
+        return ((InvestmentService) service).getByParent(id);
+    }
 }

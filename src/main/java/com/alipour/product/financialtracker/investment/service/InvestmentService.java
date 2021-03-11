@@ -67,23 +67,14 @@ public class InvestmentService extends CRUDService<Investment> {
             Investment parent = repository.getOne(investment.getParent().getId());
             validate(dto, parent.getInvestmentType());
 
-
             Investment subtractInvestment = dto.getSubtractInvestment();
-            String description = "تهاتر " +
-                    thousandFormat(subtractInvestment.getAmount()) +
-                    " " +
-                    parent.getInvestmentType().getName() +
-                    " بعد از خرید " +
-                    thousandFormat(investment.getAmount()) +
-                    " " +
-                    investmentType.getName();
+            String description = getParentDescription(investment, investmentType, parent, subtractInvestment);
 
             BigDecimal amount = subtractInvestment.getAmount().multiply(BigDecimal.valueOf(-1));
             subtractInvestment.setDescription(description);
             subtractInvestment.setAmount(amount);
             subtractInvestment.setCode(generateCode());
             repository.save(subtractInvestment);
-
 
             String parentTypeName = parent.getInvestmentType().getName();
             description = "خرید " +
@@ -97,7 +88,6 @@ public class InvestmentService extends CRUDService<Investment> {
                     " دلار.";
             investment.setDescription(description);
             investment.setParent(subtractInvestment);
-
 
         }
         investment.setCode(generateCode());
@@ -191,27 +181,61 @@ public class InvestmentService extends CRUDService<Investment> {
     public Investment edit(InvestmentDto dto) {
         Investment investment = dto.getChangeInvestment();
         Investment db_obj = repository.getOne(dto.getId());
+        InvestmentType investmentType = typeRepository.getOne(investment.getInvestmentType().getId());
 
-        if (!repository.getByParentId(db_obj.getId()).isEmpty()) {
-            throw new NotSupportException("امکان ویرایش وجود ندارد. ابتدا باید زیر شاخه ها حذف شوند");
-        }
         db_obj.setShamsiDate(investment.getShamsiDate());
         db_obj.setAmount(investment.getAmount());
-        db_obj.setUser(investment.getUser());
         db_obj.setExecutedPrice(investment.getExecutedPrice());
-        if (db_obj.getInvestmentType().getId() != 1L)
-            db_obj.setDescription("خرید " +
-                    thousandFormat(db_obj.getAmount()) +
-                    " " +
-                    db_obj.getInvestmentType().getName() +
-                    " از محل دارایی " +
-                    db_obj.getParent().getInvestmentType().getName() +
-                    " به ارزش " +
-                    thousandFormat(investment.getAmount().multiply(investment.getExecutedPrice())) +
-                    " دلار.");
+        db_obj.setUser(investment.getUser());
+        db_obj.setDescription("خرید " +
+                thousandFormat(db_obj.getAmount()) +
+                " " +
+                db_obj.getInvestmentType().getName() +
+                " از محل دارایی " +
+                db_obj.getParent().getInvestmentType().getName() +
+                " به ارزش " +
+                thousandFormat(investment.getAmount().multiply(investment.getExecutedPrice())) +
+                " دلار.");
 
-
+        if (dto.getParent() != null && db_obj.getParent() == null) {
+            addParent(dto, investment, investmentType);
+        } else if (dto.getParent() == null && db_obj.getParent() != null) {
+            repository.delete(db_obj.getParent());
+        } else if (dto.getParent() != null && db_obj.getParent() != null) {
+            if (!dto.getParent().getId().equals(db_obj.getParent().getId())) {
+                throw new NotSupportException("امکان ویرایش والد وجود ندارد.");
+            }
+            Investment parent = dto.getSubtractInvestment();
+            db_obj.setAmount(parent.getAmount());
+            db_obj.setExecutedPrice(parent.getExecutedPrice());
+            db_obj.setDescription(getParentDescription(investment, investmentType, parent, parent));
+        }
         return repository.save(db_obj);
+    }
+
+    private void addParent(InvestmentDto dto, Investment investment, InvestmentType investmentType) {
+        Investment parent = repository.getOne(investment.getParent().getId());
+        validate(dto, parent.getInvestmentType());
+
+        Investment subtractInvestment = dto.getSubtractInvestment();
+        String description = getParentDescription(investment, investmentType, parent, subtractInvestment);
+        BigDecimal amount = subtractInvestment.getAmount().multiply(BigDecimal.valueOf(-1));
+
+        subtractInvestment.setDescription(description);
+        subtractInvestment.setAmount(amount);
+        subtractInvestment.setCode(generateCode());
+        repository.save(subtractInvestment);
+    }
+
+    private String getParentDescription(Investment investment, InvestmentType investmentType, Investment parent, Investment subtractInvestment) {
+        return "تهاتر " +
+                thousandFormat(subtractInvestment.getAmount()) +
+                " " +
+                parent.getInvestmentType().getName() +
+                " بعد از خرید " +
+                thousandFormat(investment.getAmount()) +
+                " " +
+                investmentType.getName();
     }
 
     public List<VwInvestment> getByUser(Long userId) {
