@@ -90,12 +90,14 @@ export default class InvestmentList extends React.Component {
             amount: selectedInvestment.amount,
             executedPrice: selectedInvestment.executedPrice,
           },
-          subtract: {
+        };
+        if (selectedInvestment.investment) {
+          investment["subtract"] = {
             investmentType: selectedInvestment.investment.investmentType,
             amount: Math.abs(selectedInvestment.investment.amount),
             executedPrice: selectedInvestment.investment.executedPrice,
-          },
-        };
+          };
+        }
       }
       return (
         <InvestmentForm

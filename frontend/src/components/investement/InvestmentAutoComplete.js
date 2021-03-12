@@ -15,7 +15,7 @@ export default function UserAutoComplete(props) {
       fetch("/api/investments/by-code/" + user.id)
         .then((response) => response.json())
         .then((data) => {
-          setInvestments(data);
+          setInvestments(data.filter((p) => p.remain > 0));
         });
     }
   }, [user]);
@@ -57,7 +57,6 @@ export default function UserAutoComplete(props) {
         return option.code === value.code;
       }}
       renderOption={(option, { inputValue }) => {
-        console.log(option.id +" = " + investment );
         if (true) {
           const matches = match(option.code, inputValue);
           const parts = parse(option.code, matches);
