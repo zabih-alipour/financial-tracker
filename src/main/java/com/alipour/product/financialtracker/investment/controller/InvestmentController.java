@@ -5,6 +5,7 @@ import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.service.InvestmentService;
 import com.alipour.product.financialtracker.investment.views.VwInvestment;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/investments")
+@Slf4j
 public class InvestmentController extends CRUDController<Investment> {
     public InvestmentController(InvestmentService investmentService) {
         super(investmentService);

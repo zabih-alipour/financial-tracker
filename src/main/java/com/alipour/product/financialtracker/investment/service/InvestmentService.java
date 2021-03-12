@@ -85,7 +85,7 @@ public class InvestmentService extends CRUDService<Investment> {
                     parentTypeName +
                     " به ارزش " +
                     thousandFormat(investment.getAmount().multiply(investment.getExecutedPrice())) +
-                    " دلار.";
+                    " ".concat(parent.getInvestmentType().getId() == 1 ? "تومان." : "دلار.");
             investment.setDescription(description);
             investment.setParent(subtractInvestment);
 
@@ -187,15 +187,19 @@ public class InvestmentService extends CRUDService<Investment> {
         db_obj.setAmount(investment.getAmount());
         db_obj.setExecutedPrice(investment.getExecutedPrice());
         db_obj.setUser(investment.getUser());
-        db_obj.setDescription("خرید " +
-                thousandFormat(db_obj.getAmount()) +
-                " " +
-                db_obj.getInvestmentType().getName() +
-                " از محل دارایی " +
-                db_obj.getParent().getInvestmentType().getName() +
-                " به ارزش " +
-                thousandFormat(investment.getAmount().multiply(investment.getExecutedPrice())) +
-                " دلار.");
+
+        if (dto.getParent() == null) {
+            db_obj.setDescription("پس انداز ریالی");
+        } else
+            db_obj.setDescription("خرید " +
+                    thousandFormat(db_obj.getAmount()) +
+                    " " +
+                    db_obj.getInvestmentType().getName() +
+                    " از محل دارایی " +
+                    db_obj.getParent().getInvestmentType().getName() +
+                    " به ارزش " +
+                    thousandFormat(investment.getAmount().multiply(investment.getExecutedPrice())) +
+                    " ".concat(investmentType.getId() == 1 ? "تومان." : "دلار."));
 
         if (dto.getParent() != null && db_obj.getParent() == null) {
             addParent(dto, investment, investmentType);

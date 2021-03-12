@@ -19,7 +19,14 @@ import java.util.List;
  */
 @Repository
 public interface InvestmentRepository extends JpaRepository<Investment, Long>, JpaSpecificationExecutor<Investment> {
-    @Query("select i from Investment i " +
-            "where i.parent.id = :parentId")
+
+    @Query(value = "WITH RECURSIVE cte as (\n" +
+            "\tSELECT p.*, 0 as level  from investment  p where p.id = :parentId\n" +
+            "\tUNION ALL\n" +
+            "\tSELECT c.*, (cte.level +1) as level from investment  c  JOIN cte on cte.id = c.parent_id\n" +
+            ")\n" +
+            "SELECT * from cte \n" +
+            "\twhere cte.level\tin (0, 1, 2)\n" +
+            "\tORDER by cte.create_at", nativeQuery = true)
     List<Investment> getByParentId(@Param("parentId") Long parentId);
 }
