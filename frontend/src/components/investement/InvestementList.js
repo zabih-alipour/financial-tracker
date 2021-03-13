@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   DialogContentText,
@@ -24,14 +25,69 @@ import CircularProgressWithLabel from "../utils/CircularProgressWithLabel";
 import ListHeader from "../utils/ListHeader";
 import TuneIcon from "@material-ui/icons/Tune";
 import InvestmentDetail from "./InvestmentDetails";
+import { Pagination } from "@material-ui/lab";
+
+const columns = [
+  { id: "id", label: "ردیف", minWidth: 170 },
+  { id: "user.name", label: "کاربر", minWidth: 100 },
+  {
+    id: "instumentType.name",
+    label: "نوع سرمایه",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "shamsiDate",
+    label: "تاریخ",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "amount",
+    label: "مقدار",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: "executedPrice",
+    label: "قیمت خریداری شده",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: "spentAmount",
+    label: "مقدار مصرف شده",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: "code",
+    label: "کد",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: "dummy",
+    label: "فعالیت",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toFixed(2),
+  },
+];
 
 export default class InvestmentList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      investments: [],
       dialog: "",
       selectedInvestment: null,
+      pagedData: {},
     };
   }
 
@@ -39,10 +95,14 @@ export default class InvestmentList extends React.Component {
     this.fetchData();
   };
 
-  fetchData = () => {
-    fetch("/api/investments/v2")
+  fetchData = (searchCriteria = null) => {
+    fetch("/api/investments/search/v2", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(searchCriteria),
+    })
       .then((response) => response.json())
-      .then((data) => this.setState({ investments: data }));
+      .then((data) => this.setState({ pagedData: data }));
   };
 
   deleteInvestment = () => {
@@ -137,9 +197,34 @@ export default class InvestmentList extends React.Component {
     }
   };
 
+  onPageChanged = (event, page) => {
+    const { pagedData } = this.state;
+    const { size = 0 } = pagedData;
+
+    const searchCriteria = {
+      searchAria: null,
+      pagination: {
+        pageSize: size,
+        pageNumber: page,
+      },
+      sort: {
+        field: "id",
+        order: "DESC",
+      },
+    };
+    this.fetchData(searchCriteria);
+  };
+
   render() {
-    const { investments } = this.state;
-    const rows = investments.map((row, idx) => {
+    const { pagedData } = this.state;
+    const {
+      content = [],
+      totalPages = 0,
+      number = 0,
+      empty = true,
+    } = pagedData;
+
+    const rows = content.map((row, idx) => {
       const { user, investmentType } = row;
       const progress =
         row.spentAmount === null
@@ -200,7 +285,21 @@ export default class InvestmentList extends React.Component {
         />
         <TableContainer component={Paper}>
           <Table>
-            <TableHead style={{ backgroundColor: orange[200] }}>
+            <caption>
+              <Box>
+                <Box mt={0.5} justifyContent="center">
+                  <Pagination
+                    boundaryCount={2}
+                    page={number}
+                    count={totalPages}
+                    disabled={empty}
+                    color="primary"
+                    onChange={this.onPageChanged}
+                  />
+                </Box>
+              </Box>
+            </caption>
+            <TableHead style={{ backgroundColor: orange[500] }}>
               <TableRow>
                 <TableCell align="center">ردیف</TableCell>
                 <TableCell align="center">کاربر</TableCell>
