@@ -10,12 +10,19 @@ import com.alipour.product.financialtracker.investment.repository.VwInvestmentRe
 import com.alipour.product.financialtracker.investment.views.VwInvestment;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.repository.InvestmentTypeRepository;
+import com.alipour.product.financialtracker.utils.SearchCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -158,8 +165,28 @@ public class InvestmentService extends CRUDService<Investment> {
         return repository.findAll(specification, Sort.by(Sort.Direction.ASC, "shamsiDate"));
     }
 
-    public List<VwInvestment> search() {
-        return vwInvestmentRepository.findAll(Sort.by(Sort.Direction.DESC, "shamsiDate"));
+    public Page<VwInvestment> search(SearchCriteria searchCriteria) {
+        searchCriteria = Optional.ofNullable(searchCriteria).orElse(new SearchCriteria());
+
+        SearchCriteria.Pagination pagination = searchCriteria.getPagination();
+        SearchCriteria.Sort sort = searchCriteria.getSort();
+        SearchCriteria.Search searchAria = searchCriteria.getSearchAria();
+
+        Specification<VwInvestment> specification = (root, query, criteriaBuilder) -> {
+            if (searchAria != null && searchAria.getKey().equals("user.name"))
+                return criteriaBuilder.like(root.get("user").get("name"), searchAria.getValue() + "%");
+            else return null;
+        };
+
+        return vwInvestmentRepository.findAll(
+                specification,
+                PageRequest.of(
+                        pagination.getPageNumber(),
+                        pagination.getPageSize(),
+                        Sort.by(
+                                sort.getOrder().equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC,
+                                sort.getField()
+                        )));
     }
 
     public List<VwInvestment> getByUserAndCode(Long userId, String code) {

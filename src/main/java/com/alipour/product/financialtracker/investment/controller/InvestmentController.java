@@ -5,7 +5,9 @@ import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.service.InvestmentService;
 import com.alipour.product.financialtracker.investment.views.VwInvestment;
+import com.alipour.product.financialtracker.utils.SearchCriteria;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,10 +38,10 @@ public class InvestmentController extends CRUDController<Investment> {
         return ((InvestmentService) service).edit(entity);
     }
 
-    @GetMapping("/v2")
+    @PostMapping("/search/v2")
     @ResponseBody
-    public List<VwInvestment> search() {
-        return ((InvestmentService) service).search();
+    public Page<VwInvestment> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
+        return ((InvestmentService) service).search(searchCriteria);
     }
 
     @GetMapping("/by-code/{userId}")
