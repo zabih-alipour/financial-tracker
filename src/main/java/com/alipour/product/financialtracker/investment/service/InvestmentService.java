@@ -11,6 +11,7 @@ import com.alipour.product.financialtracker.investment.views.VwInvestment;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.repository.InvestmentTypeRepository;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
+import com.alipour.product.financialtracker.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -167,26 +168,8 @@ public class InvestmentService extends CRUDService<Investment> {
 
     public Page<VwInvestment> search(SearchCriteria searchCriteria) {
         searchCriteria = Optional.ofNullable(searchCriteria).orElse(new SearchCriteria());
-
-        SearchCriteria.Pagination pagination = searchCriteria.getPagination();
-        SearchCriteria.Sort sort = searchCriteria.getSort();
-        SearchCriteria.Search searchAria = searchCriteria.getSearchAria();
-
-        Specification<VwInvestment> specification = (root, query, criteriaBuilder) -> {
-            if (searchAria != null && searchAria.getKey().equals("user.name"))
-                return criteriaBuilder.like(root.get("user").get("name"), searchAria.getValue() + "%");
-            else return null;
-        };
-
-        return vwInvestmentRepository.findAll(
-                specification,
-                PageRequest.of(
-                        pagination.getPageNumber(),
-                        pagination.getPageSize(),
-                        Sort.by(
-                                sort.getOrder().equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC,
-                                sort.getField()
-                        )));
+        SpecificationBuilder<VwInvestment> specificationBuilder = new SpecificationBuilder<>(searchCriteria, VwInvestment.class);
+        return vwInvestmentRepository.findAll(specificationBuilder.specification(), specificationBuilder.pageRequest());
     }
 
     public List<VwInvestment> getByUserAndCode(Long userId, String code) {

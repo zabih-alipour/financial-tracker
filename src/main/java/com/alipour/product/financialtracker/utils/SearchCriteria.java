@@ -3,12 +3,14 @@ package com.alipour.product.financialtracker.utils;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class SearchCriteria implements Serializable {
-    private Search searchAria;
+    private List<Search> searchArias = new ArrayList<>();
     private Pagination pagination = new Pagination();
-    private Sort sort = new Sort();
+    private Sort sort;
 
     @Data
     public static class Search {

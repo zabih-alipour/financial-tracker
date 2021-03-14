@@ -1,10 +1,14 @@
 package com.alipour.product.financialtracker.payment.controller;
 
 import com.alipour.product.financialtracker.common.CRUDController;
+import com.alipour.product.financialtracker.investment.service.InvestmentService;
+import com.alipour.product.financialtracker.investment.views.VwInvestment;
 import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
 import com.alipour.product.financialtracker.payment.dtos.PaymentSettlementDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.service.PaymentService;
+import com.alipour.product.financialtracker.utils.SearchCriteria;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,5 +59,11 @@ public class PaymentController extends CRUDController<Payment> {
     @ResponseBody
     public List<Payment> findByType(@PathVariable("typeId") Long typeId) {
         return ((PaymentService) service).findByType(typeId);
+    }
+
+    @PostMapping("/search")
+    @ResponseBody
+    public Page<Payment> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
+        return ((PaymentService) service).search(searchCriteria);
     }
 }

@@ -6,8 +6,14 @@ import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.repository.PaymentReportRepository;
 import com.alipour.product.financialtracker.payment.repository.PaymentRepository;
+import com.alipour.product.financialtracker.payment.repository.PaymentSpecification;
 import com.alipour.product.financialtracker.payment.views.PaymentReport;
+import com.alipour.product.financialtracker.utils.SearchCriteria;
+import com.alipour.product.financialtracker.utils.SpecificationBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -85,5 +91,12 @@ public class PaymentService extends CRUDService<Payment> {
 
     public List<Payment> findByUser(Long userId) {
         return repository.findByUserId(userId);
+    }
+
+    public Page<Payment> search(SearchCriteria searchCriteria) {
+        searchCriteria = Optional.ofNullable(searchCriteria).orElseGet(SearchCriteria::new);
+
+        SpecificationBuilder<Payment> specificationBuilder = new SpecificationBuilder<>(searchCriteria, Payment.class);
+        return repository.findAll(specificationBuilder.specification(), specificationBuilder.pageRequest());
     }
 }
