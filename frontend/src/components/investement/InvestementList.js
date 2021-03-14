@@ -202,10 +202,10 @@ export default class InvestmentList extends React.Component {
     const { size = 0 } = pagedData;
 
     const searchCriteria = {
-      searchAria: null,
+      searchArias: [],
       pagination: {
         pageSize: size,
-        pageNumber: page,
+        pageNumber: page - 1,
       },
       sort: {
         field: "id",
@@ -290,7 +290,7 @@ export default class InvestmentList extends React.Component {
                 <Box mt={0.5} justifyContent="center">
                   <Pagination
                     boundaryCount={2}
-                    page={number}
+                    page={number + 1}
                     count={totalPages}
                     disabled={empty}
                     color="primary"

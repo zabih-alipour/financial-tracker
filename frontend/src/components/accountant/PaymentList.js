@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   DialogContentText,
@@ -23,12 +24,13 @@ import PaymentForm from "./PaymentForm";
 import TuneIcon from "@material-ui/icons/Tune";
 import AmountDecorate from "../utils/AmountDecorate";
 import ListHeader from "../utils/ListHeader";
+import { Pagination } from "@material-ui/lab";
 
 export default class PaymentList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      payments: [],
+      pagedData: {},
       dialog: "",
       selectedPayment: null,
     };
@@ -38,24 +40,28 @@ export default class PaymentList extends React.Component {
     this.fetchData();
   };
 
-  fetchData = () => {
-    fetch("/api/payments")
+  fetchData = (searchCriteria = null) => {
+    fetch("/api/payments/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(searchCriteria),
+    })
       .then((response) => response.json())
       .then((data) => {
         this.setState({
-          payments: data,
+          pagedData: data,
         });
       })
       .catch((e) => console.log(e));
   };
 
   deletePayment = () => {
-    const { payment } = this.state;
+    const { selectedPayment } = this.state;
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
-    fetch("/api/payments/" + payment.id, requestOptions).then((res) => {
+    fetch("/api/payments/" + selectedPayment.id, requestOptions).then((res) => {
       this.fetchData();
     });
   };
@@ -137,9 +143,34 @@ export default class PaymentList extends React.Component {
     this.setState({ dialog: dialog, selectedPayment: payment });
   };
 
+  onPageChanged = (event, page) => {
+    const { pagedData } = this.state;
+    const { size = 0 } = pagedData;
+
+    const searchCriteria = {
+      searchArias: [],
+      pagination: {
+        pageSize: size,
+        pageNumber: page - 1,
+      },
+      sort: {
+        field: "id",
+        order: "DESC",
+      },
+    };
+    this.fetchData(searchCriteria);
+  };
+
   render() {
-    const { payments } = this.state;
-    const rows = payments.map((row, idx) => {
+    const { pagedData } = this.state;
+    const {
+      content = [],
+      totalPages = 0,
+      number = 0,
+      empty = true,
+    } = pagedData;
+
+    const rows = content.map((row, idx) => {
       return (
         <TableRow key={idx + 1}>
           <TableCell component="th" scope="row" align="center">
@@ -154,7 +185,9 @@ export default class PaymentList extends React.Component {
           </TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">
-            <p style={{ overflowWrap: "break-word" }}>{row.description}</p>
+            <Box fontSize={12} fontWeight={2} color={grey[600]}>
+              {row.description}
+            </Box>
           </TableCell>
 
           <TableCell align="center">
@@ -209,6 +242,20 @@ export default class PaymentList extends React.Component {
         />
         <TableContainer component={Paper}>
           <Table>
+            <caption>
+              <Box>
+                <Box mt={0.5} justifyContent="center">
+                  <Pagination
+                    boundaryCount={2}
+                    page={number + 1}
+                    count={totalPages}
+                    disabled={empty}
+                    color="primary"
+                    onChange={this.onPageChanged}
+                  />
+                </Box>
+              </Box>
+            </caption>
             <TableHead style={{ backgroundColor: "orange" }}>
               <TableRow>
                 <TableCell align="center">ردیف</TableCell>
