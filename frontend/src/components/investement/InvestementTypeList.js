@@ -14,9 +14,12 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
-import { grey } from "@material-ui/core/colors";
+import { blue, grey } from "@material-ui/core/colors";
 import InvestmentTypeForm from "./InvestmentTypeForm";
 import ListHeader from "../utils/ListHeader";
+import InvestmentSpecificDetail from "./InvestmentSpecificDetail";
+import ReceiptIcon from "@material-ui/icons/Receipt";
+
 export default class InvestementTypeList extends React.Component {
   constructor(props) {
     super(props);
@@ -63,6 +66,15 @@ export default class InvestementTypeList extends React.Component {
           onClose={this.onClose}
         />
       );
+    } else if (dialog === "INVESTMENT_DETAIL") {
+      return (
+        <InvestmentSpecificDetail
+          openDialog={true}
+          user={null}
+          type={selectedType}
+          onClose={this.onClose}
+        />
+      );
     }
   };
   render() {
@@ -77,6 +89,9 @@ export default class InvestementTypeList extends React.Component {
           <TableCell align="center">{type.latestPrice}</TableCell>
           <TableCell align="center">{"20%"}</TableCell>
           <TableCell align="center">
+            <IconButton onClick={() => this.dialogHandler("INVESTMENT_DETAIL", type)}>
+              <ReceiptIcon style={{ color: blue[500] }} />
+            </IconButton>
             <IconButton onClick={() => this.dialogHandler("TYPE_FORM", type)}>
               <EditIcon color="primary" />
             </IconButton>

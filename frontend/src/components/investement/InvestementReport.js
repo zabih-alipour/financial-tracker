@@ -3,6 +3,8 @@ import { green, grey } from "@material-ui/core/colors";
 import React from "react";
 import InvestmentReportDetail from "./InvestmentReportDetails";
 import UserAutoComplete from "../user/UserAutoComplete";
+import AmountDecorate from "../utils/AmountDecorate";
+import InvestmentSpecificDetail from "./InvestmentSpecificDetail";
 
 export default class AccountReport extends React.Component {
   constructor(props) {
@@ -11,7 +13,7 @@ export default class AccountReport extends React.Component {
       details: [],
       summaries: [],
       openDialog: false,
-      selectedRow: { user: null, type: null },
+      criteria: { user: null, type: null },
     };
   }
 
@@ -26,32 +28,32 @@ export default class AccountReport extends React.Component {
       .catch((e) => console.log(e));
   };
 
-  onDetailClick = (selectedRow) => {
+  onDetailClick = (criteria) => {
     this.setState({
-      selectedRow: selectedRow,
+      criteria: criteria,
       openDialog: true,
     });
   };
 
   onClose = () => {
     this.setState({
-      selectedRow: { user: null, type: null },
+      criteria: { user: null, type: null },
       openDialog: false,
     });
   };
 
   handleDialog = () => {
-    const { openDialog, selectedRow } = this.state;
-    // if (openDialog) {
-    //   return (
-    //     <PaymentListPopup
-    //       openDialog={true}
-    //       user={selectedRow.user}
-    //       type={selectedRow.type}
-    //       onClose={this.onClose}
-    //     />
-    //   );
-    // }
+    const { openDialog, criteria } = this.state;
+    if (openDialog) {
+      return (
+        <InvestmentSpecificDetail
+          openDialog={true}
+          user={criteria.user}
+          type={criteria.type}
+          onClose={this.onClose}
+        />
+      );
+    }
   };
 
   summaryComponenet = () => {
@@ -79,7 +81,7 @@ export default class AccountReport extends React.Component {
             borderRight={1}
             align="center"
           >
-            {p.amount}
+            <AmountDecorate amount={p.amount} thousand={true} />
           </Box>
         </Box>
       );
@@ -107,13 +109,20 @@ export default class AccountReport extends React.Component {
   detailsComponenet = () => {
     const { details } = this.state;
     const rows = details.map((row, idx) => {
-      return <InvestmentReportDetail data={row} />;
+      return <InvestmentReportDetail data={row} onActionClick={this.onDetailClick} />;
     });
 
     return (
-      <Container component={Paper} style={{ marginTop: "5px", width: "80%", padding:"5px"}}>
-        <Box>
-          <UserAutoComplete fieldName="dummy" onChange={this.onUserChange} />
+      <Container
+        component={Paper}
+        style={{ marginTop: "5px", width: "80%", padding: "5px" }}
+      >
+        <Box p={1}>
+          <UserAutoComplete
+            fieldName="dummy"
+            onChange={this.onUserChange}
+            style={{ width: "99%" }}
+          />
         </Box>
         {rows}
       </Container>

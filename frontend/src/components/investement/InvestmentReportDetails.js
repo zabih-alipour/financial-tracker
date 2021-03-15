@@ -1,6 +1,8 @@
 import {
+  Box,
   Card,
   CardContent,
+  CardHeader,
   Divider,
   IconButton,
   Table,
@@ -11,22 +13,27 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { green, grey, indigo } from "@material-ui/core/colors";
+import { blue, green, grey, indigo } from "@material-ui/core/colors";
 import ReceiptIcon from "@material-ui/icons/Receipt";
+import AmountDecorate from "../utils/AmountDecorate";
 
 export default function InvestmentReportDetail(props) {
-  const { data } = props;
+  const { data, onActionClick } = props;
   const rows = () => {
     const details = data.coins.map((p) => {
       return (
         <TableRow>
           <TableCell align="center">{p.investmentType.name}</TableCell>
           <TableCell align="center">
-            {p.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            <AmountDecorate amount={p.amount} />
           </TableCell>
           <TableCell align="center">
-            <IconButton>
-              <ReceiptIcon style={{ color: green[500] }} />
+            <IconButton
+              onClick={() =>
+                onActionClick({ user: data.user, type: p.investmentType })
+              }
+            >
+              <ReceiptIcon style={{ color: blue[500] }} />
             </IconButton>
           </TableCell>
         </TableRow>
@@ -35,13 +42,16 @@ export default function InvestmentReportDetail(props) {
     return details;
   };
   return (
-    <Card style={{ margin: "10px" }}>
+    <Card style={{ margin: "10px" }} variant="outlined">
+      <CardHeader
+        title={data.user.name}
+        action={
+          <IconButton onClick={() => onActionClick({ user: data.user })}>
+            <ReceiptIcon style={{ color: blue[500] }} />
+          </IconButton>
+        }
+      />
       <CardContent>
-        <Typography variant="h4" style={{ height: "50px" }} gutterBottom>
-          {data.user.name}
-        </Typography>
-        <Divider />
-
         <Table>
           <TableHead style={{ backgroundColor: indigo[100] }}>
             <TableRow>

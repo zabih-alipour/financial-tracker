@@ -37,6 +37,7 @@ export default function UserAutoComplete(props) {
       onChange={onAutoCompleteChange}
       // autoHighlight
       // fullWidth
+      
       value={user}
       options={users}
       renderInput={(params) => (

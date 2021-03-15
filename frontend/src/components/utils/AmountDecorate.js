@@ -3,42 +3,29 @@ import { green, red } from "@material-ui/core/colors";
 import React from "react";
 
 export default function AmountDecorate(props) {
-  const { amount, thousand, style, colorize = true, precise = true } = props;
-
-  function getPrecise(amount) {
-    if (precise) {
-      return Number.parseFloat(amount).toPrecision(4);
-    } else return amount;
-  }
+  const {
+    amount,
+    thousand = true,
+    style,
+    colorize = true,
+    precise = true,
+  } = props;
 
   const getText = () => {
-    if (amount >= 0) {
-      return (
-        <Typography
-          align="center"
-          style={{ color: colorize ? green[500] : "black" }}
-        >
-          {thousand
-            ? getPrecise(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-            : amount}
-        </Typography>
-      );
-    } else {
-      return (
-        <Typography
-          align="center"
-          style={{ color: colorize ? red[500] : "black" }}
-        >
-          (
-          {thousand
-            ? getPrecise(Math.abs(amount))
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-            : Math.abs(amount)}
-          )
-        </Typography>
-      );
-    }
+    return (
+      <Typography
+        align="center"
+        style={{
+          color: colorize ? (amount >= 0 ? green[500] : red[500]) : "black",
+        }}
+      >
+        {thousand
+          ? Math.abs(amount).toLocaleString("fullwide", {
+              useGrouping: true,
+            })
+          : Math.abs(amount)}
+      </Typography>
+    );
   };
   return <Typography style={{ ...style }}>{getText()}</Typography>;
 }
