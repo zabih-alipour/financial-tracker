@@ -15,26 +15,19 @@ public class InvestmentDto extends ParentDto {
     private User user;
     private String shamsiDate;
     private Investment parent;
-    private Coin change;
-    private Coin subtract;
-
-    @Data
-    public static class Coin {
-        private BigDecimal amount;
-        private BigDecimal executedPrice;
-        private InvestmentType investmentType;
-    }
+    private CoinInfo change;
+    private CoinInfo subtract;
 
     public Investment getChangeInvestment() {
         return getInvestment(this.getChange());
     }
 
     public Investment getSubtractInvestment() {
-        Coin subtract = this.getSubtract();
+        CoinInfo subtract = this.getSubtract();
         return getInvestment(subtract);
     }
 
-    private Investment getInvestment(Coin coin) {
+    private Investment getInvestment(CoinInfo coin) {
         Investment investment = new Investment();
         investment.setUser(this.getUser());
         investment.setShamsiDate(this.getShamsiDate());

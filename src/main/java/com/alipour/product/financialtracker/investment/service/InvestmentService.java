@@ -3,27 +3,26 @@ package com.alipour.product.financialtracker.investment.service;
 import com.alipour.product.financialtracker.common.BusinessException;
 import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.common.NotSupportException;
+import com.alipour.product.financialtracker.investment.dto.CoinInfo;
 import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
+import com.alipour.product.financialtracker.investment.dto.InvestmentReport;
+import com.alipour.product.financialtracker.investment.dto.InvestmentTotalReport;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.repository.InvestmentRepository;
 import com.alipour.product.financialtracker.investment.repository.VwInvestmentRepository;
 import com.alipour.product.financialtracker.investment.views.VwInvestment;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.repository.InvestmentTypeRepository;
+import com.alipour.product.financialtracker.user.models.User;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
 import com.alipour.product.financialtracker.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -32,6 +31,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service：
@@ -254,5 +254,45 @@ public class InvestmentService extends CRUDService<Investment> {
 
     public List<VwInvestment> getByUser(Long userId) {
         return getByUserAndCode(userId, null);
+    }
+
+    public List<InvestmentReport> reportDetails(Long userId) {
+        List<Investment> investments;
+        if (userId != null)
+            investments = repository.findByUserId(userId);
+        else investments = repository.findAll();
+
+        Map<User, Map<InvestmentType, List<Investment>>> map = investments.stream().collect(
+                Collectors.groupingBy(Investment::getUser,
+                        Collectors.groupingBy(Investment::getInvestmentType)));
+
+        return map.entrySet().stream()
+                .map(entry -> {
+                    List<CoinInfo> infos = entry.getValue().entrySet().stream()
+                            .map(e -> {
+                                BigDecimal sum = e.getValue().stream()
+                                        .map(Investment::getAmount)
+                                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                                return new CoinInfo(e.getKey(), sum);
+                            })
+                            .collect(Collectors.toList());
+
+                    return new InvestmentReport(entry.getKey(), infos);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<CoinInfo> reportSummaries() {
+        List<Investment> investments = repository.findAll();
+        return investments.stream().collect(Collectors.groupingBy(Investment::getInvestmentType))
+                .entrySet().stream()
+                .map(entry -> {
+                    BigDecimal sum = entry.getValue().stream()
+                            .map(Investment::getAmount)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    return new CoinInfo(entry.getKey(), sum);
+                })
+                .sorted(Comparator.comparing(CoinInfo::getAmount).reversed())
+                .collect(Collectors.toList());
     }
 }

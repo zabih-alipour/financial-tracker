@@ -29,4 +29,7 @@ public interface InvestmentRepository extends JpaRepository<Investment, Long>, J
             "\twhere cte.level\tin (0, 1, 2)\n" +
             "\tORDER by cte.create_at", nativeQuery = true)
     List<Investment> getByParentId(@Param("parentId") Long parentId);
+
+
+    List<Investment> findByUserId(Long userId);
 }
