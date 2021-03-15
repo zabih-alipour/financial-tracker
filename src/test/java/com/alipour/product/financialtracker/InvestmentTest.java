@@ -1,5 +1,6 @@
 package com.alipour.product.financialtracker;
 
+import com.alipour.product.financialtracker.investment.dto.CoinInfo;
 import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.service.InvestmentService;
@@ -35,7 +36,7 @@ class InvestmentTest {
         InvestmentDto investment_rial_dto = new InvestmentDto();
         investment_rial_dto.setUser(dataUtil.getUser(true));
         investment_rial_dto.setShamsiDate("1399/12/01");
-        InvestmentDto.Coin rial = new InvestmentDto.Coin();
+        CoinInfo rial = new CoinInfo();
         rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
         rial.setAmount(BigDecimal.valueOf(500_000F));
         rial.setExecutedPrice(BigDecimal.valueOf(1F));
@@ -53,7 +54,7 @@ class InvestmentTest {
         InvestmentDto investment_rial_dto = new InvestmentDto();
         investment_rial_dto.setUser(dataUtil.getUser(true));
         investment_rial_dto.setShamsiDate("1399/12/01");
-        InvestmentDto.Coin rial = new InvestmentDto.Coin();
+        CoinInfo rial = new CoinInfo();
         rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
         rial.setAmount(BigDecimal.valueOf(50_000_000F));
         rial.setExecutedPrice(BigDecimal.valueOf(1F));
@@ -68,12 +69,12 @@ class InvestmentTest {
         investment_bitcoin_dto.setUser(dataUtil.getUser(true));
         investment_bitcoin_dto.setShamsiDate("1399/12/02");
         investment_bitcoin_dto.setParent(investment_rial);
-        InvestmentDto.Coin bitcoin = new InvestmentDto.Coin();
+        CoinInfo bitcoin = new CoinInfo();
         bitcoin.setInvestmentType(dataUtil.getInvestmentType("BITCOIN"));
         bitcoin.setAmount(BigDecimal.valueOf(0.002F));
         bitcoin.setExecutedPrice(BigDecimal.valueOf(9_010F));
         investment_bitcoin_dto.setChange(bitcoin);
-        InvestmentDto.Coin subtract = new InvestmentDto.Coin();
+        CoinInfo subtract = new CoinInfo();
         subtract.setInvestmentType(investment_rial.getInvestmentType());
         subtract.setAmount(BigDecimal.valueOf(26_245_010F));
         subtract.setExecutedPrice(BigDecimal.valueOf(1F));
@@ -106,7 +107,7 @@ class InvestmentTest {
         InvestmentDto investment_rial_dto = new InvestmentDto();
         investment_rial_dto.setUser(dataUtil.getUser(true));
         investment_rial_dto.setShamsiDate("1399/12/01");
-        InvestmentDto.Coin rial = new InvestmentDto.Coin();
+        CoinInfo rial = new CoinInfo();
         rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
         rial.setAmount(BigDecimal.valueOf(60_000_000F));
         rial.setExecutedPrice(BigDecimal.valueOf(1F));
@@ -122,12 +123,12 @@ class InvestmentTest {
         investment_bitcoin_dto.setUser(dataUtil.getUser(true));
         investment_bitcoin_dto.setShamsiDate("1399/12/02");
         investment_bitcoin_dto.setParent(investment_rial);
-        InvestmentDto.Coin bitcoin = new InvestmentDto.Coin();
+        CoinInfo bitcoin = new CoinInfo();
         bitcoin.setInvestmentType(dataUtil.getInvestmentType("BITCOIN"));
         bitcoin.setAmount(BigDecimal.valueOf(0.002F));
         bitcoin.setExecutedPrice(BigDecimal.valueOf(9_010F));
         investment_bitcoin_dto.setChange(bitcoin);
-        InvestmentDto.Coin subtract_rial = new InvestmentDto.Coin();
+        CoinInfo subtract_rial = new CoinInfo();
         subtract_rial.setInvestmentType(investment_rial.getInvestmentType());
         subtract_rial.setAmount(BigDecimal.valueOf(26_245_010F));
         subtract_rial.setExecutedPrice(BigDecimal.valueOf(1F));
@@ -159,12 +160,12 @@ class InvestmentTest {
         investment_litcoin_dto.setUser(dataUtil.getUser(true));
         investment_litcoin_dto.setShamsiDate("1399/12/03");
         investment_litcoin_dto.setParent(investment_bitcoin);
-        InvestmentDto.Coin litcoin = new InvestmentDto.Coin();
+        CoinInfo litcoin = new CoinInfo();
         litcoin.setInvestmentType(dataUtil.getInvestmentType("LITCOIN"));
         litcoin.setAmount(BigDecimal.valueOf(0.132142857F));
         litcoin.setExecutedPrice(BigDecimal.valueOf(98F));
         investment_litcoin_dto.setChange(litcoin);
-        InvestmentDto.Coin subtract_bitcoin = new InvestmentDto.Coin();
+        CoinInfo subtract_bitcoin = new CoinInfo();
         subtract_bitcoin.setInvestmentType(investment_bitcoin.getInvestmentType());
         subtract_bitcoin.setAmount(BigDecimal.valueOf(0.001F));
         subtract_bitcoin.setExecutedPrice(BigDecimal.valueOf(12_950F));
@@ -199,7 +200,7 @@ class InvestmentTest {
         InvestmentDto investment_rial_dto = new InvestmentDto();
         investment_rial_dto.setUser(dataUtil.getUser(true));
         investment_rial_dto.setShamsiDate("1399/11/01");
-        InvestmentDto.Coin rial = new InvestmentDto.Coin();
+        CoinInfo rial = new CoinInfo();
         rial.setInvestmentType(dataUtil.getInvestmentType("RIAL"));
         rial.setAmount(BigDecimal.valueOf(800_000F));
         rial.setExecutedPrice(BigDecimal.valueOf(1F));
@@ -214,12 +215,12 @@ class InvestmentTest {
         investment_bitcoin_dto.setUser(dataUtil.getUser(true));
         investment_bitcoin_dto.setShamsiDate("1399/11/02");
         investment_bitcoin_dto.setParent(investment_rial);
-        InvestmentDto.Coin bitcoin = new InvestmentDto.Coin();
+        CoinInfo bitcoin = new CoinInfo();
         bitcoin.setInvestmentType(dataUtil.getInvestmentType("BITCOIN"));
         bitcoin.setAmount(BigDecimal.valueOf(0.002F));
         bitcoin.setExecutedPrice(BigDecimal.valueOf(9_010F));
         investment_bitcoin_dto.setChange(bitcoin);
-        InvestmentDto.Coin subtract = new InvestmentDto.Coin();
+        CoinInfo subtract = new CoinInfo();
         subtract.setInvestmentType(investment_rial.getInvestmentType());
         subtract.setAmount(BigDecimal.valueOf(26_245_010F));
         subtract.setExecutedPrice(BigDecimal.valueOf(1F));
