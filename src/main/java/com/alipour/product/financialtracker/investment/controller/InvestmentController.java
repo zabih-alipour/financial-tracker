@@ -65,6 +65,24 @@ public class InvestmentController extends CRUDController<Investment> {
         return ((InvestmentService) service).getByParent(id);
     }
 
+    @GetMapping("/details/{userId}/{typeId}")
+    @ResponseBody
+    public List<Investment> getDetails(@PathVariable("userId") Long userId, @PathVariable("typeId") Long typeId) {
+        return ((InvestmentService) service).getDetails(userId, typeId);
+    }
+
+    @GetMapping("/details/by-user/{userId}")
+    @ResponseBody
+    public List<Investment> getDetailsByUser(@PathVariable("userId") Long userId) {
+        return ((InvestmentService) service).getDetailsByUser(userId);
+    }
+
+    @GetMapping("/details/by-type/{typeId}")
+    @ResponseBody
+    public List<Investment> getDetailsByType(@PathVariable("typeId") Long typeId) {
+        return ((InvestmentService) service).getDetailsByType(typeId);
+    }
+
     @GetMapping("/reports/{userId}")
     @ResponseBody
     public List<InvestmentReport> reportsByUser(@PathVariable(value = "userId", required = false) Long userId) {

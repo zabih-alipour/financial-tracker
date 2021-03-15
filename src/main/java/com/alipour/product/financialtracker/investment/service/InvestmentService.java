@@ -22,7 +22,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -294,5 +297,31 @@ public class InvestmentService extends CRUDService<Investment> {
                 })
                 .sorted(Comparator.comparing(CoinInfo::getAmount).reversed())
                 .collect(Collectors.toList());
+    }
+
+    public List<Investment> getDetails(Long userId, Long typeId) {
+        Specification<Investment> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = null;
+            if (userId != null && typeId != null) {
+                predicate = criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("user"), userId),
+                        criteriaBuilder.equal(root.get("investmentType"), typeId)
+                );
+            } else if (userId != null) {
+                predicate = criteriaBuilder.equal(root.get("user"), userId);
+            } else if (typeId != null) {
+                predicate = criteriaBuilder.equal(root.get("investmentType"), typeId);
+            }
+            return predicate;
+        };
+        return repository.findAll(specification, Sort.by(Sort.Direction.ASC, "shamsiDate"));
+    }
+
+    public List<Investment> getDetailsByUser(Long userId) {
+        return getDetails(userId, null);
+    }
+
+    public List<Investment> getDetailsByType(Long typeId) {
+        return getDetails(null, typeId);
     }
 }
