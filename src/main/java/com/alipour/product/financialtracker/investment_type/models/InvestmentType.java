@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 /**
  * 实体类：
@@ -27,12 +28,18 @@ public class InvestmentType extends ParentEntity {
     private String code;
 
     @Column(name = "latest_price")
-    private Double latestPrice;
+    private BigDecimal latestPrice;
 
     public InvestmentType(Long id) {
         super(id);
     }
 
     public InvestmentType() {
+    }
+
+    public InvestmentType(Long id, String name) {
+        super(id);
+        this.name = name;
+
     }
 }

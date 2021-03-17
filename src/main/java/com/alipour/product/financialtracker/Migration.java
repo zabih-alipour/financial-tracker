@@ -64,7 +64,7 @@ public class Migration implements CommandLineRunner {
                 tree.forEach(node -> {
                     InvestmentType investmentType = new InvestmentType();
                     investmentType.setName(node.get("name").asText());
-                    investmentType.setLatestPrice(node.get("latest_price").asDouble());
+                    investmentType.setLatestPrice(BigDecimal.valueOf(node.get("latest_price").asDouble()));
                     investmentType.setCode(node.get("name").asText());
                     investmentTypeService.add(investmentType);
                 });

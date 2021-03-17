@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -32,4 +33,11 @@ public interface InvestmentRepository extends JpaRepository<Investment, Long>, J
 
 
     List<Investment> findByUserId(Long userId);
+
+    @Query("select sum(i.amount) as amount from Investment i " +
+            "where i.user.id = :userId " +
+            "and i.investmentType.id = 1 " +
+            "and i.parent is null " +
+            "and i.amount >= 0")
+    BigDecimal getTotalRialInvestments(@Param("userId") Long userId);
 }

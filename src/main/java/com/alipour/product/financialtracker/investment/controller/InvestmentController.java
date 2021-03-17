@@ -95,4 +95,10 @@ public class InvestmentController extends CRUDController<Investment> {
         return ((InvestmentService) service).reportSummaries();
     }
 
+    @GetMapping("/reports/total-assets/{userId}")
+    @ResponseBody
+    public List<CoinInfo> totalAssets(@PathVariable("userId") Long userId) {
+        return ((InvestmentService) service).totalAssets(userId);
+    }
+
 }

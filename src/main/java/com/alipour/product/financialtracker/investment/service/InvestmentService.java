@@ -6,7 +6,6 @@ import com.alipour.product.financialtracker.common.NotSupportException;
 import com.alipour.product.financialtracker.investment.dto.CoinInfo;
 import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
 import com.alipour.product.financialtracker.investment.dto.InvestmentReport;
-import com.alipour.product.financialtracker.investment.dto.InvestmentTotalReport;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.repository.InvestmentRepository;
 import com.alipour.product.financialtracker.investment.repository.VwInvestmentRepository;
@@ -22,10 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -34,6 +30,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -315,6 +313,49 @@ public class InvestmentService extends CRUDService<Investment> {
             return predicate;
         };
         return repository.findAll(specification, Sort.by(Sort.Direction.ASC, "shamsiDate"));
+    }
+
+    public List<CoinInfo> totalAssets(Long userId) {
+        List<InvestmentReport> reports = reportDetails(userId);
+        List<InvestmentType> types = typeRepository.findAll();
+
+        Map<String, InvestmentType> typeCode = types.stream().collect(Collectors.toMap(InvestmentType::getCode, type -> type));
+
+        BiFunction<InvestmentType, BigDecimal, BigDecimal> currentValue = (type, defaultValue) -> {
+            if (type.getId().equals(typeCode.get("SETTLEMENT").getId()))
+                return BigDecimal.ZERO;
+            else if (type.getId().equals(typeCode.get("RIAL").getId()))
+                return BigDecimal.ZERO;
+            else if (type.getId().equals(typeCode.get("DOLOR").getId())) {
+                return defaultValue;
+            } else {
+                InvestmentType investmentType = typeCode.get(type.getCode());
+                return investmentType.getLatestPrice().multiply(defaultValue);
+            }
+        };
+//
+        List<CoinInfo> infos = new ArrayList<>();
+        if (!reports.isEmpty()) {
+            InvestmentReport investmentReport = reports.get(0);
+            BigDecimal totalUSDT = investmentReport.getCoins().stream()
+                    .map(p -> currentValue.apply(p.getInvestmentType(), p.getAmount()))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+            BigDecimal totalToman = totalUSDT.multiply(typeCode.get("DOLOR").getLatestPrice())
+                    .add(investmentReport.getCoins().stream()
+                            .filter(p -> p.getInvestmentType().getId() == 1L)
+                            .findFirst()
+                            .map(CoinInfo::getAmount)
+                            .orElse(BigDecimal.ZERO));
+
+            infos.add(new CoinInfo(new InvestmentType(99L, "سرمایه اولیه تومان"), repository.getTotalRialInvestments(investmentReport.getUser().getId())));
+            infos.add(new CoinInfo(typeCode.get("DOLOR"), totalUSDT));
+            infos.add(new CoinInfo(typeCode.get("RIAL"), totalToman));
+        }
+
+
+        return infos;
     }
 
     public List<Investment> getDetailsByUser(Long userId) {
