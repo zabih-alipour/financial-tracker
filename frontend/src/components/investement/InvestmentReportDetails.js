@@ -3,8 +3,8 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   IconButton,
+  lighten,
   Table,
   TableBody,
   TableCell,
@@ -13,12 +13,46 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { blue, green, grey, indigo } from "@material-ui/core/colors";
+import { blue, grey, indigo } from "@material-ui/core/colors";
 import ReceiptIcon from "@material-ui/icons/Receipt";
+import { useEffect, useState } from "react";
 import AmountDecorate from "../utils/AmountDecorate";
 
 export default function InvestmentReportDetail(props) {
   const { data, onActionClick } = props;
+  const [summary, setSummary] = useState([]);
+
+  useEffect(() => {
+    const user = data.user;
+    fetch("/api/investments/reports/total-assets/" + user.id)
+      .then((res) => res.json())
+      .then((data) => setSummary(data));
+  }, [ data]);
+
+  const footerComponent = () => {
+    const rows = summary.map((row, idx)=>{
+      return (
+        <TableCell align="center">
+            <Box p={1 / 2} fontSize={13} style={{ color: indigo[500] }}>
+              <Box padding={2} borderBottom={1}>
+              سرمایه به {" "} {row.investmentType.name}
+              </Box>
+              <Box padding={2}>
+                <AmountDecorate amount={row.amount} />
+              </Box>
+            </Box>
+          </TableCell>
+      )
+    })
+    return (
+      <TableFooter>
+        <TableRow style={{ backgroundColor: grey[100] }}>
+            {rows}
+          <TableCell align="center"></TableCell>
+        </TableRow>
+      </TableFooter>
+    );
+  };
   const rows = () => {
     const details = data.coins.map((p) => {
       return (
@@ -61,19 +95,7 @@ export default function InvestmentReportDetail(props) {
             </TableRow>
           </TableHead>
           <TableBody>{rows()}</TableBody>
-          {/* <TableFooter>
-            <TableRow style={{ backgroundColor: grey[100] }}>
-              <TableCell align="center">
-                <Typography align="center">مجموع</Typography>
-              </TableCell>
-              <TableCell align="center">
-                <Typography align="center">
-                  {data.sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                </Typography>
-              </TableCell>
-              <TableCell align="center"></TableCell>
-            </TableRow>
-          </TableFooter> */}
+          {footerComponent()}
         </Table>
       </CardContent>
     </Card>

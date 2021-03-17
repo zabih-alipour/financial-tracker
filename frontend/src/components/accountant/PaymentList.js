@@ -4,7 +4,6 @@ import {
   Container,
   DialogContentText,
   DialogTitle,
-  Grid,
   IconButton,
   Paper,
   Table,
@@ -13,7 +12,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@material-ui/core";
 import { green, grey } from "@material-ui/core/colors";
 import React from "react";
