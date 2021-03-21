@@ -4,14 +4,12 @@ import {
   CardContent,
   CardHeader,
   IconButton,
-  lighten,
   Table,
   TableBody,
   TableCell,
   TableFooter,
   TableHead,
   TableRow,
-  Typography,
 } from "@material-ui/core";
 import { blue, grey, indigo } from "@material-ui/core/colors";
 import ReceiptIcon from "@material-ui/icons/Receipt";
