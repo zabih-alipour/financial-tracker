@@ -1,6 +1,6 @@
 package com.alipour.product.financialtracker;
 
-import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
+import com.alipour.product.financialtracker.api_caller.CoinexApiCaller;
 import com.alipour.product.financialtracker.investment.service.InvestmentService;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
@@ -23,11 +23,11 @@ import java.math.BigDecimal;
 @Component
 public class Migration implements CommandLineRunner {
     private final ObjectMapper mapper;
-    private UserService userService;
-    private PaymentService paymentService;
-    private PaymentTypeService paymentTypeService;
-    private InvestmentTypeService investmentTypeService;
-    private InvestmentService investmentService;
+    private final UserService userService;
+    private final PaymentService paymentService;
+    private final PaymentTypeService paymentTypeService;
+    private final InvestmentTypeService investmentTypeService;
+    private final CoinexApiCaller coinexApiCaller;
 
 
     public Migration(ObjectMapper mapper,
@@ -35,13 +35,13 @@ public class Migration implements CommandLineRunner {
                      PaymentService paymentService,
                      PaymentTypeService paymentTypeService,
                      InvestmentTypeService investmentTypeService,
-                     InvestmentService investmentService) {
+                     InvestmentService investmentService, CoinexApiCaller coinexApiCaller) {
         this.mapper = mapper;
         this.userService = userService;
         this.paymentService = paymentService;
         this.paymentTypeService = paymentTypeService;
         this.investmentTypeService = investmentTypeService;
-        this.investmentService = investmentService;
+        this.coinexApiCaller = coinexApiCaller;
     }
 
     @Override
@@ -51,6 +51,7 @@ public class Migration implements CommandLineRunner {
         importPayment();
         importInvestmentTypes();
         importInvestments();
+
     }
 
     private void importInvestments() throws Exception {
