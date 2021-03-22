@@ -25,27 +25,27 @@ export default function InvestmentReportDetail(props) {
     fetch("/api/investments/reports/total-assets/" + user.id)
       .then((res) => res.json())
       .then((data) => setSummary(data));
-  }, [ data]);
+  }, [data]);
 
   const footerComponent = () => {
-    const rows = summary.map((row, idx)=>{
+    const rows = summary.map((row, idx) => {
       return (
         <TableCell align="center">
-            <Box p={1 / 2} fontSize={13} style={{ color: indigo[500] }}>
-              <Box padding={2} borderBottom={1}>
-              سرمایه به {" "} {row.investmentType.name}
-              </Box>
-              <Box padding={2}>
-                <AmountDecorate amount={row.amount} />
-              </Box>
+          <Box p={1 / 2} fontSize={13} style={{ color: indigo[500] }}>
+            <Box padding={2} borderBottom={1}>
+              سرمایه به {row.investmentType.name}
             </Box>
-          </TableCell>
-      )
-    })
+            <Box padding={2}>
+              <AmountDecorate amount={row.amount} />
+            </Box>
+          </Box>
+        </TableCell>
+      );
+    });
     return (
       <TableFooter>
         <TableRow style={{ backgroundColor: grey[100] }}>
-            {rows}
+          {rows}
           <TableCell align="center"></TableCell>
         </TableRow>
       </TableFooter>
@@ -54,8 +54,16 @@ export default function InvestmentReportDetail(props) {
   const rows = () => {
     const details = data.coins.map((p) => {
       return (
-        <TableRow>
+        <TableRow
+          title={
+            "آخرین قیمت " +
+            p.investmentType.name +
+            ": " +
+            p.investmentType.latestPrice
+          }
+        >
           <TableCell align="center">{p.investmentType.name}</TableCell>
+
           <TableCell align="center">
             <AmountDecorate amount={p.amount} />
           </TableCell>
@@ -78,9 +86,13 @@ export default function InvestmentReportDetail(props) {
       <CardHeader
         title={data.user.name}
         action={
-          <IconButton onClick={() => onActionClick({ user: data.user })}>
-            <ReceiptIcon style={{ color: blue[500] }} />
-          </IconButton>
+          <Box>
+            <Box>
+              <IconButton onClick={() => onActionClick({ user: data.user })}>
+                <ReceiptIcon style={{ color: blue[500] }} />
+              </IconButton>
+            </Box>
+          </Box>
         }
       />
       <CardContent>
@@ -88,7 +100,7 @@ export default function InvestmentReportDetail(props) {
           <TableHead style={{ backgroundColor: indigo[100] }}>
             <TableRow>
               <TableCell align="center">عنوان</TableCell>
-              <TableCell align="center">مبلغ</TableCell>
+              <TableCell align="center">مقدار</TableCell>
               <TableCell align="center">جزییات</TableCell>
             </TableRow>
           </TableHead>

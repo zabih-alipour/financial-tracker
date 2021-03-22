@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   Grid,
@@ -19,6 +20,8 @@ import InvestmentTypeForm from "./InvestmentTypeForm";
 import ListHeader from "../utils/ListHeader";
 import InvestmentSpecificDetail from "./InvestmentSpecificDetail";
 import ReceiptIcon from "@material-ui/icons/Receipt";
+import { ThreeSixty } from "@material-ui/icons";
+import { update_market_statics } from '../utils/apis'
 
 export default class InvestementTypeList extends React.Component {
   constructor(props) {
@@ -77,6 +80,7 @@ export default class InvestementTypeList extends React.Component {
       );
     }
   };
+
   render() {
     const { types } = this.state;
 
@@ -105,13 +109,26 @@ export default class InvestementTypeList extends React.Component {
           titleArea={"سبد سرمایه"}
           searchArea={<div></div>}
           buttonAria={
-            <Button
-              onClick={() => this.dialogHandler("TYPE_FORM", null)}
-              variant="outlined"
-              style={{ backgroundColor: "white" }}
-            >
-              جــدیــد
-            </Button>
+            <Box>
+              <Box ml={1 / 2} display="inline-block">
+                <Button
+                  onClick={() => update_market_statics(this.fetchData)}
+                  variant="outlined"
+                  style={{ backgroundColor: "white" }}
+                >
+                  بروزرسانی
+                </Button>
+              </Box>
+              <Box display="inline-block">
+                <Button
+                  onClick={() => this.dialogHandler("TYPE_FORM", null)}
+                  variant="outlined"
+                  style={{ backgroundColor: "white" }}
+                >
+                  جــدیــد
+                </Button>
+              </Box>
+            </Box>
           }
         />
 
