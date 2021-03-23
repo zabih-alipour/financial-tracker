@@ -41,7 +41,7 @@ public class NobitexApiCaller {
         node.set("dstCurrency", new TextNode("IRT"));
 
         MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, node.asText());
+        RequestBody body = RequestBody.create(mediaType, node.toString());
         Request request = new Request.Builder()
                 .url(MARKET_STATS)
                 .method("POST", body)
@@ -92,7 +92,7 @@ public class NobitexApiCaller {
             node.set("dstCurrency", new TextNode("USDT"));
 
             MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, node.asText());
+            RequestBody body = RequestBody.create(mediaType, node.toString());
             Request request = new Request.Builder()
                     .url(MARKET_STATS)
                     .method("POST", body)

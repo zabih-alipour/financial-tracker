@@ -21,10 +21,10 @@ public class PaymentSpecification implements GenericSpecification<Payment> {
         Predicate predicate = null;
         switch (search.getKey()) {
             case "user.id":
-                predicate = criteriaBuilder.equal(root.get("user"), search.getValue());
+                predicate = criteriaBuilder.equal(root.get("user").get("id"), search.getValue());
                 break;
             case "paymentType.id":
-                predicate = criteriaBuilder.equal(root.get("paymentType"), search.getValue());
+                predicate = criteriaBuilder.equal(root.get("paymentType").get("id"), search.getValue());
                 break;
             case "amount":
                 predicate = criteriaBuilder.equal(root.get("amount"), search.getValue());

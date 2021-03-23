@@ -20,6 +20,8 @@ public class VwInvestmentSpecification implements GenericSpecification<VwInvestm
     public Predicate toPredicate(Root<VwInvestment> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         if (search.getKey().equals("user.name"))
             return criteriaBuilder.like(root.get("user").get("name"), search.getValue() + "%");
+        if (search.getKey().equals("user.id"))
+            return criteriaBuilder.equal(root.get("user").get("id"), search.getValue());
         else return null;
     }
 }
