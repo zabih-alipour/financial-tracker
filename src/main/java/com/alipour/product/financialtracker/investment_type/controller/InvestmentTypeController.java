@@ -1,6 +1,6 @@
 package com.alipour.product.financialtracker.investment_type.controller;
 
-import com.alipour.product.financialtracker.api_caller.CoinexApiCaller;
+import com.alipour.product.financialtracker.api_caller.NobitexApiCaller;
 import com.alipour.product.financialtracker.common.CRUDController;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/investment_types")
 public class InvestmentTypeController extends CRUDController<InvestmentType> {
-    private final CoinexApiCaller apiCaller;
+    private final NobitexApiCaller apiCaller;
 
-    public InvestmentTypeController(InvestmentTypeService service, CoinexApiCaller apiCaller) {
+    public InvestmentTypeController(InvestmentTypeService service, NobitexApiCaller apiCaller) {
         super(service);
         this.apiCaller = apiCaller;
     }

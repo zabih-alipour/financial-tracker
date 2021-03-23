@@ -1,6 +1,7 @@
 package com.alipour.product.financialtracker;
 
 import com.alipour.product.financialtracker.api_caller.CoinexApiCaller;
+import com.alipour.product.financialtracker.api_caller.NobitexApiCaller;
 import com.alipour.product.financialtracker.investment.service.InvestmentService;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
@@ -10,6 +11,7 @@ import com.alipour.product.financialtracker.payment_type.models.PaymentType;
 import com.alipour.product.financialtracker.payment_type.service.PaymentTypeService;
 import com.alipour.product.financialtracker.user.models.User;
 import com.alipour.product.financialtracker.user.services.UserService;
+import com.alipour.product.financialtracker.utils.ArzSocket;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.CommandLineRunner;
@@ -27,7 +29,7 @@ public class Migration implements CommandLineRunner {
     private final PaymentService paymentService;
     private final PaymentTypeService paymentTypeService;
     private final InvestmentTypeService investmentTypeService;
-    private final CoinexApiCaller coinexApiCaller;
+    private final NobitexApiCaller nobitexApiCaller;
 
 
     public Migration(ObjectMapper mapper,
@@ -35,13 +37,13 @@ public class Migration implements CommandLineRunner {
                      PaymentService paymentService,
                      PaymentTypeService paymentTypeService,
                      InvestmentTypeService investmentTypeService,
-                     InvestmentService investmentService, CoinexApiCaller coinexApiCaller) {
+                     InvestmentService investmentService, NobitexApiCaller nobitexApiCaller) {
         this.mapper = mapper;
         this.userService = userService;
         this.paymentService = paymentService;
         this.paymentTypeService = paymentTypeService;
         this.investmentTypeService = investmentTypeService;
-        this.coinexApiCaller = coinexApiCaller;
+        this.nobitexApiCaller = nobitexApiCaller;
     }
 
     @Override

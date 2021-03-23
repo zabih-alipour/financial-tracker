@@ -326,7 +326,7 @@ public class InvestmentService extends CRUDService<Investment> {
                 return BigDecimal.ZERO;
             else if (type.getId().equals(typeCode.get("RIAL").getId()))
                 return BigDecimal.ZERO;
-            else if (type.getId().equals(typeCode.get("DOLOR").getId())) {
+            else if (type.getId().equals(typeCode.get("USDT").getId())) {
                 return defaultValue;
             } else {
                 InvestmentType investmentType = typeCode.get(type.getCode());
@@ -342,7 +342,7 @@ public class InvestmentService extends CRUDService<Investment> {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
 
-            BigDecimal totalToman = totalUSDT.multiply(typeCode.get("DOLOR").getLatestPrice())
+            BigDecimal totalToman = totalUSDT.multiply(typeCode.get("USDT").getLatestPrice())
                     .add(investmentReport.getCoins().stream()
                             .filter(p -> p.getInvestmentType().getId() == 1L)
                             .findFirst()
@@ -350,7 +350,7 @@ public class InvestmentService extends CRUDService<Investment> {
                             .orElse(BigDecimal.ZERO));
 
             infos.add(new CoinInfo(new InvestmentType(99L, "سرمایه اولیه تومان"), repository.getTotalRialInvestments(investmentReport.getUser().getId())));
-            infos.add(new CoinInfo(typeCode.get("DOLOR"), totalUSDT));
+            infos.add(new CoinInfo(typeCode.get("USDT"), totalUSDT));
             infos.add(new CoinInfo(typeCode.get("RIAL"), totalToman));
         }
 
