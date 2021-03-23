@@ -23,6 +23,7 @@ import TuneIcon from "@material-ui/icons/Tune";
 import AmountDecorate from "../utils/AmountDecorate";
 import ListHeader from "../utils/ListHeader";
 import { Pagination } from "@material-ui/lab";
+import UserAutoComplete from "../user/UserAutoComplete";
 
 export default class PaymentList extends React.Component {
   constructor(props) {
@@ -31,6 +32,7 @@ export default class PaymentList extends React.Component {
       pagedData: {},
       dialog: "",
       selectedPayment: null,
+      filteredUser: null,
     };
   }
 
@@ -142,11 +144,18 @@ export default class PaymentList extends React.Component {
   };
 
   onPageChanged = (event, page) => {
-    const { pagedData } = this.state;
+    const { pagedData, filteredUser } = this.state;
     const { size = 0 } = pagedData;
 
+    const search = [];
+    if (filteredUser) {
+      search.push({
+        key: "user.id",
+        value: filteredUser.id,
+      });
+    }
     const searchCriteria = {
-      searchArias: [],
+      searchArias: search,
       pagination: {
         pageSize: size,
         pageNumber: page - 1,
@@ -156,6 +165,32 @@ export default class PaymentList extends React.Component {
         order: "DESC",
       },
     };
+    this.fetchData(searchCriteria);
+  };
+
+  filterUser = (event) => {
+    const user = event.target.value;
+    this.setState({ filteredUser: user });
+
+    var searchCriteria = null;
+    if (user) {
+      searchCriteria = {
+        searchArias: [
+          {
+            key: "user.id",
+            value: user.id,
+          },
+        ],
+        pagination: {
+          pageSize: 5,
+          pageNumber: 0,
+        },
+        sort: {
+          field: "shamsiDate",
+          order: "DESC",
+        },
+      };
+    }
     this.fetchData(searchCriteria);
   };
 
@@ -227,7 +262,13 @@ export default class PaymentList extends React.Component {
       <Container>
         <ListHeader
           titleArea={"پرداخت ها"}
-          searchArea={<div></div>}
+          searchArea={
+            <UserAutoComplete
+              fieldName="dummy"
+              fullWidth={true}
+              onChange={this.filterUser}
+            />
+          }
           buttonAria={
             <Button
               onClick={() => this.dialogHandler("PAYMENT_FORM", null)}

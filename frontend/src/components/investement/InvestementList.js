@@ -4,7 +4,6 @@ import {
   Container,
   DialogContentText,
   DialogTitle,
-  Grid,
   IconButton,
   Paper,
   Table,
@@ -13,10 +12,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@material-ui/core";
 import { blue, green, grey, orange, red } from "@material-ui/core/colors";
-import { DeleteForever, Edit } from "@material-ui/icons";
+import { DeleteForever, Edit, Search } from "@material-ui/icons";
 import React from "react";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import AmountDecorate from "../utils/AmountDecorate";
@@ -26,60 +24,7 @@ import ListHeader from "../utils/ListHeader";
 import TuneIcon from "@material-ui/icons/Tune";
 import InvestmentDetail from "./InvestmentDetails";
 import { Pagination } from "@material-ui/lab";
-
-const columns = [
-  { id: "id", label: "ردیف", minWidth: 170 },
-  { id: "user.name", label: "کاربر", minWidth: 100 },
-  {
-    id: "instumentType.name",
-    label: "نوع سرمایه",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "shamsiDate",
-    label: "تاریخ",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "amount",
-    label: "مقدار",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "executedPrice",
-    label: "قیمت خریداری شده",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "spentAmount",
-    label: "مقدار مصرف شده",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "code",
-    label: "کد",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "dummy",
-    label: "فعالیت",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-];
+import UserAutoComplete from "../user/UserAutoComplete";
 
 export default class InvestmentList extends React.Component {
   constructor(props) {
@@ -88,6 +33,7 @@ export default class InvestmentList extends React.Component {
       dialog: "",
       selectedInvestment: null,
       pagedData: {},
+      filteredUser: null,
     };
   }
 
@@ -196,22 +142,59 @@ export default class InvestmentList extends React.Component {
       );
     }
   };
-
-  onPageChanged = (event, page) => {
-    const { pagedData } = this.state;
+  getCriteria = (page = null) => {
+    const { pagedData, filteredUser } = this.state;
     const { size = 0 } = pagedData;
 
+    const search = [];
+    if (filteredUser) {
+      search.push({
+        key: "user.id",
+        value: filteredUser.id,
+      });
+    }
+
     const searchCriteria = {
-      searchArias: [],
+      searchArias: search,
       pagination: {
         pageSize: size,
         pageNumber: page - 1,
       },
       sort: {
-        field: "id",
+        field: "shamsiDate",
         order: "DESC",
       },
     };
+    return searchCriteria;
+  };
+
+  onPageChanged = (event, page) => {
+    this.fetchData(this.getCriteria(page));
+  };
+
+  filterUser = (event) => {
+    const user = event.target.value;
+    this.setState({ filteredUser: user });
+
+    var searchCriteria = null;
+    if (user) {
+      searchCriteria = {
+        searchArias: [
+          {
+            key: "user.id",
+            value: user.id,
+          },
+        ],
+        pagination: {
+          pageSize: 5,
+          pageNumber: 0,
+        },
+        sort: {
+          field: "shamsiDate",
+          order: "DESC",
+        },
+      };
+    }
     this.fetchData(searchCriteria);
   };
 
@@ -272,7 +255,13 @@ export default class InvestmentList extends React.Component {
       <Container component="div" fixed style={{ marginTop: "5px" }}>
         <ListHeader
           titleArea={"سرمایه گذاری ها"}
-          searchArea={<div></div>}
+          searchArea={
+            <UserAutoComplete
+              fieldName="dummy"
+              onChange={this.filterUser}
+              fullWidth={true}
+            />
+          }
           buttonAria={
             <Button
               onClick={() => this.dialogHandler("INVESTMENT_FORM", null)}

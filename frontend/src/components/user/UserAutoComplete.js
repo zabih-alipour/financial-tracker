@@ -7,7 +7,7 @@ import React from "react";
 export default function UserAutoComplete(props) {
   const [users, setUsers] = React.useState(props.users ? props.users : []);
 
-  const { user, onChange, fieldName, style} = props;
+  const { user, onChange, fieldName, style, fullWidth = false } = props;
 
   React.useEffect(() => {
     if (users.length === 0) {
@@ -36,12 +36,12 @@ export default function UserAutoComplete(props) {
       autoComplete
       onChange={onAutoCompleteChange}
       // autoHighlight
-      // fullWidth
-      
+      fullWidth={fullWidth}
       value={user}
       options={users}
       renderInput={(params) => (
-        <TextField style={style}
+        <TextField
+          style={style}
           {...params}
           label="کاربر"
           placeholder="کاربر"
