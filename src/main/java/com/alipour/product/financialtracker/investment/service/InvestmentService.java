@@ -2,6 +2,7 @@ package com.alipour.product.financialtracker.investment.service;
 
 import com.alipour.product.financialtracker.common.BusinessException;
 import com.alipour.product.financialtracker.common.CRUDService;
+import com.alipour.product.financialtracker.common.DateUtils;
 import com.alipour.product.financialtracker.common.NotSupportException;
 import com.alipour.product.financialtracker.investment.dto.CoinInfo;
 import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
@@ -67,8 +68,11 @@ public class InvestmentService extends CRUDService<Investment> {
     }
 
     public Investment add(InvestmentDto dto) {
-        Investment investment = dto.getChangeInvestment();
+        if (dto.getShamsiDate() == null) {
+            dto.setShamsiDate(DateUtils.getTodayJalali());
+        }
 
+        Investment investment = dto.getChangeInvestment();
         if (dto.getParent() == null) {
             investment.setDescription("پس انداز ریالی");
         } else {
