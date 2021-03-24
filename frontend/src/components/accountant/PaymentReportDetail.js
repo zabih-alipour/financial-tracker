@@ -26,10 +26,10 @@ export default class PaymentReportDetail extends React.Component {
 
   render() {
     const { data } = this.state;
-    const rows = data.details.map((p) => {
+    const rows = data.details.map((p, idx) => {
       const row = { user: data.user, type: p.type };
       return (
-        <TableRow>
+        <TableRow key={idx}>
           <TableCell align="center">{p.type.name}</TableCell>
           <TableCell align="center">
             {p.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}

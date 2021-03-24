@@ -240,7 +240,7 @@ export default class InvestmentList extends React.Component {
               <Edit style={{ color: green[500] }} />
             </IconButton>
             <IconButton
-              disabled={row.spentAmount}
+              disabled={row.spentAmount !== null}
               onClick={() => this.dialogHandler("DELETE_INVESTMENT", row)}
             >
               <DeleteForever

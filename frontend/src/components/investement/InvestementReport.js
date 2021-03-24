@@ -87,7 +87,7 @@ export default class AccountReport extends React.Component {
       );
     });
     return (
-      <Container component={Paper} maxWidth="70%" style={{ padding: "0" }}>
+      <Container component={Paper} maxWidth={"xl"} style={{ padding: "0" }}>
         <Box mt={1}>{row}</Box>
       </Container>
     );
@@ -130,7 +130,7 @@ export default class AccountReport extends React.Component {
   };
   render() {
     return (
-      <Container maxWidth="100%" style={{ padding: "0" }}>
+      <Container maxWidth={false} style={{ padding: "0" }}>
         {this.summaryComponenet()}
         {this.detailsComponenet()}
         {this.handleDialog()}

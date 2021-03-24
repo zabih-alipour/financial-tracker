@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@material-ui/core";
 import { green, red } from "@material-ui/core/colors";
 import React from "react";
 
@@ -13,7 +13,7 @@ export default function AmountDecorate(props) {
 
   const getText = () => {
     return (
-      <Typography
+      <Box
         align="center"
         style={{
           color: colorize ? (amount >= 0 ? green[500] : red[500]) : "black",
@@ -24,8 +24,21 @@ export default function AmountDecorate(props) {
               useGrouping: true,
             })
           : Math.abs(amount)}
-      </Typography>
+      </Box>
     );
   };
-  return <Typography style={{ ...style }}>{getText()}</Typography>;
+  return (
+    <Box
+      align="center"
+      style={{
+        color: colorize ? (amount >= 0 ? green[500] : red[500]) : "black",
+      }}
+    >
+      {thousand
+        ? Math.abs(amount).toLocaleString("fullwide", {
+            useGrouping: true,
+          })
+        : Math.abs(amount)}
+    </Box>
+  );
 }

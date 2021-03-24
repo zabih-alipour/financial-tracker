@@ -1,23 +1,35 @@
-import { TextField, Typography } from "@material-ui/core";
+import { Chip, TextField, Typography } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import React from "react";
 
 export default function UserAutoComplete(props) {
-  const [users, setUsers] = React.useState(props.users ? props.users : []);
+  const [options, setOptions] = React.useState(props.users ? props.users : []);
 
-  const { user, onChange, fieldName, style, fullWidth = false } = props;
+  const {
+    onChange,
+    fieldName,
+    style,
+    fullWidth = false,
+    multiple = false,
+  } = props;
+
+  const selectedOptions = multiple
+    ? props.user
+      ? [props.user]
+      : []
+    : props.user;
 
   React.useEffect(() => {
-    if (users.length === 0) {
+    if (options.length === 0) {
       fetch("/api/users")
         .then((response) => response.json())
         .then((data) => {
-          setUsers(data);
+          setOptions(data);
         });
     }
-  }, [users]);
+  }, [options]);
 
   const onAutoCompleteChange = (event, value, reason) => {
     event = {
@@ -33,12 +45,13 @@ export default function UserAutoComplete(props) {
   return (
     <Autocomplete
       id="user-auto"
-      autoComplete
+      // autoComplete
       onChange={onAutoCompleteChange}
       // autoHighlight
+      multiple={multiple}
       fullWidth={fullWidth}
-      value={user}
-      options={users}
+      value={selectedOptions}
+      options={options}
       renderInput={(params) => (
         <TextField
           style={style}
@@ -53,8 +66,25 @@ export default function UserAutoComplete(props) {
         return option.name;
       }}
       getOptionSelected={(option, value) => {
-        return option.name === value.name;
+        if (multiple) {
+          const selected = value.filter((opt, idx) => opt.id === value.id);
+          console.log(selected);
+          return selected > 0;
+        } else {
+          return option.id === value.id;
+        }
       }}
+      // renderTags={(value, getTagProps) =>
+      //   value.map((option, index) => {
+      //     return (
+      //       <Chip
+      //         variant="outlined"
+      //         label={option.name}
+      //         {...getTagProps({ index })}
+      //       />
+      //     );
+      //   })
+      // }
       renderOption={(option, { inputValue }) => {
         const matches = match(option.name, inputValue);
         const parts = parse(option.name, matches);
