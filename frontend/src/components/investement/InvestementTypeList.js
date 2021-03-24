@@ -21,13 +21,14 @@ import ListHeader from "../utils/ListHeader";
 import InvestmentSpecificDetail from "./InvestmentSpecificDetail";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import { ThreeSixty } from "@material-ui/icons";
-import { update_market_statics } from '../utils/apis'
+import { update_market_statics } from "../utils/apis";
+import { Pagination } from "@material-ui/lab";
 
 export default class InvestementTypeList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      types: [],
+      pagedData: {},
     };
   }
 
@@ -35,12 +36,16 @@ export default class InvestementTypeList extends React.Component {
     this.fetchData();
   };
 
-  fetchData = () => {
-    fetch("/api/investment_types")
+  fetchData = (searchCriteria = null) => {
+    fetch("/api/investment_types/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(searchCriteria),
+    })
       .then((response) => response.json())
       .then((data) => {
         this.setState({
-          types: data,
+          pagedData: data,
         });
       });
   };
@@ -80,11 +85,36 @@ export default class InvestementTypeList extends React.Component {
       );
     }
   };
+  onPageChanged = (event, page) => {
+    this.fetchData(this.getCriteria(page));
+  };
+  getCriteria = (page) => {
+    const { pagedData, } = this.state;
+    const { size = 0 } = pagedData;
 
+    const searchCriteria = {
+      searchArias: [],
+      pagination: {
+        pageSize: size,
+        pageNumber: page - 1,
+      },
+      sort: {
+        field: "latestPrice",
+        order: "DESC",
+      },
+    };
+    return searchCriteria;
+  };
   render() {
-    const { types } = this.state;
+    const { pagedData } = this.state;
+    const {
+      content = [],
+      totalPages = 0,
+      number = 0,
+      empty = true,
+    } = pagedData;
 
-    const rows = types.map((type, idx) => {
+    const rows = content.map((type, idx) => {
       return (
         <TableRow key={idx}>
           <TableCell align="center">{idx + 1}</TableCell>
@@ -93,7 +123,9 @@ export default class InvestementTypeList extends React.Component {
           <TableCell align="center">{type.latestPrice}</TableCell>
           <TableCell align="center">{"20%"}</TableCell>
           <TableCell align="center">
-            <IconButton onClick={() => this.dialogHandler("INVESTMENT_DETAIL", type)}>
+            <IconButton
+              onClick={() => this.dialogHandler("INVESTMENT_DETAIL", type)}
+            >
               <ReceiptIcon style={{ color: blue[500] }} />
             </IconButton>
             <IconButton onClick={() => this.dialogHandler("TYPE_FORM", type)}>
@@ -134,6 +166,20 @@ export default class InvestementTypeList extends React.Component {
 
         <TableContainer component={Paper}>
           <Table>
+            <caption>
+              <Box>
+                <Box mt={0.5} justifyContent="center">
+                  <Pagination
+                    boundaryCount={2}
+                    page={number + 1}
+                    count={totalPages}
+                    disabled={empty}
+                    color="primary"
+                    onChange={this.onPageChanged}
+                  />
+                </Box>
+              </Box>
+            </caption>
             <TableHead style={{ backgroundColor: "orange" }}>
               <TableRow>
                 <TableCell align="center">ردیف</TableCell>
