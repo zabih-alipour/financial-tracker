@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public class CRUDController<T> {
+public class CRUDController<T extends ParentEntity> {
 
     protected final CRUDService<T> service;
 

@@ -32,7 +32,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +50,11 @@ public class InvestmentService extends CRUDService<Investment> {
     private final VwInvestmentRepository vwInvestmentRepository;
 
 
-    public InvestmentService(InvestmentRepository repository, InvestmentTypeRepository typeRepository, SecureRandom random, VwInvestmentRepository vwInvestmentRepository) {
+    public InvestmentService(
+            InvestmentRepository repository,
+            InvestmentTypeRepository typeRepository,
+            SecureRandom random,
+            VwInvestmentRepository vwInvestmentRepository) {
         this.repository = repository;
         this.typeRepository = typeRepository;
         this.random = random;
@@ -171,7 +174,7 @@ public class InvestmentService extends CRUDService<Investment> {
         return repository.findAll(specification, Sort.by(Sort.Direction.ASC, "shamsiDate"));
     }
 
-    public Page<VwInvestment> search(SearchCriteria searchCriteria) {
+    public Page<VwInvestment> searchVwInvestments(SearchCriteria searchCriteria) {
         searchCriteria = Optional.ofNullable(searchCriteria).orElse(new SearchCriteria());
         SpecificationBuilder<VwInvestment> specificationBuilder = new SpecificationBuilder<>(searchCriteria, VwInvestment.class);
         return vwInvestmentRepository.findAll(specificationBuilder.specification(), specificationBuilder.pageRequest());

@@ -44,7 +44,7 @@ public class InvestmentController extends CRUDController<Investment> {
     @PostMapping("/search/v2")
     @ResponseBody
     public Page<VwInvestment> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
-        return ((InvestmentService) service).search(searchCriteria);
+        return ((InvestmentService) service).searchVwInvestments(searchCriteria);
     }
 
     @GetMapping("/by-code/{userId}")

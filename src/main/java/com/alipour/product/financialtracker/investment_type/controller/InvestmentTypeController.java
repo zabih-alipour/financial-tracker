@@ -4,11 +4,12 @@ import com.alipour.product.financialtracker.api_caller.NobitexApiCaller;
 import com.alipour.product.financialtracker.common.CRUDController;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
+import com.alipour.product.financialtracker.payment.model.Payment;
+import com.alipour.product.financialtracker.payment.service.PaymentService;
+import com.alipour.product.financialtracker.utils.SearchCriteria;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller：
@@ -37,5 +38,11 @@ public class InvestmentTypeController extends CRUDController<InvestmentType> {
         InvestmentType investmentType = service.get(typeId).orElse(null);
         apiCaller.getMarketStatistics(investmentType);
         return ResponseEntity.ok("Successfully Updated");
+    }
+
+    @PostMapping("/search")
+    @ResponseBody
+    public Page<InvestmentType> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
+        return ((InvestmentTypeService) service).search(searchCriteria);
     }
 }
