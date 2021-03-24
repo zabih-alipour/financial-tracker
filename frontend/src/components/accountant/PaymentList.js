@@ -66,8 +66,10 @@ export default class PaymentList extends React.Component {
     });
   };
 
-  settlementPayment = (payment) => {
-    const settlenemt = { id: payment.id, amount: null };
+  settlementPayment = () => {
+    const { selectedPayment } = this.state;
+
+    const settlenemt = { id: selectedPayment.id };
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
