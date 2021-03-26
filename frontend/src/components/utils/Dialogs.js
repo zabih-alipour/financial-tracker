@@ -1,5 +1,6 @@
 import InvestmentSpecificDetail from "../investement/InvestmentSpecificDetail";
 import InvestmentForm from "../investement/InvestmentForm";
+import InvestmentTypeForm from "../investement/InvestmentTypeForm";
 
 export function ShowDialog(info, onCloseCallback) {
   const { dialog } = info;
@@ -7,7 +8,19 @@ export function ShowDialog(info, onCloseCallback) {
     return INVESTMENT_FORM(info, onCloseCallback);
   } else if (dialog === "INVESTMENT_SPECIFIC_DETAIL") {
     return INVESTMENT_SPECIFIC_DETAIL(info, onCloseCallback);
+  } else if (dialog === "INVESTMENT_TYPE_FORM") {
+    return INVESTMENT_TYPE_FORM(info, onCloseCallback);
   }
+}
+
+function INVESTMENT_TYPE_FORM(info, onCloseCallback) {
+  return (
+    <InvestmentTypeForm
+      openDialog={true}
+      type={info.type}
+      onClose={onCloseCallback}
+    />
+  );
 }
 
 function INVESTMENT_SPECIFIC_DETAIL(info, onCloseCallback) {

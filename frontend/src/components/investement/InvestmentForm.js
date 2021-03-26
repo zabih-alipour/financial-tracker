@@ -16,6 +16,8 @@ import SaveIcon from "@material-ui/icons/Save";
 import UserAutoComplete from "../user/UserAutoComplete";
 import InvestmentTypeAutoComplete from "./InvestmentTypeAutoComplete";
 import InvestmentAutoComplete from "./InvestmentAutoComplete";
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import DatePicker, { Calendar, utils } from "react-modern-calendar-datepicker";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -39,6 +41,7 @@ export default class InvestmentForm extends React.Component {
   };
 
   onChange = (event) => {
+    console.log(event);
     this.setState((state) => ({
       investment: {
         ...state.investment,
@@ -65,14 +68,14 @@ export default class InvestmentForm extends React.Component {
   onParentChange = (event) => {
     const parent = event.target.value;
     this.setState((state) => ({
-      investment:{
+      investment: {
         ...state.investment,
-        parent: parent
+        parent: parent,
       },
       subtract: {
         ...state.subtract,
         investmentType: parent.investmentType,
-        amount: parent.remain
+        amount: parent.remain,
       },
     }));
   };
@@ -152,6 +155,15 @@ export default class InvestmentForm extends React.Component {
     }
   };
 
+  formatDate = (date) => {
+    if (!date) {
+      date = utils("fa").getToday();
+    }
+    const { year, month, day } = utils("fa").getToday();
+
+    return year + "/" + month + "/" + day;
+  };
+
   render() {
     const { open, investment, change } = this.state;
     const title = investment.id == null ? " ثبت سرمایه" : " ویرایش  سرمایه";
@@ -200,6 +212,7 @@ export default class InvestmentForm extends React.Component {
               />
             </Grid>
             <Grid item sx={1}>
+              
               <TextField
                 inputProps={{ min: 0, style: { textAlign: "center" } }}
                 id="tf_shamsiDate"
@@ -208,7 +221,7 @@ export default class InvestmentForm extends React.Component {
                 variant="standard"
                 placeholder="تاریخ"
                 margin="dense"
-                value={investment.shamsiDate}
+                value={investment.shamsiDate? investment.shamsiDate: this.formatDate()}
                 onChange={(event) => this.onChange(event)}
               />
             </Grid>

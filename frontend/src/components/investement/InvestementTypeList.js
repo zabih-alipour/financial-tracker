@@ -13,13 +13,15 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
-import { blue } from "@material-ui/core/colors";
-import InvestmentTypeForm from "./InvestmentTypeForm";
+import { blue, green } from "@material-ui/core/colors";
 import ListHeader from "../utils/ListHeader";
-import InvestmentSpecificDetail from "./InvestmentSpecificDetail";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import { update_market_statics } from "../utils/apis";
 import { Pagination } from "@material-ui/lab";
+import { investment_types_search } from "../utils/apis";
+import { ShowDialog } from "../utils/Dialogs";
+import PostAddIcon from "@material-ui/icons/PostAdd";
+
 
 export default class InvestementTypeList extends React.Component {
   constructor(props) {
@@ -34,17 +36,11 @@ export default class InvestementTypeList extends React.Component {
   };
 
   fetchData = (searchCriteria = null) => {
-    fetch("/api/investment_types/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(searchCriteria),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          pagedData: data,
-        });
+    investment_types_search(searchCriteria, (data) => {
+      this.setState({
+        pagedData: data,
       });
+    });
   };
 
   dialogHandler = (dialog, type) => {
@@ -63,30 +59,16 @@ export default class InvestementTypeList extends React.Component {
 
   showDialog = () => {
     const { dialog, selectedType } = this.state;
-    if (dialog === "TYPE_FORM") {
-      return (
-        <InvestmentTypeForm
-          openDialog={true}
-          type={selectedType}
-          onClose={this.onClose}
-        />
-      );
-    } else if (dialog === "INVESTMENT_DETAIL") {
-      return (
-        <InvestmentSpecificDetail
-          openDialog={true}
-          user={null}
-          type={selectedType}
-          onClose={this.onClose}
-        />
-      );
-    }
+    return ShowDialog(
+      { type: selectedType, user: null, dialog: dialog },
+      this.onClose
+    );
   };
   onPageChanged = (event, page) => {
     this.fetchData(this.getCriteria(page));
   };
   getCriteria = (page) => {
-    const { pagedData, } = this.state;
+    const { pagedData } = this.state;
     const { size = 0 } = pagedData;
 
     const searchCriteria = {
@@ -120,12 +102,23 @@ export default class InvestementTypeList extends React.Component {
           <TableCell align="center">{type.latestPrice}</TableCell>
           <TableCell align="center">{"20%"}</TableCell>
           <TableCell align="center">
+          <IconButton
+                onClick={() =>
+                  this.dialogHandler("INVESTMENT_FORM", type)
+                }
+              >
+                <PostAddIcon style={{ color: green[500] }} />
+              </IconButton>
             <IconButton
-              onClick={() => this.dialogHandler("INVESTMENT_DETAIL", type)}
+              onClick={() =>
+                this.dialogHandler("INVESTMENT_SPECIFIC_DETAIL", type)
+              }
             >
               <ReceiptIcon style={{ color: blue[500] }} />
             </IconButton>
-            <IconButton onClick={() => this.dialogHandler("TYPE_FORM", type)}>
+            <IconButton
+              onClick={() => this.dialogHandler("INVESTMENT_TYPE_FORM", type)}
+            >
               <EditIcon color="primary" />
             </IconButton>
           </TableCell>
@@ -150,7 +143,9 @@ export default class InvestementTypeList extends React.Component {
               </Box>
               <Box display="inline-block">
                 <Button
-                  onClick={() => this.dialogHandler("TYPE_FORM", null)}
+                  onClick={() =>
+                    this.dialogHandler("INVESTMENT_TYPE_FORM", null)
+                  }
                   variant="outlined"
                   style={{ backgroundColor: "white" }}
                 >

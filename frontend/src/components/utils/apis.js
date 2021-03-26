@@ -51,3 +51,13 @@ export function get_users(callback) {
       callback(data);
     });
 }
+
+export function investment_types_search(searchCriteria = null, callback) {
+  fetch("/api/investment_types/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(searchCriteria),
+  })
+    .then((response) => response.json())
+    .then((data) => callback(data));
+}

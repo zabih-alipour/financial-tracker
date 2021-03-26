@@ -4,12 +4,11 @@ import React from "react";
 import InvestmentReportDetail from "./InvestmentReportDetails";
 import UserAutoComplete from "../user/UserAutoComplete";
 import AmountDecorate from "../utils/AmountDecorate";
+import { ShowDialog } from "../utils/Dialogs";
 import {
   investment_report_summary,
   investment_report_by_user,
 } from "../utils/apis";
-
-import { ShowDialog } from "../utils/Dialogs";
 
 export default class InvestmentReport extends React.Component {
   constructor(props) {
@@ -50,7 +49,10 @@ export default class InvestmentReport extends React.Component {
 
   handleDialog = () => {
     const { dialog, criteria } = this.state;
-    return ShowDialog({user:criteria.user, type: criteria.type, dialog: dialog}, this.onClose);
+    return ShowDialog(
+      { user: criteria.user, type: criteria.type, dialog: dialog },
+      this.onClose
+    );
   };
 
   summaryComponenet = () => {
