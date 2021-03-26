@@ -1,55 +1,75 @@
-import { Box, Container, Paper, Popper, Typography } from "@material-ui/core";
-import { green, grey } from "@material-ui/core/colors";
+import { Box, Container, Paper } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 import React from "react";
 import InvestmentReportDetail from "./InvestmentReportDetails";
 import UserAutoComplete from "../user/UserAutoComplete";
 import AmountDecorate from "../utils/AmountDecorate";
 import InvestmentSpecificDetail from "./InvestmentSpecificDetail";
+import InvestmentForm from "./InvestmentForm";
+import {
+  investment_report_summary,
+  investment_report_by_user,
+} from "../utils/apis";
 
-export default class AccountReport extends React.Component {
+export default class InvestmentReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       details: [],
       summaries: [],
-      openDialog: false,
+      dialog: "",
       criteria: { user: null, type: null },
     };
   }
 
   componentDidMount = () => {
-    fetch("api/investments/reports/summaries")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          summaries: data,
-        });
-      })
-      .catch((e) => console.log(e));
+    investment_report_summary((data) => this.setState({ summaries: data }));
   };
 
-  onDetailClick = (criteria) => {
+  onUserChange = (event) => {
+    const user = event.target.value;
+    investment_report_by_user(user, (data) => this.setState({ details: data }));
+  };
+
+  onDetailClick = (user, type, dialog) => {
     this.setState({
-      criteria: criteria,
-      openDialog: true,
+      criteria: {
+        user: user,
+        type: type,
+      },
+      dialog: dialog,
     });
   };
 
   onClose = () => {
     this.setState({
       criteria: { user: null, type: null },
-      openDialog: false,
+      dialog: "",
     });
   };
 
   handleDialog = () => {
-    const { openDialog, criteria } = this.state;
-    if (openDialog) {
+    const { dialog, criteria } = this.state;
+    if (dialog === "INVESTMENT_SPECIFIC_DETAIL") {
       return (
         <InvestmentSpecificDetail
           openDialog={true}
           user={criteria.user}
           type={criteria.type}
+          onClose={this.onClose}
+        />
+      );
+    } else if (dialog === "INVESTMENT_FORM") {
+      const investment = {
+        user: criteria.user,
+        change: {
+          investmentType: criteria.type,
+        },
+      };
+      return (
+        <InvestmentForm
+          openDialog={true}
+          investment={investment}
           onClose={this.onClose}
         />
       );
@@ -93,23 +113,16 @@ export default class AccountReport extends React.Component {
     );
   };
 
-  onUserChange = (event) => {
-    const user = event.target.value;
-    if (user) {
-      fetch("api/investments/reports/" + user.id)
-        .then((response) => response.json())
-        .then((data) => {
-          this.setState({
-            details: data,
-          });
-        })
-        .catch((e) => console.log(e));
-    }
-  };
   detailsComponenet = () => {
     const { details } = this.state;
     const rows = details.map((row, idx) => {
-      return <InvestmentReportDetail data={row} onActionClick={this.onDetailClick} />;
+      return (
+        <InvestmentReportDetail
+          key={idx}
+          data={row}
+          onActionClick={this.onDetailClick}
+        />
+      );
     });
 
     return (

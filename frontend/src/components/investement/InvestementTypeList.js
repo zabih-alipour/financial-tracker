@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Container,
-  Grid,
   IconButton,
   Paper,
   Table,
@@ -11,16 +10,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@material-ui/core";
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
-import { blue, grey } from "@material-ui/core/colors";
+import { blue } from "@material-ui/core/colors";
 import InvestmentTypeForm from "./InvestmentTypeForm";
 import ListHeader from "../utils/ListHeader";
 import InvestmentSpecificDetail from "./InvestmentSpecificDetail";
 import ReceiptIcon from "@material-ui/icons/Receipt";
-import { ThreeSixty } from "@material-ui/icons";
 import { update_market_statics } from "../utils/apis";
 import { Pagination } from "@material-ui/lab";
 

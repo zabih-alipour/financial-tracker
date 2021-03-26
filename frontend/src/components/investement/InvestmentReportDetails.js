@@ -11,8 +11,9 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { blue, grey, indigo } from "@material-ui/core/colors";
+import { blue, green, grey, indigo } from "@material-ui/core/colors";
 import ReceiptIcon from "@material-ui/icons/Receipt";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 import { useEffect, useState } from "react";
 import AmountDecorate from "../utils/AmountDecorate";
 
@@ -68,13 +69,22 @@ export default function InvestmentReportDetail(props) {
             <AmountDecorate amount={p.amount} />
           </TableCell>
           <TableCell align="center">
-            <IconButton
-              onClick={() =>
-                onActionClick({ user: data.user, type: p.investmentType })
-              }
-            >
-              <ReceiptIcon style={{ color: blue[500] }} />
-            </IconButton>
+            <Box>
+              <IconButton
+                onClick={() =>
+                  onActionClick(data.user, p.investmentType, "INVESTMENT_FORM")
+                }
+              >
+                <PostAddIcon style={{ color: green[500] }} />
+              </IconButton>
+              <IconButton
+                onClick={() =>
+                  onActionClick(data.user, p.investmentType, "INVESTMENT_SPECIFIC_DETAIL")
+                }
+              >
+                <ReceiptIcon style={{ color: blue[500] }} />
+              </IconButton>
+            </Box>
           </TableCell>
         </TableRow>
       );
@@ -88,7 +98,19 @@ export default function InvestmentReportDetail(props) {
         action={
           <Box>
             <Box>
-              <IconButton onClick={() => onActionClick({ user: data.user })}>
+              <IconButton
+                onClick={() =>
+                  onActionClick(data.user, null, "INVESTMENT_FORM")
+                }
+              >
+                <PostAddIcon style={{ color: green[500] }} />
+              </IconButton>
+              <IconButton
+                onClick={() =>
+                  onActionClick(data.user, null, "INVESTMENT_SPECIFIC_DETAIL")
+                }
+                title="جزییات"
+              >
                 <ReceiptIcon style={{ color: blue[500] }} />
               </IconButton>
             </Box>

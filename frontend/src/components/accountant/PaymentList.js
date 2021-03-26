@@ -264,12 +264,12 @@ export default class PaymentList extends React.Component {
       <Container>
         <ListHeader
           titleArea={"پرداخت ها"}
-          searchArea={<div></div>
-              // <UserAutoComplete
-              //   fieldName="dummy"
-              //   fullWidth={true}
-              //   onChange={this.filterUser}
-              // />
+          searchArea={
+              <UserAutoComplete
+                fieldName="dummy"
+                fullWidth={true}
+                onChange={this.filterUser}
+              />
           }
           buttonAria={
             <Button
