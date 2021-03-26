@@ -4,12 +4,12 @@ import React from "react";
 import InvestmentReportDetail from "./InvestmentReportDetails";
 import UserAutoComplete from "../user/UserAutoComplete";
 import AmountDecorate from "../utils/AmountDecorate";
-import InvestmentSpecificDetail from "./InvestmentSpecificDetail";
-import InvestmentForm from "./InvestmentForm";
 import {
   investment_report_summary,
   investment_report_by_user,
 } from "../utils/apis";
+
+import { ShowDialog } from "../utils/Dialogs";
 
 export default class InvestmentReport extends React.Component {
   constructor(props) {
@@ -50,30 +50,7 @@ export default class InvestmentReport extends React.Component {
 
   handleDialog = () => {
     const { dialog, criteria } = this.state;
-    if (dialog === "INVESTMENT_SPECIFIC_DETAIL") {
-      return (
-        <InvestmentSpecificDetail
-          openDialog={true}
-          user={criteria.user}
-          type={criteria.type}
-          onClose={this.onClose}
-        />
-      );
-    } else if (dialog === "INVESTMENT_FORM") {
-      const investment = {
-        user: criteria.user,
-        change: {
-          investmentType: criteria.type,
-        },
-      };
-      return (
-        <InvestmentForm
-          openDialog={true}
-          investment={investment}
-          onClose={this.onClose}
-        />
-      );
-    }
+    return ShowDialog({user:criteria.user, type: criteria.type, dialog: dialog}, this.onClose);
   };
 
   summaryComponenet = () => {

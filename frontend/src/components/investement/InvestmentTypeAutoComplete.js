@@ -1,8 +1,9 @@
-import { TextField, Typography } from "@material-ui/core";
+import { Box, TextField, Typography } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import React from "react";
+import { blue, grey } from "@material-ui/core/colors";
 
 export default function InvestmentTypeAutoComplete(props) {
   const [types, setTypes] = React.useState(props.types ? props.types : []);
@@ -56,7 +57,7 @@ export default function InvestmentTypeAutoComplete(props) {
         const matches = match(option.name, inputValue);
         const parts = parse(option.name, matches);
         return (
-          <Typography
+          <Box
             align="center"
             style={{
               width: "100%",
@@ -69,13 +70,14 @@ export default function InvestmentTypeAutoComplete(props) {
                 key={index}
                 style={{
                   display: "inline",
+                  color: part.highlight ? blue[500] : grey[600],
                   fontWeight: part.highlight ? 700 : 400,
                 }}
               >
                 {part.text}
               </Typography>
             ))}
-          </Typography>
+          </Box>
         );
       }}
     />

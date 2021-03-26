@@ -31,7 +31,7 @@ export default function InvestmentReportDetail(props) {
   const footerComponent = () => {
     const rows = summary.map((row, idx) => {
       return (
-        <TableCell align="center">
+        <TableCell align="center" key={idx}>
           <Box p={1 / 2} fontSize={13} style={{ color: indigo[500] }}>
             <Box padding={2} borderBottom={1}>
               سرمایه به {row.investmentType.name}
@@ -53,9 +53,9 @@ export default function InvestmentReportDetail(props) {
     );
   };
   const rows = () => {
-    const details = data.coins.map((p) => {
+    const details = data.coins.map((p, idx) => {
       return (
-        <TableRow
+        <TableRow key={idx}
           title={
             "آخرین قیمت " +
             p.investmentType.name +

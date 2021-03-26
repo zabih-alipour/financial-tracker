@@ -13,11 +13,11 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { blue, grey, red } from "@material-ui/core/colors";
+import { blue, grey } from "@material-ui/core/colors";
 import React, { useState, useEffect } from "react";
 import AmountDecorate from "../utils/AmountDecorate";
 import TuneIcon from "@material-ui/icons/Tune";
-import { ShowChart } from "@material-ui/icons";
+import { investment_details } from "../utils/apis";
 
 const create_styles = makeStyles({
   info_lable: {
@@ -40,14 +40,12 @@ export default function InvestmentDetail(props) {
 
   useEffect(() => {
     if (investment) {
-      fetch("/api/investments/details/" + investment.id)
-        .then((response) => response.json())
-        .then((details) => {
-          setOriginInvestment(details[0]);
-          if (details.length > 1) {
-            setDetails(details.slice(1));
-          }
-        });
+      investment_details(investment, (details) => {
+        setOriginInvestment(details[0]);
+        if (details.length > 1) {
+          setDetails(details.slice(1));
+        }
+      });
     }
   }, [investment]);
 
@@ -108,12 +106,12 @@ export default function InvestmentDetail(props) {
             </Typography>
             {originInvestment.create_at}
           </Box>
-          <Box display="inline-block" width={3/4}>
-          <Typography className={style_classes.info_lable}>
-            {"توضیحات: "}
-          </Typography>
-          {originInvestment.description}
-        </Box>
+          <Box display="inline-block" width={3 / 4}>
+            <Typography className={style_classes.info_lable}>
+              {"توضیحات: "}
+            </Typography>
+            {originInvestment.description}
+          </Box>
         </Box>
       </Box>
     );

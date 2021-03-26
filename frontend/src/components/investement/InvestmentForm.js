@@ -121,7 +121,7 @@ export default class InvestmentForm extends React.Component {
               disabled
             />
           </Grid>
-          <Grid item sx>
+          <Grid item sx={1}>
             <TextField
               inputProps={{ min: 0, style: { textAlign: "center" } }}
               label="مقدار"
@@ -134,7 +134,7 @@ export default class InvestmentForm extends React.Component {
               onChange={(event) => this.onSubtractChange(event)}
             />
           </Grid>
-          <Grid item sx>
+          <Grid item sx={1}>
             <TextField
               inputProps={{ min: 0, style: { textAlign: "center" } }}
               id="subtract_executed_price"
@@ -199,7 +199,7 @@ export default class InvestmentForm extends React.Component {
                 style={{ width: "350px" }}
               />
             </Grid>
-            <Grid item sx>
+            <Grid item sx={1}>
               <TextField
                 inputProps={{ min: 0, style: { textAlign: "center" } }}
                 id="tf_shamsiDate"

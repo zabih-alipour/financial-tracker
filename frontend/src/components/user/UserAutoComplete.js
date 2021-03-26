@@ -1,8 +1,10 @@
-import { Chip, TextField, Typography } from "@material-ui/core";
+import { Box, TextField, Typography } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import React from "react";
+import { get_users } from "../utils/apis";
+import { blue, grey } from "@material-ui/core/colors";
 
 export default function UserAutoComplete(props) {
   const [options, setOptions] = React.useState(props.users ? props.users : []);
@@ -23,11 +25,9 @@ export default function UserAutoComplete(props) {
 
   React.useEffect(() => {
     if (options.length === 0) {
-      fetch("/api/users")
-        .then((response) => response.json())
-        .then((data) => {
-          setOptions(data);
-        });
+      get_users((data) => {
+        setOptions(data);
+      });
     }
   }, [options]);
 
@@ -68,7 +68,6 @@ export default function UserAutoComplete(props) {
       getOptionSelected={(option, value) => {
         if (multiple) {
           const selected = value.filter((opt, idx) => opt.id === value.id);
-          console.log(selected);
           return selected > 0;
         } else {
           return option.id === value.id;
@@ -89,7 +88,7 @@ export default function UserAutoComplete(props) {
         const matches = match(option.name, inputValue);
         const parts = parse(option.name, matches);
         return (
-          <Typography
+          <Box
             align="center"
             style={{
               width: "100%",
@@ -102,13 +101,14 @@ export default function UserAutoComplete(props) {
                 key={index}
                 style={{
                   display: "inline",
+                  color: part.highlight ? blue[500] : grey[600],
                   fontWeight: part.highlight ? 700 : 400,
                 }}
               >
                 {part.text}
               </Typography>
             ))}
-          </Typography>
+          </Box>
         );
       }}
     />

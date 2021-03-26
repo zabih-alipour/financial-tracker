@@ -35,3 +35,19 @@ export function investment_report_by_user(user, callback) {
       .catch((e) => console.log(e));
   }
 }
+
+export function investment_details(investment, callback) {
+  fetch("/api/investments/details/" + investment.id)
+    .then((response) => response.json())
+    .then((details) => {
+      callback(details);
+    });
+}
+
+export function get_users(callback) {
+  fetch("/api/users")
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}

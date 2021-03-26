@@ -20,7 +20,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function InvestmentDetail(props) {
-
   const [details, setDetails] = useState([]);
   const [open, setOpen] = useState(props.openDialog);
   const { user, type, onClose, fullScreen } = props;
@@ -44,7 +43,6 @@ export default function InvestmentDetail(props) {
     onClose();
   };
 
-  
   const detailRows = () => {
     return details.map((row, idx) => {
       return (

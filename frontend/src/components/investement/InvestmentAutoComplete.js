@@ -3,6 +3,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import React from "react";
+import { blue, grey } from "@material-ui/core/colors";
 
 export default function UserAutoComplete(props) {
   const [investments, setInvestments] = React.useState(
@@ -72,6 +73,7 @@ export default function UserAutoComplete(props) {
                       key={index}
                       style={{
                         display: "inline",
+                        color: part.highlight ? blue[500] : grey[600],
                         fontWeight: part.highlight ? 700 : 400,
                       }}
                     >
