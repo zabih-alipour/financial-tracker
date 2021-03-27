@@ -1,10 +1,14 @@
-import { TextField, Typography } from "@material-ui/core";
+import { Box, TextField, Typography } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
+import { blue, grey } from "@material-ui/core/colors";
+import React, { useState } from "react";
+import { get_payment_types } from "../utils/apis";
 
 export default function PaymentTypeAutoComplete(props) {
-  const { type, types, onChange, fieldName } = props;
+  const { type, onChange, fieldName } = props;
+  const [types, setTypes] = useState([]);
 
   const onAutoCompleteChange = (event, value, reason) => {
     event = {
@@ -16,6 +20,12 @@ export default function PaymentTypeAutoComplete(props) {
 
     onChange(event);
   };
+
+  React.useEffect(() => {
+    if (types.length === 0) {
+      get_payment_types((data) => setTypes(data));
+    }
+  }, [types]);
 
   return (
     <Autocomplete
@@ -46,7 +56,7 @@ export default function PaymentTypeAutoComplete(props) {
         const matches = match(option.name, inputValue);
         const parts = parse(option.name, matches);
         return (
-          <Typography
+          <Box
             align="center"
             style={{
               width: "100%",
@@ -59,45 +69,15 @@ export default function PaymentTypeAutoComplete(props) {
                 key={index}
                 style={{
                   display: "inline",
+                  color: part.highlight ? blue[700] : grey[800],
                   fontWeight: part.highlight ? 700 : 400,
                 }}
               >
                 {part.text}
               </Typography>
             ))}
-          </Typography>
+          </Box>
         );
-        // if (type != null) {
-
-        // }
-        // if (option.id !== type.id) {
-        //   if (option.path != null) {
-        //     const found = option.path.match(/\d+/g);
-        //     if (
-        //       found != null &&
-        //       type.id != null &&
-        //       !found.includes(type.id)
-        //     ) {
-        //       return (
-        //         <div
-        //           style={{
-        //             width: "100%",
-        //             padding: "5px",
-        //             borderBottom: "1px dotted",
-        //           }}
-        //         >
-        //           {parts.map((part, index) => (
-        //             <Typography fullWidth key={index} align="center">
-        //               {part.text}
-        //             </Typography>
-        //           ))}
-        //         </div>
-        //       );
-        //     }
-        //   } else {
-
-        //   }
-        // }
       }}
     />
   );

@@ -3,9 +3,7 @@ import {
   Button,
   Container,
   Dialog,
-  Divider,
   IconButton,
-  MenuItem,
   Slide,
   TextField,
   Toolbar,
@@ -16,6 +14,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import "./PaymentTypeForm.css";
 import SaveIcon from "@material-ui/icons/Save";
 import PaymentTypeAutoComplete from "./PaymentTypeAutoComplete";
+import { payment_type_persist } from "../utils/apis";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -28,19 +27,14 @@ export default class PaymentTypeForm extends React.Component {
     this.onClose = props.onClose;
     this.state = {
       open: props.openDialog,
-      types: props.types,
       type:
         props.type != null ? props.type : { id: null, name: "", parent: null },
     };
   }
+
   persistType = () => {
     const { type } = this.state;
-    const requestOptions = {
-      method: type.id == null ? "POST" : "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(type),
-    };
-    fetch("/api/paymentTypes", requestOptions).then((res) => {
+    payment_type_persist(type, (res) => {
       this.handleClose("SUCCESSFUL");
     });
   };
@@ -57,7 +51,7 @@ export default class PaymentTypeForm extends React.Component {
   };
 
   render() {
-    const { open, type, types } = this.state;
+    const { open, type } = this.state;
     const title =
       type.id == null ? " تعریف دسته بندی جدید" : " ویرایش دسته بندی";
     return (
@@ -96,7 +90,6 @@ export default class PaymentTypeForm extends React.Component {
 
           <PaymentTypeAutoComplete
             type={type.parent}
-            types={types}
             onChange={this.onChange}
             fieldName="parent"
           />

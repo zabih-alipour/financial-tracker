@@ -3,7 +3,6 @@ import {
   Container,
   DialogContentText,
   DialogTitle,
-  Grid,
   IconButton,
   Paper,
   Table,
@@ -12,9 +11,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@material-ui/core";
-import { green, grey } from "@material-ui/core/colors";
+import { green } from "@material-ui/core/colors";
 import React from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
@@ -23,6 +21,8 @@ import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import PaymentTypeForm from "./PaymentTypeForm";
 import PaymentListPopup from "./PaymentListPopup";
 import ListHeader from "../utils/ListHeader";
+import { delete_payment_type, get_payment_types } from "../utils/apis";
+import { ShowDialog } from "../utils/Dialogs";
 
 export default class PaymentTypeList extends React.Component {
   constructor(props) {
@@ -39,26 +39,18 @@ export default class PaymentTypeList extends React.Component {
   };
 
   fetchData = () => {
-    fetch("/api/paymentTypes")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          paymentTypes: data,
-        });
+    get_payment_types((data) => {
+      this.setState({
+        paymentTypes: data,
       });
+    });
   };
 
   deleteType = () => {
     const { selectedType } = this.state;
-    const requestOptions = {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    };
-    fetch("/api/paymentTypes/" + selectedType.id, requestOptions).then(
-      (res) => {
-        this.fetchData();
-      }
-    );
+    delete_payment_type(selectedType, (res) => {
+      this.fetchData();
+    });
   };
 
   onClose = (status) => {
@@ -73,17 +65,9 @@ export default class PaymentTypeList extends React.Component {
   onSelected = (type) => {};
 
   showDialog = () => {
-    const { dialog, selectedType, paymentTypes } = this.state;
-    if (dialog === "TYPE_FORM") {
-      return (
-        <PaymentTypeForm
-          openDialog={true}
-          types={paymentTypes}
-          type={selectedType}
-          onClose={this.onClose}
-        />
-      );
-    } else if (dialog === "DELETE_TYPE") {
+    const { dialog, selectedType } = this.state;
+
+    if (dialog === "DELETE_TYPE") {
       return (
         <ConfirmationDialog
           data={selectedType}
@@ -103,16 +87,8 @@ export default class PaymentTypeList extends React.Component {
           onClose={this.onClose}
         />
       );
-    } else if (dialog === "TYPE_PAYMENT") {
-      return (
-        <PaymentListPopup
-          openDialog={true}
-          user={null}
-          type={selectedType}
-          onClose={this.onClose}
-        />
-      );
-    }
+    } else
+      return ShowDialog({ type: selectedType, dialog: dialog }, this.onClose);
   };
 
   dialogHandler = (dialog, type) => {
@@ -131,10 +107,10 @@ export default class PaymentTypeList extends React.Component {
           <TableCell align="center">{row.name}</TableCell>
           <TableCell align="center">{parentName}</TableCell>
           <TableCell align="center">
-            <IconButton onClick={() => this.dialogHandler("TYPE_PAYMENT", row)}>
+            <IconButton onClick={() => this.dialogHandler("PAYMENT_LIST_POPUP", row)}>
               <ReceiptIcon color="primary" />
             </IconButton>
-            <IconButton onClick={() => this.dialogHandler("TYPE_FORM", row)}>
+            <IconButton onClick={() => this.dialogHandler("PAYMENT_TYPE_FORM", row)}>
               <EditIcon style={{ color: green[300] }} />
             </IconButton>
             <IconButton onClick={() => this.dialogHandler("DELETE_TYPE", row)}>
@@ -152,7 +128,7 @@ export default class PaymentTypeList extends React.Component {
           searchArea={<div></div>}
           buttonAria={
             <Button
-              onClick={() => this.dialogHandler("TYPE_FORM", null)}
+              onClick={() => this.dialogHandler("PAYMENT_TYPE_FORM", null)}
               variant="contained"
               style={{ backgroundColor: "white" }}
             >

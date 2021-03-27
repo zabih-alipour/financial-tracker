@@ -34,7 +34,7 @@ export default function UserAutoComplete(props) {
   const onAutoCompleteChange = (event, value, reason) => {
     event = {
       target: {
-        name: [fieldName],
+        name: fieldName,
         value: value,
       },
     };

@@ -23,7 +23,7 @@ export default function InvestmentTypeAutoComplete(props) {
   const onAutoCompleteChange = (event, value, reason) => {
     event = {
       target: {
-        name: [fieldName],
+        name: fieldName,
         value: value,
       },
     };

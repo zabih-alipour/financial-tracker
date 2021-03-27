@@ -50,12 +50,20 @@ export default class InvestmentForm extends React.Component {
     }));
   };
   onCoinChange = (event) => {
-    this.setState((state) => ({
-      change: {
+    this.setState((state) => {
+      const { name, value } = event.target;
+      const change = {
         ...state.change,
-        [event.target.name]: event.target.value,
-      },
-    }));
+        [name]: value,
+      };
+
+      if (name === "investmentType") {
+        change["executedPrice"] = value.latestPrice;
+      }
+      return {
+        change: change,
+      };
+    });
   };
   onSubtractChange = (event) => {
     this.setState((state) => ({
@@ -212,7 +220,6 @@ export default class InvestmentForm extends React.Component {
               />
             </Grid>
             <Grid item sx={1}>
-              
               <TextField
                 inputProps={{ min: 0, style: { textAlign: "center" } }}
                 id="tf_shamsiDate"
@@ -221,7 +228,11 @@ export default class InvestmentForm extends React.Component {
                 variant="standard"
                 placeholder="تاریخ"
                 margin="dense"
-                value={investment.shamsiDate? investment.shamsiDate: this.formatDate()}
+                value={
+                  investment.shamsiDate
+                    ? investment.shamsiDate
+                    : this.formatDate()
+                }
                 onChange={(event) => this.onChange(event)}
               />
             </Grid>
@@ -246,7 +257,7 @@ export default class InvestmentForm extends React.Component {
                 style={{ width: "350px" }}
               />
             </Grid>
-            <Grid item sx>
+            <Grid item sx={1}>
               <TextField
                 inputProps={{ min: 0, style: { textAlign: "center" } }}
                 id="tf_coin_amount"
@@ -259,7 +270,7 @@ export default class InvestmentForm extends React.Component {
                 onChange={(event) => this.onCoinChange(event)}
               />
             </Grid>
-            <Grid item sx>
+            <Grid item sx_={1}>
               <TextField
                 inputProps={{ min: 0, style: { textAlign: "center" } }}
                 id="tf_coin_executed_price"
@@ -272,7 +283,7 @@ export default class InvestmentForm extends React.Component {
                 onChange={(event) => this.onCoinChange(event)}
               />
             </Grid>
-            <Grid item sx>
+            <Grid item sx_={1}>
               <InvestmentAutoComplete
                 investment={investment.investment}
                 fieldName={"dummy"}

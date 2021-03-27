@@ -61,3 +61,32 @@ export function investment_types_search(searchCriteria = null, callback) {
     .then((response) => response.json())
     .then((data) => callback(data));
 }
+
+export function payment_type_persist(type, callback) {
+  const requestOptions = {
+    method: type.id == null ? "POST" : "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(type),
+  };
+  fetch("/api/paymentTypes", requestOptions).then((res) => {
+    callback("SUCCESSFUL");
+  });
+}
+
+export function get_payment_types(callback) {
+  fetch("/api/paymentTypes")
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}
+
+export function delete_payment_type(type, callback) {
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  };
+  fetch("/api/paymentTypes/" + type.id, requestOptions).then((res) => {
+    callback();
+  });
+}
