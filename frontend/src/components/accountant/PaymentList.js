@@ -13,17 +13,22 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { green, grey } from "@material-ui/core/colors";
+import { blue, green, grey } from "@material-ui/core/colors";
 import React from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
-import PaymentForm from "./PaymentForm";
 import TuneIcon from "@material-ui/icons/Tune";
 import AmountDecorate from "../utils/AmountDecorate";
 import ListHeader from "../utils/ListHeader";
 import { Pagination } from "@material-ui/lab";
 import UserAutoComplete from "../user/UserAutoComplete";
+import { ShowDialog } from "../utils/Dialogs";
+import {
+  delete_payment,
+  payment_search,
+  settlement_payment,
+} from "../utils/apis";
 
 export default class PaymentList extends React.Component {
   constructor(props) {
@@ -41,27 +46,16 @@ export default class PaymentList extends React.Component {
   };
 
   fetchData = (searchCriteria = null) => {
-    fetch("/api/payments/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(searchCriteria),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          pagedData: data,
-        });
-      })
-      .catch((e) => console.log(e));
+    payment_search(searchCriteria, (data) => {
+      this.setState({
+        pagedData: data,
+      });
+    });
   };
 
   deletePayment = () => {
     const { selectedPayment } = this.state;
-    const requestOptions = {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    };
-    fetch("/api/payments/" + selectedPayment.id, requestOptions).then((res) => {
+    delete_payment(selectedPayment, (res) => {
       this.fetchData();
     });
   };
@@ -69,13 +63,7 @@ export default class PaymentList extends React.Component {
   settlementPayment = () => {
     const { selectedPayment } = this.state;
 
-    const settlenemt = { id: selectedPayment.id };
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(settlenemt),
-    };
-    fetch("/api/payments/settlement", requestOptions).then((res) => {
+    settlement_payment(selectedPayment, (res) => {
       this.fetchData();
     });
   };
@@ -92,15 +80,8 @@ export default class PaymentList extends React.Component {
 
   showDialog = () => {
     const { dialog, selectedPayment } = this.state;
-    if (dialog === "PAYMENT_FORM") {
-      return (
-        <PaymentForm
-          openDialog={true}
-          payment={selectedPayment}
-          onClose={this.onClose}
-        />
-      );
-    } else if (dialog === "DELETE_PAYMENT") {
+
+    if (dialog === "DELETE_PAYMENT") {
       return (
         <ConfirmationDialog
           data={selectedPayment}
@@ -139,6 +120,10 @@ export default class PaymentList extends React.Component {
         />
       );
     }
+    return ShowDialog(
+      { payment: selectedPayment, dialog: dialog },
+      this.onClose
+    );
   };
 
   dialogHandler = (dialog, payment) => {
@@ -226,22 +211,15 @@ export default class PaymentList extends React.Component {
           </TableCell>
 
           <TableCell align="center">
-            {row.amount > 0 ? (
-              <IconButton
-                title="تسویه"
-                onClick={() => this.dialogHandler("SETTLEMENT_PAYMENT", row)}
-              >
-                <TuneIcon color="primary" />
-              </IconButton>
-            ) : (
-              <IconButton
-                disabled
-                title="تسویه"
-                onClick={() => this.dialogHandler("SETTLEMENT_PAYMENT", row)}
-              >
-                <TuneIcon style={{ color: grey[400] }} />
-              </IconButton>
-            )}
+            <IconButton
+              disabled={row.amount > 0}
+              title="تسویه"
+              onClick={() => this.dialogHandler("SETTLEMENT_PAYMENT", row)}
+            >
+              <TuneIcon
+                style={{ color: row.amount > 0 ? blue[500] : grey[400] }}
+              />
+            </IconButton>
 
             <IconButton
               onClick={() => this.dialogHandler("PAYMENT_FORM", row)}
@@ -261,15 +239,15 @@ export default class PaymentList extends React.Component {
     });
 
     return (
-      <Container>
+      <Container maxWidth={"xl"}>
         <ListHeader
           titleArea={"پرداخت ها"}
           searchArea={
-              <UserAutoComplete
-                fieldName="dummy"
-                fullWidth={true}
-                onChange={this.filterUser}
-              />
+            <UserAutoComplete
+              fieldName="dummy"
+              fullWidth={true}
+              onChange={this.filterUser}
+            />
           }
           buttonAria={
             <Button

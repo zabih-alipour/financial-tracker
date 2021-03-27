@@ -90,3 +90,36 @@ export function delete_payment_type(type, callback) {
     callback();
   });
 }
+
+export function payment_search(searchCriteria, callback) {
+  fetch("/api/payments/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(searchCriteria),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}
+
+export function delete_payment(payment, callback) {
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  };
+  fetch("/api/payments/" + payment.id, requestOptions).then((data) => {
+    callback(data);
+  });
+}
+
+export function settlement_payment(payment, callback) {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payment),
+  };
+  fetch("/api/payments/settlement", requestOptions).then((data) => {
+    callback(data);
+  });
+}

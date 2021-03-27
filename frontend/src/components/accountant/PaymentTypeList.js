@@ -12,14 +12,13 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
+import { green, lime, orange, purple } from "@material-ui/core/colors";
 import React from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
-import PaymentTypeForm from "./PaymentTypeForm";
-import PaymentListPopup from "./PaymentListPopup";
 import ListHeader from "../utils/ListHeader";
 import { delete_payment_type, get_payment_types } from "../utils/apis";
 import { ShowDialog } from "../utils/Dialogs";
@@ -107,13 +106,22 @@ export default class PaymentTypeList extends React.Component {
           <TableCell align="center">{row.name}</TableCell>
           <TableCell align="center">{parentName}</TableCell>
           <TableCell align="center">
-            <IconButton onClick={() => this.dialogHandler("PAYMENT_LIST_POPUP", row)}>
+            <IconButton title={"تعریف پرداخت"}
+              onClick={() => this.dialogHandler("PAYMENT_FORM", row)}
+            >
+              <PostAddIcon style={{ color: purple[600] }} />
+            </IconButton>
+            <IconButton title={"پرداخت ها"}
+              onClick={() => this.dialogHandler("PAYMENT_LIST_POPUP", row)}
+            >
               <ReceiptIcon color="primary" />
             </IconButton>
-            <IconButton onClick={() => this.dialogHandler("PAYMENT_TYPE_FORM", row)}>
+            <IconButton title={"ویرایش"}
+              onClick={() => this.dialogHandler("PAYMENT_TYPE_FORM", row)}
+            >
               <EditIcon style={{ color: green[300] }} />
             </IconButton>
-            <IconButton onClick={() => this.dialogHandler("DELETE_TYPE", row)}>
+            <IconButton  title={"حذف"} onClick={() => this.dialogHandler("DELETE_TYPE", row)}>
               <DeleteForeverIcon color="secondary" />
             </IconButton>
           </TableCell>

@@ -3,6 +3,7 @@ import InvestmentForm from "../investement/InvestmentForm";
 import InvestmentTypeForm from "../investement/InvestmentTypeForm";
 import PaymentTypeForm from "../accountant/PaymentTypeForm";
 import PaymentListPopup from "../accountant/PaymentListPopup";
+import PaymentForm from "../accountant/PaymentForm";
 
 export function ShowDialog(info, onCloseCallback) {
   const { dialog } = info;
@@ -16,6 +17,8 @@ export function ShowDialog(info, onCloseCallback) {
     return PAYMENT_TYPE_FORM(info, onCloseCallback);
   } else if (dialog === "PAYMENT_LIST_POPUP") {
     return PAYMENT_LIST_POPUP(info, onCloseCallback);
+  } else if (dialog === "PAYMENT_FORM") {
+    return PAYMENT_FORM(info, onCloseCallback);
   }
 }
 
@@ -71,6 +74,25 @@ function PAYMENT_LIST_POPUP(info, onCloseCallback) {
       openDialog={true}
       user={user}
       type={type}
+      onClose={onCloseCallback}
+    />
+  );
+}
+
+function PAYMENT_FORM(info, onCloseCallback) {
+  var { type, payment } = info;
+
+  if (type) {
+    payment = {
+      paymentType: type,
+    };
+  }
+
+  console.log(payment);
+  return (
+    <PaymentForm
+      openDialog={true}
+      payment={payment}
       onClose={onCloseCallback}
     />
   );
