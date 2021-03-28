@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   DialogContentText,
   DialogTitle,
   IconButton,
@@ -22,8 +21,8 @@ import TuneIcon from "@material-ui/icons/Tune";
 import AmountDecorate from "../utils/AmountDecorate";
 import ListHeader from "../utils/ListHeader";
 import { Pagination } from "@material-ui/lab";
-import UserAutoComplete from "../user/UserAutoComplete";
 import { ShowDialog } from "../utils/Dialogs";
+import PaymentListSearch from "./PaymentListSearch";
 import {
   delete_payment,
   payment_search,
@@ -42,11 +41,40 @@ export default class PaymentList extends React.Component {
   }
 
   componentDidMount = () => {
-    this.fetchData();
+    this.doSearch();
   };
 
-  fetchData = (searchCriteria = null) => {
-    payment_search(searchCriteria, (data) => {
+  onPageChanged = (event, page) => {
+    const { pagedData } = this.state;
+    const { size = 0 } = pagedData;
+
+    const searchCriteria = {
+      pagination: {
+        pageSize: size,
+        pageNumber: page - 1,
+      }
+    };
+    this.doSearch(searchCriteria);
+  };
+
+  doSearch = (searchCriteria = null) => {
+    const { pageable } = this.state.pagedData;
+    const criteria = {};
+
+    if (searchCriteria) {
+      if (searchCriteria.pagination) {
+        criteria["pagination"] = searchCriteria.pagination;
+      } else criteria["pagination"] = pageable;
+
+      if (searchCriteria.sort) {
+        criteria["sort"] = searchCriteria.sort;
+      }
+      if (searchCriteria.searchArias) {
+        criteria["searchArias"] = searchCriteria.searchArias;
+      }
+    }
+
+    payment_search(criteria, (data) => {
       this.setState({
         pagedData: data,
       });
@@ -56,7 +84,7 @@ export default class PaymentList extends React.Component {
   deletePayment = () => {
     const { selectedPayment } = this.state;
     delete_payment(selectedPayment, (res) => {
-      this.fetchData();
+      this.doSearch();
     });
   };
 
@@ -64,7 +92,7 @@ export default class PaymentList extends React.Component {
     const { selectedPayment } = this.state;
 
     settlement_payment(selectedPayment, (res) => {
-      this.fetchData();
+      this.doSearch();
     });
   };
 
@@ -74,7 +102,7 @@ export default class PaymentList extends React.Component {
       selectedPayment: null,
     });
     if (status === "SUCCESS") {
-      this.fetchData();
+      this.doSearch();
     }
   };
 
@@ -130,57 +158,6 @@ export default class PaymentList extends React.Component {
     this.setState({ dialog: dialog, selectedPayment: payment });
   };
 
-  onPageChanged = (event, page) => {
-    const { pagedData, filteredUser } = this.state;
-    const { size = 0 } = pagedData;
-
-    const search = [];
-    if (filteredUser) {
-      search.push({
-        key: "user.id",
-        value: filteredUser.id,
-      });
-    }
-    const searchCriteria = {
-      searchArias: search,
-      pagination: {
-        pageSize: size,
-        pageNumber: page - 1,
-      },
-      sort: {
-        field: "id",
-        order: "DESC",
-      },
-    };
-    this.fetchData(searchCriteria);
-  };
-
-  filterUser = (event) => {
-    const user = event.target.value;
-    this.setState({ filteredUser: user });
-
-    var searchCriteria = null;
-    if (user) {
-      searchCriteria = {
-        searchArias: [
-          {
-            key: "user.id",
-            value: user.id,
-          },
-        ],
-        pagination: {
-          pageSize: 5,
-          pageNumber: 0,
-        },
-        sort: {
-          field: "shamsiDate",
-          order: "DESC",
-        },
-      };
-    }
-    this.fetchData(searchCriteria);
-  };
-
   render() {
     const { pagedData } = this.state;
     const {
@@ -188,6 +165,7 @@ export default class PaymentList extends React.Component {
       totalPages = 0,
       number = 0,
       empty = true,
+      pageable,
     } = pagedData;
 
     const rows = content.map((row, idx) => {
@@ -239,60 +217,59 @@ export default class PaymentList extends React.Component {
     });
 
     return (
-      <Container maxWidth={"xl"}>
-        <ListHeader
-          titleArea={"پرداخت ها"}
-          searchArea={
-            <UserAutoComplete
-              fieldName="dummy"
-              fullWidth={true}
-              onChange={this.filterUser}
-            />
-          }
-          buttonAria={
-            <Button
-              onClick={() => this.dialogHandler("PAYMENT_FORM", null)}
-              variant="contained"
-              style={{ backgroundColor: "white" }}
-            >
-              جــدیــد
-            </Button>
-          }
-        />
-        <TableContainer component={Paper}>
-          <Table>
-            <caption>
-              <Box>
-                <Box mt={0.5} justifyContent="center">
-                  <Pagination
-                    boundaryCount={2}
-                    page={number + 1}
-                    count={totalPages}
-                    disabled={empty}
-                    color="primary"
-                    onChange={this.onPageChanged}
-                  />
+      <Box p={2} display="flex" flexWrap="nowrap">
+        <Box display="inline-block" style={{ width: "19%" }} ml={2}>
+          <PaymentListSearch doSearch={this.doSearch} pageable={pageable} />
+        </Box>
+        <Box display="inline-block" style={{ width: "80%" }}>
+          <ListHeader
+            titleArea={"پرداخت ها"}
+            searchArea={<div></div>}
+            buttonAria={
+              <Button
+                onClick={() => this.dialogHandler("PAYMENT_FORM", null)}
+                variant="contained"
+                style={{ backgroundColor: "white" }}
+              >
+                جــدیــد
+              </Button>
+            }
+          />
+          <TableContainer component={Paper}>
+            <Table>
+              <caption>
+                <Box>
+                  <Box mt={0.5} justifyContent="center">
+                    <Pagination
+                      boundaryCount={2}
+                      page={number + 1}
+                      count={totalPages}
+                      disabled={empty}
+                      color="primary"
+                      onChange={this.onPageChanged}
+                    />
+                  </Box>
                 </Box>
-              </Box>
-            </caption>
-            <TableHead style={{ backgroundColor: "orange" }}>
-              <TableRow>
-                <TableCell align="center">ردیف</TableCell>
-                <TableCell align="center"> کاربر </TableCell>
-                <TableCell align="center">نوع پرداخت</TableCell>
-                <TableCell align="center">کد پرداخت</TableCell>
-                <TableCell align="center">تاریخ</TableCell>
-                <TableCell align="center">مبلغ</TableCell>
-                <TableCell align="center">تاریخ ایجاد</TableCell>
-                <TableCell align="center">توضیحات</TableCell>
-                <TableCell align="center">اکشن</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{rows}</TableBody>
-          </Table>
-        </TableContainer>
+              </caption>
+              <TableHead style={{ backgroundColor: "orange" }}>
+                <TableRow>
+                  <TableCell align="center">ردیف</TableCell>
+                  <TableCell align="center"> کاربر </TableCell>
+                  <TableCell align="center">نوع پرداخت</TableCell>
+                  <TableCell align="center">کد پرداخت</TableCell>
+                  <TableCell align="center">تاریخ</TableCell>
+                  <TableCell align="center">مبلغ</TableCell>
+                  <TableCell align="center">تاریخ ایجاد</TableCell>
+                  <TableCell align="center">توضیحات</TableCell>
+                  <TableCell align="center">اکشن</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{rows}</TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
         {this.showDialog()}
-      </Container>
+      </Box>
     );
   }
 }

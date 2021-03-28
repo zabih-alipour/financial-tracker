@@ -38,7 +38,6 @@ export default function UserAutoComplete(props) {
         value: value,
       },
     };
-
     onChange(event);
   };
 
@@ -56,7 +55,6 @@ export default function UserAutoComplete(props) {
         <TextField
           style={style}
           {...params}
-          label="کاربر"
           placeholder="کاربر"
           variant="standard"
           margin="dense"
