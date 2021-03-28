@@ -92,7 +92,7 @@ public class PaymentService extends CRUDService<Payment> {
 
     public Page<Payment> search(SearchCriteria searchCriteria) {
         searchCriteria = Optional.ofNullable(searchCriteria).orElseGet(SearchCriteria::new);
-
+        searchCriteria.getPagination().setPageSize(10);
         SpecificationBuilder<Payment> specificationBuilder = new SpecificationBuilder<>(searchCriteria, Payment.class);
         return repository.findAll(specificationBuilder.specification(), specificationBuilder.pageRequest());
     }

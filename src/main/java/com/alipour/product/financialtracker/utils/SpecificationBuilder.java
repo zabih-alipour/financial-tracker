@@ -22,13 +22,15 @@ public class SpecificationBuilder<T extends ParentEntity> {
     }
 
     public Specification<T> specification() {
-        List<GenericSpecification<T>> specifications = criteria.getSearchArias().stream().map(this::getSpecification).collect(Collectors.toList());
+        List<GenericSpecification<T>> specifications = criteria.getSearchArias().stream()
+                .map(this::getSpecification)
+                .collect(Collectors.toList());
 
-        GenericSpecification<T> specification = null;
+        Specification<T> specification = null;
         if (!specifications.isEmpty()) {
             specification = specifications.get(0);
             for (int i = 1; i < specifications.size(); i++) {
-                specification.and(specifications.get(i));
+                specification = specification.and(specifications.get(i));
             }
         }
         return specification;
