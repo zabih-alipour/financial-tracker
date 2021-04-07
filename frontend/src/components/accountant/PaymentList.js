@@ -36,7 +36,6 @@ export default class PaymentList extends React.Component {
       pagedData: {},
       dialog: "",
       selectedPayment: null,
-      filteredUser: null,
     };
   }
 
@@ -52,7 +51,7 @@ export default class PaymentList extends React.Component {
       pagination: {
         pageSize: size,
         pageNumber: page - 1,
-      }
+      },
     };
     this.doSearch(searchCriteria);
   };

@@ -302,7 +302,7 @@ export default class InvestmentForm extends React.Component {
             size="large"
             margin="dense"
             onClick={this.persistInvestment}
-            startIcon={<SaveIcon />}
+            startIcon={<SaveIcon   style={{marginLeft:"10px"}}/>}
             style={{ marginTop: "30px" }}
           >
             ذخــیره

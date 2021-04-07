@@ -14,6 +14,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import "./PaymentForm.css";
 import PaymentTypeAutoComplete from "./PaymentTypeAutoComplete";
 import UserAutoComplete from "../user/UserAutoComplete";
+import SaveIcon from "@material-ui/icons/Save";
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -156,12 +158,15 @@ export default class PaymentForm extends React.Component {
             onChange={(event) => this.onChange(event)}
           />
 
-          <Button
+<Button
+            variant="contained"
             fullWidth
-            margin="dense"
             autoFocus
-            className="saveButton"
+            color="primary"
+            size="large"
+            margin="dense"
             onClick={this.persistPayment}
+            startIcon={<SaveIcon   style={{marginLeft:"10px"}}/>}
             style={{ marginTop: "30px" }}
           >
             ذخــیره
