@@ -10,8 +10,10 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 import EditIcon from "@material-ui/icons/Edit";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
 import { green } from "@material-ui/core/colors";
+import {INVESTMENT_SPECIFIC_DETAIL_KEY, PAYMENT_LIST_POPUP_KEY, USER_FORM_KEY } from '../utils/Dialogs'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,21 +53,30 @@ function UserListItem(props) {
 
         <Divider light variant="fullWidth" textalign="center" />
         <BottomNavigation>
-          <BottomNavigationAction
-          onClick={() => dialogHandler("USER_PAYMENT", user)}
-            label="Recents"
+        <BottomNavigationAction
+          onClick={() => dialogHandler(INVESTMENT_SPECIFIC_DETAIL_KEY, user)}
+            label="سرمایه ها"
+            showLabel
             value="recents"
+            icon={<MenuBookIcon color="primary" />}
+          />
+          <BottomNavigationAction
+          onClick={() => dialogHandler(PAYMENT_LIST_POPUP_KEY, user)}
+            label="پرداخت ها"
+            showLabel
             icon={<ViewHeadlineIcon color="primary" />}
           />
           <BottomNavigationAction
-            onClick={() => dialogHandler("USER_FORM", user)}
-            label="Favorites"
+            onClick={() => dialogHandler(USER_FORM_KEY, user)}
+            label="ویرایش"
+            showLabel
             value="favorites"
             icon={<EditIcon style={{ color: green[300] }} />}
           />
           <BottomNavigationAction
             onClick={() => dialogHandler("DELETE_USER", user)}
-            label="Nearby"
+            label="حذف"
+            showLabel
             value="nearby"
             icon={<DeleteSweepIcon color="secondary" />}
           />

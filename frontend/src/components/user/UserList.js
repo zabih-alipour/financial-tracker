@@ -17,7 +17,7 @@ import AlertDialogSlide from "../dialog/ConfirmationDialog";
 import UserForm from "./UserForm";
 import PaymentListPopup from "../accountant/PaymentListPopup";
 import ListHeader from "../utils/ListHeader";
-import { Alert } from "@material-ui/lab";
+import { ShowDialog } from "../utils/Dialogs";
 
 export default class UserList extends React.Component {
   constructor(props) {
@@ -73,15 +73,7 @@ export default class UserList extends React.Component {
 
   showDialog = () => {
     const { selectedUser, dialog } = this.state;
-    if (dialog === "USER_FORM") {
-      return (
-        <UserForm
-          user={selectedUser}
-          openDialog={true}
-          onClose={this.onClose}
-        />
-      );
-    } else if (dialog === "DELETE_USER") {
+    if (dialog === "DELETE_USER") {
       return (
         <AlertDialogSlide
           data={selectedUser}
@@ -100,16 +92,8 @@ export default class UserList extends React.Component {
           onClose={this.onClose}
         />
       );
-    } else if (dialog === "USER_PAYMENT") {
-      return (
-        <PaymentListPopup
-          openDialog={true}
-          user={selectedUser}
-          type={null}
-          onClose={this.onClose}
-        />
-      );
-    }
+    } else
+      return ShowDialog({ user: selectedUser, dialog: dialog }, this.onClose);
   };
 
   dialogHandler = (dialog, user) => {

@@ -4,22 +4,39 @@ import InvestmentTypeForm from "../investement/InvestmentTypeForm";
 import PaymentTypeForm from "../accountant/PaymentTypeForm";
 import PaymentListPopup from "../accountant/PaymentListPopup";
 import PaymentForm from "../accountant/PaymentForm";
+import UserForm from "../user/UserForm";
+
+export const INVESTMENT_FORM_KEY = "INVESTMENT_FORM";
+export const INVESTMENT_SPECIFIC_DETAIL_KEY = "INVESTMENT_SPECIFIC_DETAIL";
+export const INVESTMENT_TYPE_FORM_KEY = "INVESTMENT_TYPE_FORM";
+export const PAYMENT_TYPE_FORM_KEY = "PAYMENT_TYPE_FORM";
+export const PAYMENT_LIST_POPUP_KEY = "PAYMENT_LIST_POPUP";
+export const PAYMENT_FORM_KEY = "PAYMENT_FORM";
+export const USER_FORM_KEY = "USER_FORM";
 
 export function ShowDialog(info, onCloseCallback) {
   const { dialog } = info;
-  if (dialog === "INVESTMENT_FORM") {
+  if (dialog === INVESTMENT_FORM_KEY) {
     return INVESTMENT_FORM(info, onCloseCallback);
-  } else if (dialog === "INVESTMENT_SPECIFIC_DETAIL") {
+  } else if (dialog === INVESTMENT_SPECIFIC_DETAIL_KEY) {
     return INVESTMENT_SPECIFIC_DETAIL(info, onCloseCallback);
-  } else if (dialog === "INVESTMENT_TYPE_FORM") {
+  } else if (dialog === INVESTMENT_TYPE_FORM_KEY) {
     return INVESTMENT_TYPE_FORM(info, onCloseCallback);
-  } else if (dialog === "PAYMENT_TYPE_FORM") {
+  } else if (dialog === PAYMENT_TYPE_FORM_KEY) {
     return PAYMENT_TYPE_FORM(info, onCloseCallback);
-  } else if (dialog === "PAYMENT_LIST_POPUP") {
+  } else if (dialog === PAYMENT_LIST_POPUP_KEY) {
     return PAYMENT_LIST_POPUP(info, onCloseCallback);
-  } else if (dialog === "PAYMENT_FORM") {
+  } else if (dialog === PAYMENT_FORM_KEY) {
     return PAYMENT_FORM(info, onCloseCallback);
+  } else if (dialog === USER_FORM_KEY) {
+    return USER_FORM(info, onCloseCallback);
   }
+}
+
+function USER_FORM(info, onCloseCallback) {
+  return (
+    <UserForm user={info.user} openDialog={true} onClose={onCloseCallback} />
+  );
 }
 
 function INVESTMENT_TYPE_FORM(info, onCloseCallback) {
@@ -87,8 +104,6 @@ function PAYMENT_FORM(info, onCloseCallback) {
       paymentType: type,
     };
   }
-
-  console.log(payment);
   return (
     <PaymentForm
       openDialog={true}

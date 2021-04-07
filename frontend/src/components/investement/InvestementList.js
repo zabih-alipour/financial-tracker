@@ -25,6 +25,7 @@ import TuneIcon from "@material-ui/icons/Tune";
 import InvestmentDetail from "./InvestmentDetails";
 import { Pagination } from "@material-ui/lab";
 import UserAutoComplete from "../user/UserAutoComplete";
+import ListPagination from "../utils/ListPagination";
 
 export default class InvestmentList extends React.Component {
   constructor(props) {
@@ -204,6 +205,7 @@ export default class InvestmentList extends React.Component {
       content = [],
       totalPages = 0,
       number = 0,
+      totalElements = 0,
       empty = true,
     } = pagedData;
 
@@ -275,18 +277,13 @@ export default class InvestmentList extends React.Component {
         <TableContainer component={Paper}>
           <Table>
             <caption>
-              <Box>
-                <Box mt={0.5} justifyContent="center">
-                  <Pagination
-                    boundaryCount={2}
-                    page={number + 1}
-                    count={totalPages}
-                    disabled={empty}
-                    color="primary"
-                    onChange={this.onPageChanged}
-                  />
-                </Box>
-              </Box>
+              <ListPagination
+                number={number}
+                totalPages={totalPages}
+                empty={empty}
+                totalElements={totalElements}
+                onPageChanged={this.onPageChanged}
+              />
             </caption>
             <TableHead style={{ backgroundColor: orange[500] }}>
               <TableRow>

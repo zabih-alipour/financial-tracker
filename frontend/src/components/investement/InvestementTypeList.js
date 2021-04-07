@@ -21,7 +21,7 @@ import { Pagination } from "@material-ui/lab";
 import { investment_types_search } from "../utils/apis";
 import { ShowDialog } from "../utils/Dialogs";
 import PostAddIcon from "@material-ui/icons/PostAdd";
-
+import ListPagination from "../utils/ListPagination";
 
 export default class InvestementTypeList extends React.Component {
   constructor(props) {
@@ -90,6 +90,7 @@ export default class InvestementTypeList extends React.Component {
       content = [],
       totalPages = 0,
       number = 0,
+      totalElements = 0,
       empty = true,
     } = pagedData;
 
@@ -102,13 +103,11 @@ export default class InvestementTypeList extends React.Component {
           <TableCell align="center">{type.latestPrice}</TableCell>
           <TableCell align="center">{"20%"}</TableCell>
           <TableCell align="center">
-          <IconButton
-                onClick={() =>
-                  this.dialogHandler("INVESTMENT_FORM", type)
-                }
-              >
-                <PostAddIcon style={{ color: green[500] }} />
-              </IconButton>
+            <IconButton
+              onClick={() => this.dialogHandler("INVESTMENT_FORM", type)}
+            >
+              <PostAddIcon style={{ color: green[500] }} />
+            </IconButton>
             <IconButton
               onClick={() =>
                 this.dialogHandler("INVESTMENT_SPECIFIC_DETAIL", type)
@@ -159,18 +158,13 @@ export default class InvestementTypeList extends React.Component {
         <TableContainer component={Paper}>
           <Table>
             <caption>
-              <Box>
-                <Box mt={0.5} justifyContent="center">
-                  <Pagination
-                    boundaryCount={2}
-                    page={number + 1}
-                    count={totalPages}
-                    disabled={empty}
-                    color="primary"
-                    onChange={this.onPageChanged}
-                  />
-                </Box>
-              </Box>
+              <ListPagination
+                number={number}
+                totalPages={totalPages}
+                empty={empty}
+                totalElements={totalElements}
+                onPageChanged={this.onPageChanged}
+              />
             </caption>
             <TableHead style={{ backgroundColor: "orange" }}>
               <TableRow>

@@ -20,7 +20,6 @@ import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import TuneIcon from "@material-ui/icons/Tune";
 import AmountDecorate from "../utils/AmountDecorate";
 import ListHeader from "../utils/ListHeader";
-import { Pagination } from "@material-ui/lab";
 import { ShowDialog } from "../utils/Dialogs";
 import PaymentListSearch from "./PaymentListSearch";
 import {
@@ -28,6 +27,7 @@ import {
   payment_search,
   settlement_payment,
 } from "../utils/apis";
+import ListPagination from "../utils/ListPagination";
 
 export default class PaymentList extends React.Component {
   constructor(props) {
@@ -163,6 +163,7 @@ export default class PaymentList extends React.Component {
       content = [],
       totalPages = 0,
       number = 0,
+      totalElements = 0,
       empty = true,
       pageable,
     } = pagedData;
@@ -237,18 +238,13 @@ export default class PaymentList extends React.Component {
           <TableContainer component={Paper}>
             <Table>
               <caption>
-                <Box>
-                  <Box mt={0.5} justifyContent="center">
-                    <Pagination
-                      boundaryCount={2}
-                      page={number + 1}
-                      count={totalPages}
-                      disabled={empty}
-                      color="primary"
-                      onChange={this.onPageChanged}
-                    />
-                  </Box>
-                </Box>
+                <ListPagination
+                  number={number}
+                  totalPages={totalPages}
+                  empty={empty}
+                  totalElements={totalElements}
+                  onPageChanged={this.onPageChanged}
+                />
               </caption>
               <TableHead style={{ backgroundColor: "orange" }}>
                 <TableRow>
