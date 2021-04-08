@@ -109,7 +109,7 @@ export default class InvestmentReport extends React.Component {
     return (
       <Container
         component={Paper}
-        style={{ padding: "5px" }}
+        style={{ marginTop: "5px",  padding: "5px" }}
       >
         <Box p={1}>
           <UserAutoComplete
@@ -128,7 +128,7 @@ export default class InvestmentReport extends React.Component {
         {this.summaryComponenet()}
         <Box p={1} display="flex" flexWrap="nowrap" >
           <Box width="20%" display="inline-block" ml={2}>
-            <UserListPanel />
+            <UserListPanel onClick={this.onUserChange}/>
           </Box>
           <Box width="60%" display="inline-block" ml={2}>
               {this.detailsComponenet()}
