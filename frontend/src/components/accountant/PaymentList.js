@@ -190,7 +190,7 @@ export default class PaymentList extends React.Component {
 
           <TableCell align="center">
             <IconButton
-              disabled={row.amount > 0}
+              disabled={row.amount < 0}
               title="تسویه"
               onClick={() => this.dialogHandler("SETTLEMENT_PAYMENT", row)}
             >

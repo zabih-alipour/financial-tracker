@@ -9,6 +9,7 @@ import {
   investment_report_summary,
   investment_report_by_user,
 } from "../utils/apis";
+import UserListPanel from "../user/UserListPanel";
 
 export default class InvestmentReport extends React.Component {
   constructor(props) {
@@ -94,6 +95,7 @@ export default class InvestmentReport extends React.Component {
 
   detailsComponenet = () => {
     const { details } = this.state;
+    console.log(details);
     const rows = details.map((row, idx) => {
       return (
         <InvestmentReportDetail
@@ -107,7 +109,7 @@ export default class InvestmentReport extends React.Component {
     return (
       <Container
         component={Paper}
-        style={{ marginTop: "5px", width: "80%", padding: "5px" }}
+        style={{ padding: "5px" }}
       >
         <Box p={1}>
           <UserAutoComplete
@@ -122,11 +124,21 @@ export default class InvestmentReport extends React.Component {
   };
   render() {
     return (
-      <Container maxWidth={false} style={{ padding: "0" }}>
+      <Box>
         {this.summaryComponenet()}
-        {this.detailsComponenet()}
+        <Box p={1} display="flex" flexWrap="nowrap" >
+          <Box width="20%" display="inline-block" ml={2}>
+            <UserListPanel />
+          </Box>
+          <Box width="60%" display="inline-block" ml={2}>
+              {this.detailsComponenet()}
+          </Box>
+          <Box width="20%" display="inline-block">
+            akshlk
+          </Box>
+        </Box>
         {this.handleDialog()}
-      </Container>
+      </Box>
     );
   }
 }

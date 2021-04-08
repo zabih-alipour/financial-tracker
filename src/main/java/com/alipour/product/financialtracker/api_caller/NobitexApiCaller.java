@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

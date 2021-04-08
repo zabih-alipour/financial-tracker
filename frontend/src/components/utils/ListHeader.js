@@ -8,7 +8,7 @@ export default function ListHeader(props) {
       display="flex"
       mt="10px"
       mb="5px"
-
+      borderRadius="4px"
       bgcolor={lightBlue[300]}
       boxShadow={10}
     >

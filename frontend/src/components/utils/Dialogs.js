@@ -51,6 +51,7 @@ function INVESTMENT_TYPE_FORM(info, onCloseCallback) {
 
 function INVESTMENT_SPECIFIC_DETAIL(info, onCloseCallback) {
   const { user, type } = info;
+  console.log(info);
   return (
     <InvestmentSpecificDetail
       openDialog={true}
