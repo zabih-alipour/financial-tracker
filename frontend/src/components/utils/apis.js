@@ -123,3 +123,11 @@ export function settlement_payment(payment, callback) {
     callback(data);
   });
 }
+
+export function asset_summary(callback) {
+  fetch("/api/investments/asset_summary")
+    .then((res) => res.json())
+    .then((data) => {
+      callback(data);
+    });
+}

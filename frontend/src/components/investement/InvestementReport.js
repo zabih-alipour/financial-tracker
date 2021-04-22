@@ -10,6 +10,7 @@ import {
   investment_report_by_user,
 } from "../utils/apis";
 import UserListPanel from "../user/UserListPanel";
+import AssetSummary from "./AssetSummary";
 
 export default class InvestmentReport extends React.Component {
   constructor(props) {
@@ -95,7 +96,6 @@ export default class InvestmentReport extends React.Component {
 
   detailsComponenet = () => {
     const { details } = this.state;
-    console.log(details);
     const rows = details.map((row, idx) => {
       return (
         <InvestmentReportDetail
@@ -134,7 +134,7 @@ export default class InvestmentReport extends React.Component {
               {this.detailsComponenet()}
           </Box>
           <Box width="20%" display="inline-block">
-            akshlk
+            <AssetSummary/>
           </Box>
         </Box>
         {this.handleDialog()}

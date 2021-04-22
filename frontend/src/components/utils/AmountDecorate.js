@@ -9,12 +9,13 @@ export default function AmountDecorate(props) {
     style,
     colorize = true,
     precise = true,
+    align = "center",
   } = props;
 
   const getText = () => {
     return (
       <Box
-        align="center"
+        align={align}
         style={{
           color: colorize ? (amount >= 0 ? green[500] : red[500]) : "black",
         }}
@@ -29,7 +30,7 @@ export default function AmountDecorate(props) {
   };
   return (
     <Box
-      align="center"
+      align={align}
       style={{
         color: colorize ? (amount >= 0 ? green[500] : red[500]) : "black",
       }}
