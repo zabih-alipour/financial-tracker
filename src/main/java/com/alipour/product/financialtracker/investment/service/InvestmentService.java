@@ -4,10 +4,13 @@ import com.alipour.product.financialtracker.common.BusinessException;
 import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.common.DateUtils;
 import com.alipour.product.financialtracker.common.NotSupportException;
+import com.alipour.product.financialtracker.investment.dto.AssetSummaryDto;
 import com.alipour.product.financialtracker.investment.dto.CoinInfo;
 import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
 import com.alipour.product.financialtracker.investment.dto.InvestmentReport;
 import com.alipour.product.financialtracker.investment.models.Investment;
+import com.alipour.product.financialtracker.investment.models.InvestmentSummary;
+import com.alipour.product.financialtracker.investment.repository.AssetSummaryRepository;
 import com.alipour.product.financialtracker.investment.repository.InvestmentRepository;
 import com.alipour.product.financialtracker.investment.repository.VwInvestmentRepository;
 import com.alipour.product.financialtracker.investment.views.VwInvestment;
@@ -16,6 +19,7 @@ import com.alipour.product.financialtracker.investment_type.repository.Investmen
 import com.alipour.product.financialtracker.user.models.User;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
 import com.alipour.product.financialtracker.utils.SpecificationBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -42,23 +46,26 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@Slf4j
 public class InvestmentService extends CRUDService<Investment> {
 
     private final InvestmentRepository repository;
     private final InvestmentTypeRepository typeRepository;
     private final SecureRandom random;
     private final VwInvestmentRepository vwInvestmentRepository;
+    private final AssetSummaryRepository assetSummaryRepository;
 
 
     public InvestmentService(
             InvestmentRepository repository,
             InvestmentTypeRepository typeRepository,
             SecureRandom random,
-            VwInvestmentRepository vwInvestmentRepository) {
+            VwInvestmentRepository vwInvestmentRepository, AssetSummaryRepository assetSummaryRepository) {
         this.repository = repository;
         this.typeRepository = typeRepository;
         this.random = random;
         this.vwInvestmentRepository = vwInvestmentRepository;
+        this.assetSummaryRepository = assetSummaryRepository;
     }
 
     @Override
@@ -371,5 +378,41 @@ public class InvestmentService extends CRUDService<Investment> {
 
     public List<Investment> getDetailsByType(Long typeId) {
         return getDetails(null, typeId);
+    }
+
+    public List<AssetSummaryDto> asset_summary() {
+        final InvestmentType usdt = typeRepository.findByCode("USDT");
+        final Map<String, BigDecimal> map = assetSummaryRepository.findAll()
+                .stream()
+                .collect(Collectors.groupingBy(InvestmentSummary::getInvestmentType))
+                .entrySet().stream()
+                .collect(Collectors.toMap(p -> p.getKey().getCode(), entry -> {
+                    final InvestmentType investmentType = entry.getKey();
+                    BigDecimal latestPrice = investmentType.getLatestPrice();
+
+                    final BigDecimal amount = entry.getValue().stream()
+                            .map(InvestmentSummary::getAmount)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+                    if (investmentType.getCode().equals("SETTLEMENT")
+                            || investmentType.getCode().equals("RIAL")
+                            || investmentType.getCode().equals("USDT")) {
+                        latestPrice = BigDecimal.ONE;
+                    }
+                    return amount.multiply(latestPrice);
+                }));
+
+
+        final BigDecimal totalDolor = map.entrySet().stream()
+                .filter(entry -> !entry.getKey().equals("RIAL") && !entry.getKey().equals("SETTLEMENT"))
+                .map(Map.Entry::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return Arrays.asList(
+                new AssetSummaryDto("سرمایه اولیه", map.get("RIAL")),
+                new AssetSummaryDto("کل سرمایه به دلار", totalDolor),
+                new AssetSummaryDto(" کل سرمایه تومان", totalDolor.multiply(usdt.getLatestPrice()).divide(BigDecimal.TEN, BigDecimal.ROUND_FLOOR)),
+                new AssetSummaryDto("مبلغ تسویه شده", map.get("SETTLEMENT")));
     }
 }

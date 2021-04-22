@@ -1,10 +1,7 @@
 package com.alipour.product.financialtracker.investment.controller;
 
 import com.alipour.product.financialtracker.common.CRUDController;
-import com.alipour.product.financialtracker.investment.dto.CoinInfo;
-import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
-import com.alipour.product.financialtracker.investment.dto.InvestmentReport;
-import com.alipour.product.financialtracker.investment.dto.InvestmentTotalReport;
+import com.alipour.product.financialtracker.investment.dto.*;
 import com.alipour.product.financialtracker.investment.models.Investment;
 import com.alipour.product.financialtracker.investment.service.InvestmentService;
 import com.alipour.product.financialtracker.investment.views.VwInvestment;
@@ -99,6 +96,12 @@ public class InvestmentController extends CRUDController<Investment> {
     @ResponseBody
     public List<CoinInfo> totalAssets(@PathVariable("userId") Long userId) {
         return ((InvestmentService) service).totalAssets(userId);
+    }
+
+    @GetMapping("/asset_summary")
+    @ResponseBody
+    public List<AssetSummaryDto> asset_summary() {
+        return ((InvestmentService) service).asset_summary();
     }
 
 }

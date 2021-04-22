@@ -66,7 +66,6 @@ public class Migration implements CommandLineRunner {
         importPayment();
         importInvestmentTypes();
         importInvestments();
-        updateDb();
 
     }
 

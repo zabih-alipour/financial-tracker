@@ -1,8 +1,7 @@
 package com.alipour.product.financialtracker.investment.repository;
 
+import com.alipour.product.financialtracker.investment.dto.AssetSummaryDto;
 import com.alipour.product.financialtracker.investment.models.Investment;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

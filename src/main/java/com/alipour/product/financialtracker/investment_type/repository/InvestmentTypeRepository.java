@@ -14,4 +14,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface InvestmentTypeRepository extends JpaRepository<InvestmentType, Long>, JpaSpecificationExecutor<InvestmentType> {
+
+    InvestmentType findByCode(String code);
 }
