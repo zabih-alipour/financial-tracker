@@ -7,6 +7,7 @@ import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
 import com.alipour.product.financialtracker.payment.dtos.PaymentSettlementDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.service.PaymentService;
+import com.alipour.product.financialtracker.payment.views.PaymentSearch;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -32,9 +33,7 @@ public class PaymentController extends CRUDController<Payment> {
     @PostMapping("/settlement")
     @ResponseBody
     public Payment add(@RequestBody PaymentSettlementDto dto) {
-        if (dto.getAmount() == null)
-            return ((PaymentService) service).settlement(dto.getId());
-        else return ((PaymentService) service).settlement(dto.getId(), dto.getAmount());
+        return ((PaymentService) service).settlement(dto);
     }
 
     @GetMapping("/reports")
@@ -63,7 +62,7 @@ public class PaymentController extends CRUDController<Payment> {
 
     @PostMapping("/search")
     @ResponseBody
-    public Page<Payment> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
+    public Page<PaymentSearch> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
         return ((PaymentService) service).search(searchCriteria);
     }
 }

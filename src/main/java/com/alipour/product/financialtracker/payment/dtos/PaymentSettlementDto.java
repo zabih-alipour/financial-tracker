@@ -10,4 +10,5 @@ import java.math.BigDecimal;
 @Data
 public class PaymentSettlementDto extends ParentDto {
     private BigDecimal amount;
+    private String description;
 }

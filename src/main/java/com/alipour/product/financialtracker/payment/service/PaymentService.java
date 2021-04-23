@@ -1,12 +1,16 @@
 package com.alipour.product.financialtracker.payment.service;
 
+import com.alipour.product.financialtracker.common.BadRequestException;
 import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.common.DateUtils;
 import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
+import com.alipour.product.financialtracker.payment.dtos.PaymentSettlementDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.repository.PaymentReportRepository;
 import com.alipour.product.financialtracker.payment.repository.PaymentRepository;
+import com.alipour.product.financialtracker.payment.repository.PaymentSearchRepository;
 import com.alipour.product.financialtracker.payment.views.PaymentReport;
+import com.alipour.product.financialtracker.payment.views.PaymentSearch;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
 import com.alipour.product.financialtracker.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
@@ -29,10 +33,12 @@ public class PaymentService extends CRUDService<Payment> {
 
     private final PaymentRepository repository;
     private final PaymentReportRepository reportRepository;
+    private final PaymentSearchRepository searchRepository;
 
-    public PaymentService(PaymentRepository repository, PaymentReportRepository reportRepository) {
+    public PaymentService(PaymentRepository repository, PaymentReportRepository reportRepository, PaymentSearchRepository searchRepository) {
         this.repository = repository;
         this.reportRepository = reportRepository;
+        this.searchRepository = searchRepository;
     }
 
     @Override
@@ -42,7 +48,7 @@ public class PaymentService extends CRUDService<Payment> {
 
     @Override
     public Payment add(Payment payment) {
-        payment.setCode(UUID.randomUUID().getMostSignificantBits());
+        payment.setCode(Math.abs(UUID.randomUUID().getMostSignificantBits()));
         if (payment.getShamsiDate() == null || payment.getShamsiDate().isEmpty())
             payment.setShamsiDate(DateUtils.getTodayJalali());
         return super.add(payment);
@@ -53,14 +59,30 @@ public class PaymentService extends CRUDService<Payment> {
         return repository;
     }
 
-    public Payment settlement(Long paymentId) {
-        Payment copy = repository.getOne(paymentId).copy();
-        return add(copy);
+    public Payment settlement(PaymentSettlementDto dto) {
+        final Payment payment = repository.getOne(dto.getId());
+        Payment settlement = payment.settlement();
+        if (dto.getAmount() == null) {
+            dto.setAmount(payment.getAmount());
+        }
+
+        if (dto.getAmount().longValue() < 0) {
+            throw new BadRequestException("مقدار وارد شده کمتر از صفر نمیتواند باشد");
+        }
+        if (payment.getAmount().compareTo(dto.getAmount()) < 0) {
+            throw new BadRequestException("مقدار وارد شده از کل مبلغ پرداخت بیشتر میباشد");
+        }
+        settlement.setAmount(dto.getAmount().negate());
+        settlement.setDescription(settlement.getDescription().concat(" \t ").concat(Optional.ofNullable(dto.getDescription()).orElse("")));
+
+        return add(settlement);
     }
 
     public Payment settlement(Long paymentId, BigDecimal amount) {
-        Payment copy = repository.getOne(paymentId).copy();
-        copy.setAmount(copy.getAmount().abs().subtract(amount));
+
+        Payment copy = repository.getOne(paymentId).settlement();
+
+        copy.setAmount(copy.getAmount().subtract(amount));
         return add(copy);
     }
 
@@ -90,10 +112,10 @@ public class PaymentService extends CRUDService<Payment> {
         return repository.findByUserId(userId);
     }
 
-    public Page<Payment> search(SearchCriteria searchCriteria) {
+    public Page<PaymentSearch> search(SearchCriteria searchCriteria) {
         searchCriteria = Optional.ofNullable(searchCriteria).orElseGet(SearchCriteria::new);
         searchCriteria.getPagination().setPageSize(10);
-        SpecificationBuilder<Payment> specificationBuilder = new SpecificationBuilder<>(searchCriteria, Payment.class);
-        return repository.findAll(specificationBuilder.specification(), specificationBuilder.pageRequest());
+        SpecificationBuilder<PaymentSearch> specificationBuilder = new SpecificationBuilder<>(searchCriteria, PaymentSearch.class);
+        return searchRepository.findAll(specificationBuilder.specification(), specificationBuilder.pageRequest());
     }
 }

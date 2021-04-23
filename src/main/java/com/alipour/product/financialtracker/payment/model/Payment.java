@@ -28,6 +28,10 @@ public class Payment extends ParentEntity implements Serializable {
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_of_payment"))
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", nullable = false, foreignKey = @ForeignKey(name = "fk_parent_of_payment"))
+    private Payment parent;
+
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
@@ -47,11 +51,12 @@ public class Payment extends ParentEntity implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    public Payment copy() {
+    public Payment settlement() {
         Payment payment = new Payment();
         payment.setPaymentType(this.getPaymentType());
-        payment.setAmount(this.getAmount().negate());
+        payment.setAmount(this.getAmount());
         payment.setUser(this.getUser());
+        payment.setParent(this);
         payment.setShamsiDate(DateUtils.getTodayJalali());
         payment.setDescription(
                 "تسویه "
