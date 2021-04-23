@@ -20,7 +20,11 @@ import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import TuneIcon from "@material-ui/icons/Tune";
 import AmountDecorate from "../utils/AmountDecorate";
 import ListHeader from "../utils/ListHeader";
-import { ShowDialog } from "../utils/Dialogs";
+import {
+  ShowDialog,
+  PAYMENT_SETTLEMENT_KEY,
+  PAYMENT_FORM_KEY,
+} from "../utils/Dialogs";
 import PaymentListSearch from "./PaymentListSearch";
 import {
   delete_payment,
@@ -127,25 +131,6 @@ export default class PaymentList extends React.Component {
           onClose={this.onClose}
         />
       );
-    } else if (dialog === "SETTLEMENT_PAYMENT") {
-      return (
-        <ConfirmationDialog
-          data={selectedPayment}
-          openDialog={true}
-          headerComponent={
-            <DialogTitle id="alert-dialog-slide-title">
-              {"تسویه پرداخت"}
-            </DialogTitle>
-          }
-          bodyComponent={
-            <DialogContentText id="alert-dialog-slide-description">
-              آیا پرداخت با کد {selectedPayment.code} تسویه شود؟
-            </DialogContentText>
-          }
-          onAccept={this.settlementPayment}
-          onClose={this.onClose}
-        />
-      );
     }
     return ShowDialog(
       { payment: selectedPayment, dialog: dialog },
@@ -179,28 +164,34 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">{row.code}</TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">
-            <AmountDecorate amount={row.amount} thousand={true} />
+            <AmountDecorate amount={row.paymentAmount} thousand={true} />
           </TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">
-            <Box fontSize={12} fontWeight={2} color={grey[600]}>
+            <Box
+              fontSize={12}
+              fontWeight={2}
+              color={grey[600]}
+              whiteSpace="wrap"
+              width="200px"
+            >
               {row.description}
             </Box>
           </TableCell>
 
           <TableCell align="center">
             <IconButton
-              disabled={row.amount < 0}
+              disabled={row.settled === true}
               title="تسویه"
-              onClick={() => this.dialogHandler("SETTLEMENT_PAYMENT", row)}
+              onClick={() => this.dialogHandler(PAYMENT_SETTLEMENT_KEY, row)}
             >
               <TuneIcon
-                style={{ color: row.amount > 0 ? blue[500] : grey[400] }}
+                style={{ color: !row.settled ? blue[500] : grey[400] }}
               />
             </IconButton>
 
             <IconButton
-              onClick={() => this.dialogHandler("PAYMENT_FORM", row)}
+              onClick={() => this.dialogHandler(PAYMENT_FORM_KEY, row)}
               title="ویرایش"
             >
               <EditIcon style={{ color: green[300] }} />

@@ -7,6 +7,7 @@ export default function AmountDecorate(props) {
     amount,
     thousand = true,
     style,
+    display = "block",
     colorize = true,
     precise = true,
     align = "center",
@@ -29,7 +30,7 @@ export default function AmountDecorate(props) {
     );
   };
   return (
-    <Box
+    <Box  display={display}
       align={align}
       style={{
         color: colorize ? (amount >= 0 ? green[500] : red[500]) : "black",
