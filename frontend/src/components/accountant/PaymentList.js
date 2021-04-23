@@ -166,6 +166,9 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">
             <AmountDecorate amount={row.paymentAmount} thousand={true} />
           </TableCell>
+          <TableCell align="center">
+            <AmountDecorate amount={row.settlementAmount} thousand={true} />
+          </TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">
             <Box
@@ -245,6 +248,7 @@ export default class PaymentList extends React.Component {
                   <TableCell align="center">کد پرداخت</TableCell>
                   <TableCell align="center">تاریخ</TableCell>
                   <TableCell align="center">مبلغ</TableCell>
+                  <TableCell align="center">مبلغ تسویه شده</TableCell>
                   <TableCell align="center">تاریخ ایجاد</TableCell>
                   <TableCell align="center">توضیحات</TableCell>
                   <TableCell align="center">اکشن</TableCell>
