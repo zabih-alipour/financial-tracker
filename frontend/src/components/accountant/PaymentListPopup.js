@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 import React from "react";
+import AmountDecorate from "../utils/AmountDecorate";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -64,7 +65,7 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">{row.code}</TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">
-            {row.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            <AmountDecorate amount={row.amount} />
           </TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
           <TableCell align="center">

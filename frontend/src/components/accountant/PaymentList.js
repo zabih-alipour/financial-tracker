@@ -24,7 +24,7 @@ import {
   ShowDialog,
   PAYMENT_SETTLEMENT_KEY,
   PAYMENT_FORM_KEY,
-  PAYMENT_LIST_POPUP_KEY,
+  PAYMENT_LIST_DETAIL_KEY,
 } from "../utils/Dialogs";
 import PaymentListSearch from "./PaymentListSearch";
 import {
@@ -187,7 +187,7 @@ export default class PaymentList extends React.Component {
           <TableCell align="center">
             <IconButton 
               title="جزییات"
-              onClick={() => this.dialogHandler(PAYMENT_LIST_POPUP_KEY, row)}
+              onClick={() => this.dialogHandler(PAYMENT_LIST_DETAIL_KEY, row)}
             >
               <Receipt
                 style={{ color: cyan[500] }}

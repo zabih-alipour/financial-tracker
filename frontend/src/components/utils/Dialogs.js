@@ -6,6 +6,7 @@ import PaymentListPopup from "../accountant/PaymentListPopup";
 import PaymentForm from "../accountant/PaymentForm";
 import UserForm from "../user/UserForm";
 import PaymentSettlementForm from "../accountant/PaymentSettlementForm";
+import PaymentDetail from "../accountant/PaymentDetails";
 
 export const INVESTMENT_FORM_KEY = "INVESTMENT_FORM";
 export const INVESTMENT_SPECIFIC_DETAIL_KEY = "INVESTMENT_SPECIFIC_DETAIL";
@@ -15,6 +16,7 @@ export const PAYMENT_LIST_POPUP_KEY = "PAYMENT_LIST_POPUP";
 export const PAYMENT_FORM_KEY = "PAYMENT_FORM";
 export const USER_FORM_KEY = "USER_FORM";
 export const PAYMENT_SETTLEMENT_KEY = "PAYMENT_SETTLEMENT";
+export const PAYMENT_LIST_DETAIL_KEY = "PAYMENT_LIST_DETAIL";
 
 export function ShowDialog(info, onCloseCallback) {
   const { dialog } = info;
@@ -32,17 +34,32 @@ export function ShowDialog(info, onCloseCallback) {
     return PAYMENT_FORM(info, onCloseCallback);
   } else if (dialog === USER_FORM_KEY) {
     return USER_FORM(info, onCloseCallback);
-  }else if (dialog === PAYMENT_SETTLEMENT_KEY) {
+  } else if (dialog === PAYMENT_SETTLEMENT_KEY) {
     return PAYMENT_SETTLEMENT(info, onCloseCallback);
+  } else if (dialog === PAYMENT_LIST_DETAIL_KEY) {
+    return PAYMENT_LIST_DETAIL(info, onCloseCallback);
   }
+}
+
+function PAYMENT_LIST_DETAIL(info, onCloseCallback) {
+  return (
+    <PaymentDetail
+      payment={info.payment}
+      openDialog={true}
+      onClose={onCloseCallback}
+    />
+  );
 }
 
 function PAYMENT_SETTLEMENT(info, onCloseCallback) {
   return (
-    <PaymentSettlementForm payment={info.payment} openDialog={true} onClose={onCloseCallback} />
+    <PaymentSettlementForm
+      payment={info.payment}
+      openDialog={true}
+      onClose={onCloseCallback}
+    />
   );
 }
-
 
 function USER_FORM(info, onCloseCallback) {
   return (

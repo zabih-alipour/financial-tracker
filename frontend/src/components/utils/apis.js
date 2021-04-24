@@ -103,6 +103,22 @@ export function payment_search(searchCriteria, callback) {
     });
 }
 
+export function payment_by_id(payment, callback) {
+  fetch("/api/payments/" + payment.id)
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}
+
+export function payment_settlement_detail(payment, callback) {
+  fetch("/api/payments/by-parent/" + payment.id)
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}
+
 export function delete_payment(payment, callback) {
   const requestOptions = {
     method: "DELETE",
