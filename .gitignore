@@ -6,6 +6,7 @@ target/
 node_modules
 package-lock.json
 *.db
+*.db-journal
 .mvn
 mvnw
 mvnw.cmd

@@ -12,7 +12,7 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { blue, green, grey } from "@material-ui/core/colors";
+import { blue, cyan, green, grey, lime } from "@material-ui/core/colors";
 import React from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
@@ -24,6 +24,7 @@ import {
   ShowDialog,
   PAYMENT_SETTLEMENT_KEY,
   PAYMENT_FORM_KEY,
+  PAYMENT_LIST_POPUP_KEY,
 } from "../utils/Dialogs";
 import PaymentListSearch from "./PaymentListSearch";
 import {
@@ -32,6 +33,7 @@ import {
   settlement_payment,
 } from "../utils/apis";
 import ListPagination from "../utils/ListPagination";
+import { Receipt } from "@material-ui/icons";
 
 export default class PaymentList extends React.Component {
   constructor(props) {
@@ -161,15 +163,15 @@ export default class PaymentList extends React.Component {
           </TableCell>
           <TableCell align="center">{row.user.name}</TableCell>
           <TableCell align="center">{row.paymentType.name}</TableCell>
-          <TableCell align="center">{row.code}</TableCell>
+          {/* <TableCell align="center">{row.code}</TableCell> */}
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">
-            <AmountDecorate amount={row.paymentAmount} thousand={true} />
+            <AmountDecorate amount={row.amount} thousand={true} />
           </TableCell>
           <TableCell align="center">
             <AmountDecorate amount={row.settlementAmount} thousand={true} />
           </TableCell>
-          <TableCell align="center">{row.created_at}</TableCell>
+          {/* <TableCell align="center">{row.created_at}</TableCell> */}
           <TableCell align="center">
             <Box
               fontSize={12}
@@ -183,6 +185,14 @@ export default class PaymentList extends React.Component {
           </TableCell>
 
           <TableCell align="center">
+            <IconButton 
+              title="جزییات"
+              onClick={() => this.dialogHandler(PAYMENT_LIST_POPUP_KEY, row)}
+            >
+              <Receipt
+                style={{ color: cyan[500] }}
+              />
+            </IconButton>
             <IconButton
               disabled={row.settled === true}
               title="تسویه"
@@ -221,7 +231,7 @@ export default class PaymentList extends React.Component {
             searchArea={<div></div>}
             buttonAria={
               <Button
-                onClick={() => this.dialogHandler("PAYMENT_FORM", null)}
+                onClick={() => this.dialogHandler(PAYMENT_FORM_KEY, null)}
                 variant="contained"
                 style={{ backgroundColor: "white" }}
               >
@@ -245,11 +255,11 @@ export default class PaymentList extends React.Component {
                   <TableCell align="center">ردیف</TableCell>
                   <TableCell align="center"> کاربر </TableCell>
                   <TableCell align="center">نوع پرداخت</TableCell>
-                  <TableCell align="center">کد پرداخت</TableCell>
+                  {/* <TableCell align="center">کد پرداخت</TableCell> */}
                   <TableCell align="center">تاریخ</TableCell>
                   <TableCell align="center">مبلغ</TableCell>
                   <TableCell align="center">مبلغ تسویه شده</TableCell>
-                  <TableCell align="center">تاریخ ایجاد</TableCell>
+                  {/* <TableCell align="center">تاریخ ایجاد</TableCell> */}
                   <TableCell align="center">توضیحات</TableCell>
                   <TableCell align="center">اکشن</TableCell>
                 </TableRow>

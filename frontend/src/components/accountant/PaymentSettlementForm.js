@@ -26,7 +26,7 @@ export default function PaymentSettlementForm(props) {
   const [open, setOpen] = useState(props.openDialog);
   const [settlementDto, setSettlementDto] = useState({
     id: payment.id,
-    amount: payment.paymentAmount + payment.settlementAmount,
+    amount: payment.amount + payment.settlementAmount,
   });
 
   const handleClose = (status = "NO_ACTION") => {
@@ -92,7 +92,7 @@ export default function PaymentSettlementForm(props) {
             <Box display="flex" mb={2}>
               <Box width="50%">
                 {"کل مبلغ: "}
-                <AmountDecorate display="inline-block" amount={payment.paymentAmount} />
+                <AmountDecorate display="inline-block" amount={payment.amount} />
               </Box>
               <Box width="50%">
                 {"مبلغ تسویه شده: "}
