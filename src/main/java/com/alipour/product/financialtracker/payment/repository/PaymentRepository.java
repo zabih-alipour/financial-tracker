@@ -23,6 +23,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpec
     List<Payment> findByUserId(@Param("userId") Long userId);
 
     @Query("select p from Payment p " +
+            "where p.parent.id=:parentId " +
+            "order by p.shamsiDate")
+    List<Payment> findByParentId(@Param("parentId") Long parentId);
+
+    @Query("select p from Payment p " +
             "where p.paymentType.id=:typeId " +
             "order by p.shamsiDate")
     List<Payment> findByTypeId(@Param("typeId") Long typeId);

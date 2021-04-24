@@ -112,6 +112,10 @@ public class PaymentService extends CRUDService<Payment> {
         return repository.findByUserId(userId);
     }
 
+    public List<Payment> findByParent(Long paymentId) {
+        return repository.findByParentId(paymentId);
+    }
+
     public Page<PaymentSearch> search(SearchCriteria searchCriteria) {
         searchCriteria = Optional.ofNullable(searchCriteria).orElseGet(SearchCriteria::new);
         searchCriteria.getPagination().setPageSize(10);
