@@ -39,7 +39,7 @@ public class PaymentSearch extends ParentEntity {
     private String description;
 
     @Column(name = "payment_amount", nullable = false)
-    private BigDecimal paymentAmount;
+    private BigDecimal amount;
 
     @Column(name = "settlement_amount", nullable = false)
     private BigDecimal settlementAmount;

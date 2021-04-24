@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.UnknownHostException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,7 +63,8 @@ public class NobitexApiCaller {
 
                     JsonNode global = bodyJsonNode.get("global");
                     if (global.hasNonNull("binance")) {
-                        global.get("binance").fields().forEachRemaining(entry -> {
+                        for (Iterator<Map.Entry<String, JsonNode>> it = global.get("binance").fields(); it.hasNext(); ) {
+                            Map.Entry<String, JsonNode> entry = it.next();
                             InvestmentType type = typeMap.get(entry.getKey().toUpperCase());
                             if (type != null) {
                                 if (!type.getCode().equals("USDT")) {
@@ -77,7 +78,7 @@ public class NobitexApiCaller {
                                 type.setLatestPrice(BigDecimal.valueOf(entry.getValue().asDouble()));
                                 investmentTypeService.add(type);
                             }
-                        });
+                        }
                     }
                 }
             }
