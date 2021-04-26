@@ -1,28 +1,18 @@
-import { Container } from "@material-ui/core";
+import { Box, Container } from "@material-ui/core";
 import React from "react";
 import PaymentReportDetail from "./PaymentReportDetail";
 import PaymentListPopup from "./PaymentListPopup";
+import UserListPanel from "../user/UserListPanel";
 
 export default class AccountReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      reports: [],
       openDialog: false,
       selectedRow: { user: null, type: null },
+      selectedUser: { id: 1 },
     };
   }
-
-  componentDidMount = () => {
-    fetch("/api/payments/reports")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          reports: data,
-        });
-      })
-      .catch((e) => console.log(e));
-  };
 
   onDetailClick = (selectedRow) => {
     this.setState({
@@ -40,6 +30,7 @@ export default class AccountReport extends React.Component {
 
   handleDialog = () => {
     const { openDialog, selectedRow } = this.state;
+
     if (openDialog) {
       return (
         <PaymentListPopup
@@ -51,21 +42,33 @@ export default class AccountReport extends React.Component {
       );
     }
   };
+
+  onUserChange = (event) => {
+    const user = event.target.value;
+    this.setState({ selectedUser: user });
+  };
+
   render() {
-    const { reports } = this.state;
-    const rows = reports.map((p, idx) => {
-      return (
-        <PaymentReportDetail key={idx}
-          data={p}
-          onDetailClick={this.onDetailClick}
-        />
-      );
-    });
+    const { selectedUser } = this.state;
     return (
-      <Container>
-        {rows}
+      <Box>
+        <Box p={1} display="flex" flexWrap="nowrap">
+          <Box width="20%" display="inline-block" ml={2}>
+            <UserListPanel onClick={this.onUserChange} />
+          </Box>
+          <Box width="60%" display="inline-block" ml={2}>
+            <PaymentReportDetail
+              key={selectedUser.id}
+              user={selectedUser}
+              onDetailClick={this.onDetailClick}
+            />
+          </Box>
+          {/* <Box width="20%" display="inline-block">
+            <AssetSummary/>
+          </Box> */}
+        </Box>
         {this.handleDialog()}
-      </Container>
+      </Box>
     );
   }
 }
