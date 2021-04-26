@@ -36,10 +36,10 @@ public class PaymentController extends CRUDController<Payment> {
         return ((PaymentService) service).settlement(dto);
     }
 
-    @GetMapping("/reports")
+    @GetMapping("/reports/{userId}")
     @ResponseBody
-    public Set<PaymentReportDto> reports() {
-        return ((PaymentService) service).reports();
+    public PaymentReportDto reports(@PathVariable("userId") Long userId) {
+        return ((PaymentService) service).reports(userId);
     }
 
     @GetMapping("/{userId}/{typeId}")

@@ -11,6 +11,8 @@ import com.alipour.product.financialtracker.payment.repository.PaymentRepository
 import com.alipour.product.financialtracker.payment.repository.PaymentSearchRepository;
 import com.alipour.product.financialtracker.payment.views.PaymentReport;
 import com.alipour.product.financialtracker.payment.views.PaymentSearch;
+import com.alipour.product.financialtracker.user.models.User;
+import com.alipour.product.financialtracker.user.repositories.UserRepository;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
 import com.alipour.product.financialtracker.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
@@ -34,11 +36,13 @@ public class PaymentService extends CRUDService<Payment> {
     private final PaymentRepository repository;
     private final PaymentReportRepository reportRepository;
     private final PaymentSearchRepository searchRepository;
+    private final UserRepository userRepository;
 
-    public PaymentService(PaymentRepository repository, PaymentReportRepository reportRepository, PaymentSearchRepository searchRepository) {
+    public PaymentService(PaymentRepository repository, PaymentReportRepository reportRepository, PaymentSearchRepository searchRepository, UserRepository userRepository) {
         this.repository = repository;
         this.reportRepository = reportRepository;
         this.searchRepository = searchRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -86,18 +90,23 @@ public class PaymentService extends CRUDService<Payment> {
         return add(copy);
     }
 
-    public Set<PaymentReportDto> reports() {
-        return reportRepository.findAll().stream()
-                .collect(Collectors.groupingBy(PaymentReport::getUser))
-                .entrySet().stream()
-                .map(p -> {
-                    List<PaymentReportDto.Detail> details = p.getValue().stream()
-                            .map(val -> new PaymentReportDto.Detail(val.getType(), val.getAmount()))
-                            .collect(Collectors.toList());
-                    return new PaymentReportDto(p.getKey(), details);
-                })
-                .sorted(Comparator.comparing(PaymentReportDto::getSum).reversed())
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+    public PaymentReportDto reports(Long userId) {
+        final PaymentReportDto reportDto = new PaymentReportDto();
+        final Map<User, List<PaymentReport>> map = reportRepository.findByUserId(userId).stream()
+                .collect(Collectors.groupingBy(PaymentReport::getUser));
+        map.forEach((user, paymentReports) -> {
+            List<PaymentReportDto.Detail> details = paymentReports.stream()
+                    .map(val -> new PaymentReportDto.Detail(val.getType(), val.getAmount()))
+                    .collect(Collectors.toList());
+
+            reportDto.setUser(user);
+            reportDto.setDetailsAndSum(details);
+        });
+        if (reportDto.getUser() == null) {
+            reportDto.setUser(userRepository.getOne(userId));
+        }
+
+        return reportDto;
     }
 
     public List<Payment> findByUserAndType(Long userId, Long typeId) {

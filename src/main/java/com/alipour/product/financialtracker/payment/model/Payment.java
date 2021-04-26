@@ -29,7 +29,7 @@ public class Payment extends ParentEntity implements Serializable {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", nullable = false, foreignKey = @ForeignKey(name = "fk_parent_of_payment"))
+    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "fk_parent_of_payment"))
     private Payment parent;
 
     @Column(name = "amount", nullable = false)

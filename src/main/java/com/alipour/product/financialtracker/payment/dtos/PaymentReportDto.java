@@ -7,17 +7,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class PaymentReportDto extends ParentDto {
     private User user;
-    private List<Detail> details;
-    private Long sum;
+    private List<Detail> details = new ArrayList<>();
+    private Long sum = 0L;
 
-    public PaymentReportDto(User user, List<Detail> details) {
-        this.user = user;
+    public PaymentReportDto() {
+
+    }
+
+    public void setDetailsAndSum(List<Detail> details) {
         this.details = details;
         this.sum = details.stream()
                 .map(Detail::getAmount)
