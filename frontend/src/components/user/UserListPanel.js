@@ -97,10 +97,18 @@ export default function UserListPanel(props) {
   return (
     <Box component={Paper}>
       <Box display="flex" borderBottom={1} bgcolor={indigo[100]} p={2}>
-        <Box display="inline-block" width="85%">
-          <TextField fullWidth placeholder="جستجو" />
+        <Box display="inline-block" width="94%">
+          <TextField
+            fullWidth
+            placeholder="جستجو"
+            onChange={(event) =>
+              setFilteredUsers(
+                users.filter((p) => p.name.startsWith(event.target.value))
+              )
+            }
+          />
         </Box>
-        <Box display="inline-block" width="15%" alignItems="left">
+        <Box display="inline-block" width="6%" alignItems="left">
           <IconButton
             style={{
               display: "inline-block",
@@ -110,12 +118,6 @@ export default function UserListPanel(props) {
             onClick={() => sortData()}
           >
             <Sort color={green[500]} />
-          </IconButton>
-          <IconButton
-            style={{ display: "inline-block", padding: "0px" }}
-            onClick={() => setFilteredUsers(users)}
-          >
-            <Refresh />
           </IconButton>
         </Box>
       </Box>
