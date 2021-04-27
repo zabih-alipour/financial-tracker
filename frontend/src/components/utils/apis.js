@@ -47,9 +47,14 @@ export function investment_details(investment, callback) {
 export function get_users(callback) {
   fetch("/api/users")
     .then((response) => response.json())
-    .then((data) => {
-      callback(data);
-    });
+    .then((data) => callback(data));
+}
+
+export function get_users_with_detail(params, callback) {
+  const { showAsset = false, showBalance = false } = params;
+  fetch("/api/users/v2?showAsset=" + showAsset + "&showBalance=" + showBalance)
+    .then((response) => response.json())
+    .then((data) => callback(data));
 }
 
 export function investment_types_search(searchCriteria = null, callback) {

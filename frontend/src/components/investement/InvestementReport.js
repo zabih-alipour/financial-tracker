@@ -107,10 +107,7 @@ export default class InvestmentReport extends React.Component {
     });
 
     return (
-      <Container
-        component={Paper}
-        style={{ marginTop: "5px",  padding: "5px" }}
-      >
+      <Container component={Paper} style={{ marginTop: "5px", padding: "5px" }}>
         <Box p={1}>
           <UserAutoComplete
             fieldName="dummy"
@@ -126,15 +123,15 @@ export default class InvestmentReport extends React.Component {
     return (
       <Box>
         {this.summaryComponenet()}
-        <Box p={1} display="flex" flexWrap="nowrap" >
+        <Box p={1} display="flex" flexWrap="nowrap">
           <Box width="20%" display="inline-block" ml={2}>
-            <UserListPanel onClick={this.onUserChange}/>
+            <UserListPanel showAsset={true} onClick={this.onUserChange} />
           </Box>
           <Box width="60%" display="inline-block" ml={2}>
-              {this.detailsComponenet()}
+            {this.detailsComponenet()}
           </Box>
           <Box width="20%" display="inline-block">
-            <AssetSummary/>
+            <AssetSummary />
           </Box>
         </Box>
         {this.handleDialog()}

@@ -54,7 +54,7 @@ export default class AccountReport extends React.Component {
       <Box>
         <Box p={1} display="flex" flexWrap="nowrap">
           <Box width="20%" display="inline-block" ml={2}>
-            <UserListPanel onClick={this.onUserChange} />
+            <UserListPanel showBalance={true} onClick={this.onUserChange} />
           </Box>
           <Box width="60%" display="inline-block" ml={2}>
             <PaymentReportDetail
