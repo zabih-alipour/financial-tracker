@@ -26,8 +26,8 @@ public class PaymentSearchSpecification implements GenericSpecification<PaymentS
             case "paymentType":
                 predicate = criteriaBuilder.equal(root.get("paymentType").get("id"), search.getValue());
                 break;
-            case "paymentAmount":
-                predicate = criteriaBuilder.equal(root.get("paymentAmount"), search.getValue());
+            case "amount":
+                predicate = criteriaBuilder.equal(root.get("amount"), search.getValue());
                 break;
             case "settlementAmount":
                 predicate = criteriaBuilder.equal(root.get("settlementAmount"), search.getValue());
