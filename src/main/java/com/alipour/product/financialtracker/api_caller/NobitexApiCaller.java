@@ -2,6 +2,7 @@ package com.alipour.product.financialtracker.api_caller;
 
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
+import com.alipour.product.financialtracker.type_price_history.service.InvestmentTypePriceHistoryService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -25,11 +26,13 @@ public class NobitexApiCaller {
     private final InvestmentTypeService investmentTypeService;
     private final ObjectMapper mapper;
     private final OkHttpClient client;
+    private final InvestmentTypePriceHistoryService typePriceHistoryService;
 
-    public NobitexApiCaller(InvestmentTypeService investmentTypeService, ObjectMapper mapper, OkHttpClient client) {
+    public NobitexApiCaller(InvestmentTypeService investmentTypeService, ObjectMapper mapper, OkHttpClient client, InvestmentTypePriceHistoryService typePriceHistoryService) {
         this.investmentTypeService = investmentTypeService;
         this.mapper = mapper;
         this.client = client;
+        this.typePriceHistoryService = typePriceHistoryService;
     }
 
     public void getMarketStatistics() {
@@ -82,6 +85,7 @@ public class NobitexApiCaller {
                     }
                 }
             }
+            typePriceHistoryService.getCopy();
         } catch (IOException e) {
             e.printStackTrace();
         }

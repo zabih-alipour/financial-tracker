@@ -44,7 +44,7 @@ public class InvestmentController extends CRUDController<Investment> {
         return ((InvestmentService) service).searchVwInvestments(searchCriteria);
     }
 
-    @GetMapping("/by-code/{userId}")
+    @GetMapping("/by-user/{userId}")
     @ResponseBody
     public List<VwInvestment> getByUser(@PathVariable("userId") Long userId) {
         return ((InvestmentService) service).getByUser(userId);
