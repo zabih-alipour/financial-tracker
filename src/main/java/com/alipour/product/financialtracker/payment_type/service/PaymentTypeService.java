@@ -2,11 +2,13 @@ package com.alipour.product.financialtracker.payment_type.service;
 
 import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.payment_type.models.PaymentType;
+import com.alipour.product.financialtracker.payment_type.models.PaymentTypeUserDetail;
 import com.alipour.product.financialtracker.payment_type.repository.PaymentTypeRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -49,6 +51,10 @@ public class PaymentTypeService extends CRUDService<PaymentType> {
         }
 
         return super.edit(paymentType);
+    }
+
+    public List<PaymentTypeUserDetail> detailsPerUser(Long id){
+        return repository.detailsPerUser(id);
     }
 
     private String getPath(PaymentType paymentType) {
