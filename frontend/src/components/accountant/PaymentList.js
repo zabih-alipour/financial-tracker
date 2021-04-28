@@ -42,6 +42,7 @@ export default class PaymentList extends React.Component {
       pagedData: {},
       dialog: "",
       selectedPayment: null,
+      searchArias: {},
     };
   }
 
@@ -76,12 +77,13 @@ export default class PaymentList extends React.Component {
       }
       if (searchCriteria.searchArias) {
         criteria["searchArias"] = searchCriteria.searchArias;
-      }
+      } else criteria["searchArias"] = this.state.searchArias;
     }
 
     payment_search(criteria, (data) => {
       this.setState({
         pagedData: data,
+        searchArias: criteria.searchArias,
       });
     });
   };
@@ -185,13 +187,11 @@ export default class PaymentList extends React.Component {
           </TableCell>
 
           <TableCell align="center">
-            <IconButton 
+            <IconButton
               title="جزییات"
               onClick={() => this.dialogHandler(PAYMENT_LIST_DETAIL_KEY, row)}
             >
-              <Receipt
-                style={{ color: cyan[500] }}
-              />
+              <Receipt style={{ color: cyan[500] }} />
             </IconButton>
             <IconButton
               disabled={row.settled === true}

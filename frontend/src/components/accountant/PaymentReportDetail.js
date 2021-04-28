@@ -17,7 +17,7 @@ import { green, grey, indigo } from "@material-ui/core/colors";
 import AmountDecorate from "../utils/AmountDecorate";
 
 export default function PaymentReportDetail(props) {
-  const { onDetailClick } = props.onDetailClick;
+  const { onDetailClick } = props;
   const [user, setUser] = useState(props.user);
   const [data, setData] = useState({});
 
@@ -75,7 +75,7 @@ export default function PaymentReportDetail(props) {
                 <Typography align="center">مجموع</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography align="center">
+                <Typography align="center" component={"div"}>
                   <AmountDecorate amount={data.sum} />
                 </Typography>
               </TableCell>

@@ -16,6 +16,17 @@ export function update_market_statics(callback) {
   });
 }
 
+export function investment_search(searchCriteria, callback) {
+  fetch("/api/investments/search/v2", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(searchCriteria),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}
 export function investment_report_summary(callback) {
   fetch("api/investments/reports/summaries")
     .then((response) => response.json())

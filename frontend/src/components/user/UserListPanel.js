@@ -59,7 +59,7 @@ export default function UserListPanel(props) {
               <ImageIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText
+          <ListItemText component={"div"}
             style={{ textAlign: "right" }}
             primary={user.name}
             secondary={
@@ -117,7 +117,7 @@ export default function UserListPanel(props) {
             }}
             onClick={() => sortData()}
           >
-            <Sort color={green[500]} />
+            <Sort color="primary" />
           </IconButton>
         </Box>
       </Box>

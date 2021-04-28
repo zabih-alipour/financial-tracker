@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   DialogContentText,
   DialogTitle,
   IconButton,
@@ -23,9 +22,9 @@ import CircularProgressWithLabel from "../utils/CircularProgressWithLabel";
 import ListHeader from "../utils/ListHeader";
 import TuneIcon from "@material-ui/icons/Tune";
 import InvestmentDetail from "./InvestmentDetails";
-import { Pagination } from "@material-ui/lab";
-import UserAutoComplete from "../user/UserAutoComplete";
 import ListPagination from "../utils/ListPagination";
+import InvestmentListSearch from "./InvestmentListSearch";
+import { investment_search } from "../utils/apis";
 
 export default class InvestmentList extends React.Component {
   constructor(props) {
@@ -34,22 +33,37 @@ export default class InvestmentList extends React.Component {
       dialog: "",
       selectedInvestment: null,
       pagedData: {},
-      filteredUser: null,
+      searchArias: {},
     };
   }
 
-  componentDidMount = () => {
-    this.fetchData();
+  doSearch = (searchCriteria = null) => {
+    const { pageable } = this.state.pagedData;
+    const criteria = {};
+
+    if (searchCriteria) {
+      if (searchCriteria.pagination) {
+        criteria["pagination"] = searchCriteria.pagination;
+      } else criteria["pagination"] = pageable;
+
+      if (searchCriteria.sort) {
+        criteria["sort"] = searchCriteria.sort;
+      }
+      if (searchCriteria.searchArias) {
+        criteria["searchArias"] = searchCriteria.searchArias;
+      } else criteria["searchArias"] = this.state.searchArias;
+    }
+
+    investment_search(criteria, (data) => {
+      this.setState({
+        pagedData: data,
+        searchArias: criteria.searchArias,
+      });
+    });
   };
 
-  fetchData = (searchCriteria = null) => {
-    fetch("/api/investments/search/v2", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(searchCriteria),
-    })
-      .then((response) => response.json())
-      .then((data) => this.setState({ pagedData: data }));
+  componentDidMount = () => {
+    this.doSearch();
   };
 
   deleteInvestment = () => {
@@ -60,7 +74,7 @@ export default class InvestmentList extends React.Component {
     };
     fetch("/api/investments/" + selectedInvestment.id, requestOptions).then(
       (res) => {
-        this.fetchData();
+        this.doSearch();
       }
     );
   };
@@ -79,7 +93,7 @@ export default class InvestmentList extends React.Component {
     });
 
     if (status === "SUCCESSFUL") {
-      this.fetchData();
+      this.doSearch();
     }
   };
 
@@ -143,60 +157,18 @@ export default class InvestmentList extends React.Component {
       );
     }
   };
-  getCriteria = (page = null) => {
-    const { pagedData, filteredUser } = this.state;
+
+  onPageChanged = (event, page) => {
+    const { pagedData } = this.state;
     const { size = 0 } = pagedData;
 
-    const search = [];
-    if (filteredUser) {
-      search.push({
-        key: "user.id",
-        value: filteredUser.id,
-      });
-    }
-
     const searchCriteria = {
-      searchArias: search,
       pagination: {
         pageSize: size,
         pageNumber: page - 1,
       },
-      sort: {
-        field: "shamsiDate",
-        order: "DESC",
-      },
     };
-    return searchCriteria;
-  };
-
-  onPageChanged = (event, page) => {
-    this.fetchData(this.getCriteria(page));
-  };
-
-  filterUser = (event) => {
-    const user = event.target.value;
-    this.setState({ filteredUser: user });
-
-    var searchCriteria = null;
-    if (user) {
-      searchCriteria = {
-        searchArias: [
-          {
-            key: "user.id",
-            value: user.id,
-          },
-        ],
-        pagination: {
-          pageSize: 5,
-          pageNumber: 0,
-        },
-        sort: {
-          field: "shamsiDate",
-          order: "DESC",
-        },
-      };
-    }
-    this.fetchData(searchCriteria);
+    this.doSearch(searchCriteria);
   };
 
   render() {
@@ -207,6 +179,7 @@ export default class InvestmentList extends React.Component {
       number = 0,
       totalElements = 0,
       empty = true,
+      pageable,
     } = pagedData;
 
     const rows = content.map((row, idx) => {
@@ -254,55 +227,61 @@ export default class InvestmentList extends React.Component {
       );
     });
     return (
-      <Container component="div" style={{ marginTop: "5px", width:"90%"}}>
-        <ListHeader
-          titleArea={"سرمایه گذاری ها"}
-          searchArea={
-            <UserAutoComplete
-              fieldName="dummy"
-              onChange={this.filterUser}
-              fullWidth={true}
-            />
-          }
-          buttonAria={
-            <Button
-              onClick={() => this.dialogHandler("INVESTMENT_FORM", null)}
-              variant="outlined"
-              style={{ backgroundColor: "white" }}
-            >
-              جــدیــد
-            </Button>
-          }
-        />
-        <TableContainer component={Paper}>
-          <Table>
-            <caption>
-              <ListPagination
-                number={number}
-                totalPages={totalPages}
-                empty={empty}
-                totalElements={totalElements}
-                onPageChanged={this.onPageChanged}
-              />
-            </caption>
-            <TableHead style={{ backgroundColor: orange[500] }}>
-              <TableRow>
-                <TableCell align="center">ردیف</TableCell>
-                <TableCell align="center">کاربر</TableCell>
-                <TableCell align="center">نوع سرمایه</TableCell>
-                <TableCell align="center">تاریخ</TableCell>
-                <TableCell align="center">مقدار</TableCell>
-                <TableCell align="center">قیمت خریداری شده</TableCell>
-                <TableCell align="center">مقدار مصرف شده</TableCell>
-                <TableCell align="center">کد</TableCell>
-                <TableCell align="center">فعالیت</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{rows}</TableBody>
-          </Table>
-        </TableContainer>
+      <Box display="flex" p={1}>
+        <Box display="inline-block" width="20%" ml={2}>
+          <InvestmentListSearch doSearch={this.doSearch} pageable={pageable} />
+        </Box>
+        <Box display="inline-block" width="80%">
+          <ListHeader
+            titleArea={"سرمایه گذاری ها"}
+            searchArea={
+              <div></div>
+              // <UserAutoComplete
+              //   fieldName="dummy"
+              //   onChange={this.filterUser}
+              //   fullWidth={true}
+              // />
+            }
+            buttonAria={
+              <Button
+                onClick={() => this.dialogHandler("INVESTMENT_FORM", null)}
+                variant="outlined"
+                style={{ backgroundColor: "white" }}
+              >
+                جــدیــد
+              </Button>
+            }
+          />
+          <TableContainer component={Paper}>
+            <Table>
+              <caption>
+                <ListPagination
+                  number={number}
+                  totalPages={totalPages}
+                  empty={empty}
+                  totalElements={totalElements}
+                  onPageChanged={this.onPageChanged}
+                />
+              </caption>
+              <TableHead style={{ backgroundColor: orange[500] }}>
+                <TableRow>
+                  <TableCell align="center">ردیف</TableCell>
+                  <TableCell align="center">کاربر</TableCell>
+                  <TableCell align="center">نوع سرمایه</TableCell>
+                  <TableCell align="center">تاریخ</TableCell>
+                  <TableCell align="center">مقدار</TableCell>
+                  <TableCell align="center">قیمت خریداری شده</TableCell>
+                  <TableCell align="center">مقدار مصرف شده</TableCell>
+                  <TableCell align="center">کد</TableCell>
+                  <TableCell align="center">فعالیت</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{rows}</TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
         {this.showDialog()}
-      </Container>
+      </Box>
     );
   }
 }
