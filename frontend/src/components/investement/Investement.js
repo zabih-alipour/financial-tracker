@@ -28,13 +28,13 @@ export default function Investement(props) {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="سبد سرمایه" />
           <Tab label="سرمایه ها" />
+          <Tab label="سبد سرمایه" />
           <Tab label="گزارش" />
         </Tabs>
       </Paper>
-      <TabPanel value={value} index={0} component={<InvestementTypeList />} />
-      <TabPanel value={value} index={1} component={<InvestementList />} />
+      <TabPanel value={value} index={1} component={<InvestementTypeList />} />
+      <TabPanel value={value} index={0} component={<InvestementList />} />
       <TabPanel value={value} index={2} component={<InvestementReport />} />
     </div>
   );

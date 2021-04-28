@@ -22,9 +22,9 @@ export default function ListHeader(props) {
         <Box
           textAlign="center"
           fontWeight="fontWeightBold"
-          fontSize="h5.fontSize"
+          fontSize="h6.fontSize"
           fontFamily="Monospace"
-          letterSpacing={2}
+          letterSpacing={1}
           lineHeight={3}
           color="white"
         >

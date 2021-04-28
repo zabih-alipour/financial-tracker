@@ -13,7 +13,7 @@ export default function UserAutoComplete(props) {
 
   React.useEffect(() => {
     if (user) {
-      fetch("/api/investments/by-code/" + user.id)
+      fetch("/api/investments/by-user/" + user.id)
         .then((response) => response.json())
         .then((data) => {
           setInvestments(data.filter((p) => p.remain > 0));

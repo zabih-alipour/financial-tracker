@@ -254,7 +254,7 @@ export default class InvestmentList extends React.Component {
       );
     });
     return (
-      <Container component="div" fixed style={{ marginTop: "5px" }}>
+      <Container component="div" style={{ marginTop: "5px", width:"90%"}}>
         <ListHeader
           titleArea={"سرمایه گذاری ها"}
           searchArea={
