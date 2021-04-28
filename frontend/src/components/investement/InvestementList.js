@@ -33,12 +33,12 @@ export default class InvestmentList extends React.Component {
       dialog: "",
       selectedInvestment: null,
       pagedData: {},
-      searchArias: {},
+      searchArias: null,
     };
   }
 
   doSearch = (searchCriteria = null) => {
-    const { pageable } = this.state.pagedData;
+    const { searchArias, pageable } = this.state.pagedData;
     const criteria = {};
 
     if (searchCriteria) {
@@ -51,8 +51,8 @@ export default class InvestmentList extends React.Component {
       }
       if (searchCriteria.searchArias) {
         criteria["searchArias"] = searchCriteria.searchArias;
-      } else criteria["searchArias"] = this.state.searchArias;
-    }
+      } else criteria["searchArias"] = searchArias;
+    } else criteria["searchArias"] = searchArias;
 
     investment_search(criteria, (data) => {
       this.setState({

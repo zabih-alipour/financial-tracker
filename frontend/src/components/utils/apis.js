@@ -97,6 +97,14 @@ export function get_payment_types(callback) {
     });
 }
 
+export function payment_type_user_datails(paymentType, callback) {
+  fetch("/api/paymentTypes/users/" + paymentType.id)
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}
+
 export function delete_payment_type(type, callback) {
   const requestOptions = {
     method: "DELETE",

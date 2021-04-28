@@ -4,6 +4,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -21,7 +22,7 @@ import ReceiptIcon from "@material-ui/icons/Receipt";
 import ConfirmationDialog from "../dialog/ConfirmationDialog";
 import ListHeader from "../utils/ListHeader";
 import { delete_payment_type, get_payment_types } from "../utils/apis";
-import { ShowDialog } from "../utils/Dialogs";
+import { PAYMENT_TYPE_USER_DETAIL_KEY, ShowDialog } from "../utils/Dialogs";
 
 export default class PaymentTypeList extends React.Component {
   constructor(props) {
@@ -103,25 +104,35 @@ export default class PaymentTypeList extends React.Component {
           <TableCell component="th" scope="row" align="center">
             {row.id}
           </TableCell>
-          <TableCell align="center">{row.name}</TableCell>
+          <TableCell align="center">
+            <Link button onClick={() => this.dialogHandler(PAYMENT_TYPE_USER_DETAIL_KEY, row)}>
+              {row.name}
+            </Link>
+          </TableCell>
           <TableCell align="center">{parentName}</TableCell>
           <TableCell align="center">
-            <IconButton title={"تعریف پرداخت"}
+            <IconButton
+              title={"تعریف پرداخت"}
               onClick={() => this.dialogHandler("PAYMENT_FORM", row)}
             >
               <PostAddIcon style={{ color: purple[600] }} />
             </IconButton>
-            <IconButton title={"پرداخت ها"}
+            <IconButton
+              title={"پرداخت ها"}
               onClick={() => this.dialogHandler("PAYMENT_LIST_POPUP", row)}
             >
               <ReceiptIcon color="primary" />
             </IconButton>
-            <IconButton title={"ویرایش"}
+            <IconButton
+              title={"ویرایش"}
               onClick={() => this.dialogHandler("PAYMENT_TYPE_FORM", row)}
             >
               <EditIcon style={{ color: green[300] }} />
             </IconButton>
-            <IconButton  title={"حذف"} onClick={() => this.dialogHandler("DELETE_TYPE", row)}>
+            <IconButton
+              title={"حذف"}
+              onClick={() => this.dialogHandler("DELETE_TYPE", row)}
+            >
               <DeleteForeverIcon color="secondary" />
             </IconButton>
           </TableCell>

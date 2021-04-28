@@ -42,7 +42,7 @@ export default class PaymentList extends React.Component {
       pagedData: {},
       dialog: "",
       selectedPayment: null,
-      searchArias: {},
+      searchArias: null,
     };
   }
 
@@ -64,7 +64,7 @@ export default class PaymentList extends React.Component {
   };
 
   doSearch = (searchCriteria = null) => {
-    const { pageable } = this.state.pagedData;
+    const { pageable ,searchArias} = this.state.pagedData;
     const criteria = {};
 
     if (searchCriteria) {
@@ -77,8 +77,8 @@ export default class PaymentList extends React.Component {
       }
       if (searchCriteria.searchArias) {
         criteria["searchArias"] = searchCriteria.searchArias;
-      } else criteria["searchArias"] = this.state.searchArias;
-    }
+      } else criteria["searchArias"] = searchArias;
+    } else criteria["searchArias"] = searchArias;
 
     payment_search(criteria, (data) => {
       this.setState({
