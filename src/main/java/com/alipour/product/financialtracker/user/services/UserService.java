@@ -1,6 +1,7 @@
 package com.alipour.product.financialtracker.user.services;
 
 import com.alipour.product.financialtracker.common.CRUDService;
+import com.alipour.product.financialtracker.payment_type.models.UserPaymentTypeDetail;
 import com.alipour.product.financialtracker.user.models.User;
 import com.alipour.product.financialtracker.user.models.UserSummary;
 import com.alipour.product.financialtracker.user.repositories.UserRepository;
@@ -33,7 +34,10 @@ public class UserService extends CRUDService<User> {
     }
 
     public List<UserSummary> findWithDetail(Boolean showAsset, Boolean showBalance) {
-
         return userSummaryRepository.findAll();
+    }
+
+   public List<UserPaymentTypeDetail> userPaymentDetail(Long userId) {
+        return repository.userPaymentTypeDetail(userId);
     }
 }

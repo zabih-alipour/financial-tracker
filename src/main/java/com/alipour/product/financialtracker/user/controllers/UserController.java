@@ -1,6 +1,7 @@
 package com.alipour.product.financialtracker.user.controllers;
 
 import com.alipour.product.financialtracker.common.CRUDController;
+import com.alipour.product.financialtracker.payment_type.models.UserPaymentTypeDetail;
 import com.alipour.product.financialtracker.user.models.User;
 import com.alipour.product.financialtracker.user.models.UserSummary;
 import com.alipour.product.financialtracker.user.services.UserService;
@@ -22,5 +23,10 @@ public class UserController extends CRUDController<User> {
     public List<UserSummary> findWithDetail(@RequestParam(value = "showAsset", defaultValue = "false", required = false) Boolean showAsset,
                                             @RequestParam(value = "showBalance", defaultValue = "false", required = false) Boolean showBalance) {
         return ((UserService) service).findWithDetail(showAsset, showBalance);
+    }
+   @GetMapping("/payment-type/{id}")
+    @ResponseBody
+    public List<UserPaymentTypeDetail> userPaymentDetail(@PathVariable("id") Long userId) {
+        return ((UserService) service).userPaymentDetail(userId);
     }
 }
