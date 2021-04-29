@@ -13,7 +13,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
 import { green } from "@material-ui/core/colors";
-import {INVESTMENT_SPECIFIC_DETAIL_KEY, PAYMENT_LIST_POPUP_KEY, USER_FORM_KEY } from '../utils/Dialogs'
+import {INVESTMENT_SPECIFIC_DETAIL_KEY, PAYMENT_LIST_POPUP_KEY, USER_FORM_KEY, USER_PAYMENT_TYPE_DETAIL_KEY } from '../utils/Dialogs'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,7 +61,7 @@ function UserListItem(props) {
             icon={<MenuBookIcon color="primary" />}
           />
           <BottomNavigationAction
-          onClick={() => dialogHandler(PAYMENT_LIST_POPUP_KEY, user)}
+          onClick={() => dialogHandler(USER_PAYMENT_TYPE_DETAIL_KEY, user)}
             label="پرداخت ها"
             showLabel
             icon={<ViewHeadlineIcon color="primary" />}

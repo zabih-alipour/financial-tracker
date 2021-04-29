@@ -27,6 +27,7 @@ import {
   PAYMENT_FORM_KEY,
   PAYMENT_LIST_DETAIL_KEY,
   PAYMENT_TYPE_USER_DETAIL_KEY,
+  USER_PAYMENT_TYPE_DETAIL_KEY,
 } from "../utils/Dialogs";
 import PaymentListSearch from "./PaymentListSearch";
 import {
@@ -142,6 +143,7 @@ export default class PaymentList extends React.Component {
         {
           payment: selectedPayment,
           type: selectedPayment.paymentType,
+          user: selectedPayment.user,
           dialog: dialog,
         },
         this.onClose
@@ -170,7 +172,16 @@ export default class PaymentList extends React.Component {
           <TableCell component="th" scope="row" align="center">
             {idx + 1}
           </TableCell>
-          <TableCell align="center">{row.user.name}</TableCell>
+          <TableCell align="center">
+            <Link
+              button
+              onClick={() =>
+                this.dialogHandler(USER_PAYMENT_TYPE_DETAIL_KEY, row)
+              }
+            >
+              {row.user.name}
+            </Link>
+          </TableCell>
           <TableCell align="center">
             <Link
               button
