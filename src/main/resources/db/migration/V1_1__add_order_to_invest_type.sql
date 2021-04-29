@@ -1,0 +1,1 @@
+alter table investment_type add display_order int;
