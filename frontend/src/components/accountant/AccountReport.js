@@ -3,44 +3,39 @@ import React from "react";
 import PaymentReportDetail from "./PaymentReportDetail";
 import PaymentListPopup from "./PaymentListPopup";
 import UserListPanel from "../user/UserListPanel";
+import { ShowDialog } from "../utils/Dialogs";
 
 export default class AccountReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openDialog: false,
+      dialog: null,
       selectedRow: { user: null, type: null },
       selectedUser: { id: 1 },
     };
   }
 
-  onDetailClick = (selectedRow) => {
-    this.setState({
-      selectedRow: selectedRow,
-      openDialog: true,
-    });
-  };
-
   onClose = () => {
     this.setState({
       selectedRow: { user: null, type: null },
-      openDialog: false,
+      dialog: null,
     });
   };
 
-  handleDialog = () => {
-    const { openDialog, selectedRow } = this.state;
+  showDialog = () => {
+    const { dialog, selectedRow } = this.state;
 
-    if (openDialog) {
-      return (
-        <PaymentListPopup
-          openDialog={true}
-          user={selectedRow.user}
-          type={selectedRow.type}
-          onClose={this.onClose}
-        />
-      );
-    }
+    return ShowDialog(
+      { user: selectedRow.user, type: selectedRow.type, dialog: dialog },
+      this.onClose
+    );
+  };
+
+  handelDialog = (dialog, selectedRow) => {
+    this.setState({
+      selectedRow: selectedRow,
+      dialog: dialog,
+    });
   };
 
   onUserChange = (event) => {
@@ -60,14 +55,14 @@ export default class AccountReport extends React.Component {
             <PaymentReportDetail
               key={selectedUser.id}
               user={selectedUser}
-              onDetailClick={this.onDetailClick}
+              handelDialog={this.handelDialog}
             />
           </Box>
           {/* <Box width="20%" display="inline-block">
             <AssetSummary/>
           </Box> */}
         </Box>
-        {this.handleDialog()}
+        {this.showDialog()}
       </Box>
     );
   }

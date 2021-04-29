@@ -4,6 +4,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -25,6 +26,7 @@ import {
   PAYMENT_SETTLEMENT_KEY,
   PAYMENT_FORM_KEY,
   PAYMENT_LIST_DETAIL_KEY,
+  PAYMENT_TYPE_USER_DETAIL_KEY,
 } from "../utils/Dialogs";
 import PaymentListSearch from "./PaymentListSearch";
 import {
@@ -64,7 +66,7 @@ export default class PaymentList extends React.Component {
   };
 
   doSearch = (searchCriteria = null) => {
-    const { pageable ,searchArias} = this.state.pagedData;
+    const { pageable, searchArias } = this.state.pagedData;
     const criteria = {};
 
     if (searchCriteria) {
@@ -115,31 +117,36 @@ export default class PaymentList extends React.Component {
 
   showDialog = () => {
     const { dialog, selectedPayment } = this.state;
-
-    if (dialog === "DELETE_PAYMENT") {
-      return (
-        <ConfirmationDialog
-          data={selectedPayment}
-          openDialog={true}
-          headerComponent={
-            <DialogTitle id="alert-dialog-slide-title">
-              {"حذف پرداخت"}
-            </DialogTitle>
-          }
-          bodyComponent={
-            <DialogContentText id="alert-dialog-slide-description">
-              آیا مطمغن هستین که میخواید پرداخت را حذف کنید؟
-            </DialogContentText>
-          }
-          onAccept={this.deletePayment}
-          onClose={this.onClose}
-        />
+    if (selectedPayment) {
+      if (dialog === "DELETE_PAYMENT") {
+        return (
+          <ConfirmationDialog
+            data={selectedPayment}
+            openDialog={true}
+            headerComponent={
+              <DialogTitle id="alert-dialog-slide-title">
+                {"حذف پرداخت"}
+              </DialogTitle>
+            }
+            bodyComponent={
+              <DialogContentText id="alert-dialog-slide-description">
+                آیا مطمغن هستین که میخواید پرداخت را حذف کنید؟
+              </DialogContentText>
+            }
+            onAccept={this.deletePayment}
+            onClose={this.onClose}
+          />
+        );
+      }
+      return ShowDialog(
+        {
+          payment: selectedPayment,
+          type: selectedPayment.paymentType,
+          dialog: dialog,
+        },
+        this.onClose
       );
     }
-    return ShowDialog(
-      { payment: selectedPayment, dialog: dialog },
-      this.onClose
-    );
   };
 
   dialogHandler = (dialog, payment) => {
@@ -164,7 +171,16 @@ export default class PaymentList extends React.Component {
             {idx + 1}
           </TableCell>
           <TableCell align="center">{row.user.name}</TableCell>
-          <TableCell align="center">{row.paymentType.name}</TableCell>
+          <TableCell align="center">
+            <Link
+              button
+              onClick={() =>
+                this.dialogHandler(PAYMENT_TYPE_USER_DETAIL_KEY, row)
+              }
+            >
+              {row.paymentType.name}
+            </Link>
+          </TableCell>
           {/* <TableCell align="center">{row.code}</TableCell> */}
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">
