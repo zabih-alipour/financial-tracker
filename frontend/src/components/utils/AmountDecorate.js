@@ -44,7 +44,7 @@ export default function AmountDecorate(props) {
       <Box
         display="inline-block"
         width={label ? "50%" : "100%"}
-        textAlign={label ? "left" : "center"}
+        textAlign={label ? "left" : align}
       >
         {thousand
           ? Math.abs(amount).toLocaleString("fullwide", {

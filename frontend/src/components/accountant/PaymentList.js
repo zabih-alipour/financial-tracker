@@ -139,16 +139,17 @@ export default class PaymentList extends React.Component {
           />
         );
       }
-      return ShowDialog(
-        {
-          payment: selectedPayment,
-          type: selectedPayment.paymentType,
-          user: selectedPayment.user,
-          dialog: dialog,
-        },
-        this.onClose
-      );
     }
+
+    return ShowDialog(
+      {
+        payment: selectedPayment,
+        type: selectedPayment ? selectedPayment.paymentType : null,
+        user: selectedPayment ? selectedPayment.user : null,
+        dialog: dialog,
+      },
+      this.onClose
+    );
   };
 
   dialogHandler = (dialog, payment) => {

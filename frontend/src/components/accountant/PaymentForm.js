@@ -16,7 +16,6 @@ import PaymentTypeAutoComplete from "./PaymentTypeAutoComplete";
 import UserAutoComplete from "../user/UserAutoComplete";
 import SaveIcon from "@material-ui/icons/Save";
 
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -27,8 +26,6 @@ export default class PaymentForm extends React.Component {
     this.state = {
       open: props.openDialog,
       onClose: props.onClose,
-      types: [],
-      users: [],
       payment:
         props.payment != null
           ? props.payment
@@ -42,18 +39,6 @@ export default class PaymentForm extends React.Component {
             },
     };
   }
-  componentDidMount = () => {
-    fetch("/api/paymentTypes")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({ types: data });
-      });
-    fetch("/api/users")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({ users: data });
-      });
-  };
 
   persistPayment = () => {
     const { payment } = this.state;
@@ -82,7 +67,7 @@ export default class PaymentForm extends React.Component {
   };
 
   render() {
-    const { open, payment, types, users } = this.state;
+    const { open, payment } = this.state;
     const title = payment.id == null ? " تعریف پرداخت جدید" : " ویرایش پرداخت";
     return (
       <Dialog
@@ -109,14 +94,12 @@ export default class PaymentForm extends React.Component {
         <Container style={{ padding: "20px" }}>
           <UserAutoComplete
             user={payment.user}
-            users={users}
             onChange={this.onChange}
             fieldName="user"
           />
 
           <PaymentTypeAutoComplete
             type={payment.paymentType}
-            types={types}
             onChange={this.onChange}
             fieldName="paymentType"
           />
@@ -158,7 +141,7 @@ export default class PaymentForm extends React.Component {
             onChange={(event) => this.onChange(event)}
           />
 
-<Button
+          <Button
             variant="contained"
             fullWidth
             autoFocus
@@ -166,7 +149,7 @@ export default class PaymentForm extends React.Component {
             size="large"
             margin="dense"
             onClick={this.persistPayment}
-            startIcon={<SaveIcon   style={{marginLeft:"10px"}}/>}
+            startIcon={<SaveIcon style={{ marginLeft: "10px" }} />}
             style={{ marginTop: "30px" }}
           >
             ذخــیره

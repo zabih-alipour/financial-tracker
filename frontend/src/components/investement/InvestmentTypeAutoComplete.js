@@ -4,21 +4,12 @@ import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import React from "react";
 import { blue, grey } from "@material-ui/core/colors";
+import { investment_types_search } from "../utils/apis";
 
 export default function InvestmentTypeAutoComplete(props) {
   const [types, setTypes] = React.useState(props.types ? props.types : []);
 
-  const { type, onChange, fieldName, style } = props;
-
-  React.useEffect(() => {
-    if (types.length === 0) {
-      fetch("/api/investment_types")
-        .then((response) => response.json())
-        .then((data) => {
-          setTypes(data);
-        });
-    }
-  }, [types, type]);
+  const { type, onChange, fieldName, style, fullWidth = false } = props;
 
   const onAutoCompleteChange = (event, value, reason) => {
     event = {
@@ -31,13 +22,31 @@ export default function InvestmentTypeAutoComplete(props) {
     onChange(event);
   };
 
+  const doSearch = (event, value, reason) => {
+    const criteria = {
+      searchArias: [
+        {
+          key: "name",
+          value: value,
+        },
+      ],
+    };
+
+    investment_types_search(criteria, (data) => setTypes(data["content"]));
+  };
+
   return (
     <Autocomplete
+      fullWidth={fullWidth}
       id="investment-type-auto"
       autoComplete
+      noOptionsText="موردی برای نمایش وجود ندارد"
       onChange={onAutoCompleteChange}
+      onInputChange={doSearch}
       value={type}
       options={types}
+      loading={true}
+      loadingText="در حال جستچو..."
       renderInput={(params) => (
         <TextField
           {...params}
@@ -51,7 +60,7 @@ export default function InvestmentTypeAutoComplete(props) {
         return option.name;
       }}
       getOptionSelected={(option, value) => {
-        return option.name === value.name;
+        return option.id === value.id;
       }}
       renderOption={(option, { inputValue }) => {
         const matches = match(option.name, inputValue);

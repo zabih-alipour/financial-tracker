@@ -22,6 +22,7 @@ import { investment_types_search } from "../utils/apis";
 import { ShowDialog } from "../utils/Dialogs";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import ListPagination from "../utils/ListPagination";
+import InvestmentTypeAutoComplete from "./InvestmentTypeAutoComplete";
 
 export default class InvestementTypeList extends React.Component {
   constructor(props) {
@@ -32,10 +33,10 @@ export default class InvestementTypeList extends React.Component {
   }
 
   componentDidMount = () => {
-    this.fetchData();
+    this.doSearch();
   };
 
-  fetchData = (searchCriteria = null) => {
+  doSearch = (searchCriteria = null) => {
     investment_types_search(searchCriteria, (data) => {
       this.setState({
         pagedData: data,
@@ -53,7 +54,7 @@ export default class InvestementTypeList extends React.Component {
       selectedType: null,
     });
     if (status === "SUCCESSFUL") {
-      this.fetchData();
+      this.doSearch();
     }
   };
 
@@ -65,7 +66,7 @@ export default class InvestementTypeList extends React.Component {
     );
   };
   onPageChanged = (event, page) => {
-    this.fetchData(this.getCriteria(page));
+    this.doSearch(this.getCriteria(page));
   };
   getCriteria = (page) => {
     const { pagedData } = this.state;
@@ -84,6 +85,23 @@ export default class InvestementTypeList extends React.Component {
     };
     return searchCriteria;
   };
+
+  onChange = (event) => {
+    const { name, value } = event.target;
+    var searchCriteria = null;
+    if (value !== null && value !== "") {
+      searchCriteria = {
+        searchArias: [
+          {
+            key: "id",
+            value: value.id,
+          },
+        ],
+      };
+    }
+    this.doSearch(searchCriteria); 
+  };
+
   render() {
     const { pagedData } = this.state;
     const {
@@ -128,12 +146,18 @@ export default class InvestementTypeList extends React.Component {
       <Container>
         <ListHeader
           titleArea={"سبد سرمایه"}
-          searchArea={<div></div>}
+          searchArea={
+            <InvestmentTypeAutoComplete
+              fullWidth={true}
+              fieldName="investmentType"
+              onChange={this.onChange}
+            />
+          }
           buttonAria={
             <Box>
               <Box ml={1 / 2} display="inline-block">
                 <Button
-                  onClick={() => update_market_statics(this.fetchData)}
+                  onClick={() => update_market_statics(this.doSearch)}
                   variant="outlined"
                   style={{ backgroundColor: "white" }}
                 >

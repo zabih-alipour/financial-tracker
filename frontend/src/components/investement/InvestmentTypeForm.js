@@ -110,6 +110,17 @@ export default class InvestmentTypeForm extends React.Component {
             value={type.latestPrice}
             onChange={(event) => this.onChange(event)}
           />
+          <TextField
+            fullWidth
+            inputProps={{ min: 0, style: { textAlign: "center" } }}
+            id="tf_displayOrder"
+            name="displayOrder"
+            variant="standard"
+            margin="dense"
+            placeholder="اولویت نمایش"
+            value={type.displayOrder}
+            onChange={(event) => this.onChange(event)}
+          />
 
           <Button
             variant="contained"
