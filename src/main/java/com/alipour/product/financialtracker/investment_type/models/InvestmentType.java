@@ -30,7 +30,7 @@ public class InvestmentType extends ParentEntity {
     @Column(name = "latest_price")
     private BigDecimal latestPrice;
 
-    @Column(name = "display_order")
+    @Column(name = "display_order", columnDefinition = "default 0")
     private BigDecimal displayOrder;
 
     public InvestmentType(Long id) {

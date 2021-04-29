@@ -1,0 +1,1 @@
+update investment_type set display_order = 0;

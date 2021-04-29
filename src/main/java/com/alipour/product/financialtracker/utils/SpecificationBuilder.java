@@ -3,10 +3,13 @@ package com.alipour.product.financialtracker.utils;
 import com.alipour.product.financialtracker.common.ParentEntity;
 import com.alipour.product.financialtracker.investment.repository.VwInvestmentSpecification;
 import com.alipour.product.financialtracker.investment.views.VwInvestment;
+import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
+import com.alipour.product.financialtracker.investment_type.repository.InvestmentTypeSpecification;
 import com.alipour.product.financialtracker.payment.model.Payment;
 import com.alipour.product.financialtracker.payment.repository.PaymentSearchSpecification;
 import com.alipour.product.financialtracker.payment.repository.PaymentSpecification;
 import com.alipour.product.financialtracker.payment.views.PaymentSearch;
+import com.alipour.product.financialtracker.payment_type.models.PaymentType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -61,6 +64,8 @@ public class SpecificationBuilder<T extends ParentEntity> {
             specification = new VwInvestmentSpecification(search);
         else if (tclass.isAssignableFrom(PaymentSearch.class))
             specification = new PaymentSearchSpecification(search);
+        else if (tclass.isAssignableFrom(InvestmentType.class))
+            specification = new InvestmentTypeSpecification(search);
 
 
         return specification;

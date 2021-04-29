@@ -6,6 +6,8 @@ import com.alipour.product.financialtracker.investment_type.repository.Investmen
 import com.alipour.product.financialtracker.utils.SearchCriteria;
 import com.alipour.product.financialtracker.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +37,13 @@ public class InvestmentTypeService extends CRUDService<InvestmentType> {
 
     public Page<InvestmentType> search(SearchCriteria searchCriteria) {
         searchCriteria = Optional.ofNullable(searchCriteria).orElse(new SearchCriteria());
-        searchCriteria.getSort().setField("latestPrice");
+        searchCriteria.getSort().setField("displayOrder");
         searchCriteria.getSort().setOrder("DESC");
 
         searchCriteria.getPagination().setPageSize(10);
 
         SpecificationBuilder<InvestmentType> specificationBuilder = new SpecificationBuilder<>(searchCriteria, InvestmentType.class);
-        return repository.findAll(specificationBuilder.specification(), specificationBuilder.pageRequest());
+        final PageRequest pageable = specificationBuilder.pageRequest();
+        return repository.findAll(specificationBuilder.specification(), pageable);
     }
 }
