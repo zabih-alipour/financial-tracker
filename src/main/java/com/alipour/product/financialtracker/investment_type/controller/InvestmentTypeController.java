@@ -29,7 +29,7 @@ public class InvestmentTypeController extends CRUDController<InvestmentType> {
 
     @PutMapping("/update/all")
     public ResponseEntity<String> updateAll() {
-        apiCaller.getMarketStatistics();
+        apiCaller.getMarketStatistics2();
         return ResponseEntity.ok("Successfully Updated");
     }
 

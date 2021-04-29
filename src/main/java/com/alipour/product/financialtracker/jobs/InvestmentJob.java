@@ -20,6 +20,6 @@ public class InvestmentJob {
     @Scheduled(fixedRate = (10 * 60 * 1000), initialDelay = (60 * 1000))
     public void investmentTypeUpdate() {
         log.info("InvestmentType started to update latest price .... ");
-        apiCaller.getMarketStatistics();
+        apiCaller.getMarketStatistics2();
     }
 }
