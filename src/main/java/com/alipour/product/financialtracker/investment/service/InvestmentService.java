@@ -38,6 +38,8 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+import static com.alipour.product.financialtracker.utils.Utils.generateCode;
+
 /**
  * Service：
  *
@@ -51,7 +53,6 @@ public class InvestmentService extends CRUDService<Investment> {
 
     private final InvestmentRepository repository;
     private final InvestmentTypeRepository typeRepository;
-    private final SecureRandom random;
     private final VwInvestmentRepository vwInvestmentRepository;
     private final AssetSummaryRepository assetSummaryRepository;
 
@@ -59,11 +60,9 @@ public class InvestmentService extends CRUDService<Investment> {
     public InvestmentService(
             InvestmentRepository repository,
             InvestmentTypeRepository typeRepository,
-            SecureRandom random,
             VwInvestmentRepository vwInvestmentRepository, AssetSummaryRepository assetSummaryRepository) {
         this.repository = repository;
         this.typeRepository = typeRepository;
-        this.random = random;
         this.vwInvestmentRepository = vwInvestmentRepository;
         this.assetSummaryRepository = assetSummaryRepository;
     }
@@ -85,6 +84,7 @@ public class InvestmentService extends CRUDService<Investment> {
         Investment investment = dto.getChangeInvestment();
         if (dto.getParent() == null) {
             investment.setDescription("پس انداز ریالی");
+            investment.setExecutedPrice(BigDecimal.ONE);
         } else {
             InvestmentType investmentType = typeRepository.getOne(investment.getInvestmentType().getId());
             Investment parent = repository.getOne(investment.getParent().getId());
@@ -131,10 +131,6 @@ public class InvestmentService extends CRUDService<Investment> {
                 throw new BusinessException(String.format("مقدار کوین دریافتی %f با مقدار کوین مصرفی %f همخوانی ندارد", exchange, subtract));
             }
         }
-    }
-
-    private String generateCode() {
-        return String.format("%d", random.nextInt(999999));
     }
 
     @Override

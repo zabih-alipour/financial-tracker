@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "payment_type")
 public class PaymentType extends ParentEntity {
-
+    public static final PaymentType INVESTMENT = new PaymentType(13L);
     @Column
     private String name;
 

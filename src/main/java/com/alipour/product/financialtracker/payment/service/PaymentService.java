@@ -3,6 +3,10 @@ package com.alipour.product.financialtracker.payment.service;
 import com.alipour.product.financialtracker.common.BadRequestException;
 import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.common.DateUtils;
+import com.alipour.product.financialtracker.investment.dto.CoinInfo;
+import com.alipour.product.financialtracker.investment.dto.InvestmentDto;
+import com.alipour.product.financialtracker.investment.service.InvestmentService;
+import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
 import com.alipour.product.financialtracker.payment.dtos.PaymentSettlementDto;
 import com.alipour.product.financialtracker.payment.model.Payment;
@@ -11,6 +15,8 @@ import com.alipour.product.financialtracker.payment.repository.PaymentRepository
 import com.alipour.product.financialtracker.payment.repository.PaymentSearchRepository;
 import com.alipour.product.financialtracker.payment.views.PaymentReport;
 import com.alipour.product.financialtracker.payment.views.PaymentSearch;
+import com.alipour.product.financialtracker.payment_type.models.PaymentType;
+import com.alipour.product.financialtracker.payment_type.repository.PaymentTypeRepository;
 import com.alipour.product.financialtracker.user.models.User;
 import com.alipour.product.financialtracker.user.repositories.UserRepository;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
@@ -21,8 +27,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.alipour.product.financialtracker.utils.Utils.generateCode;
 
 /**
  * Service：
@@ -37,12 +47,16 @@ public class PaymentService extends CRUDService<Payment> {
     private final PaymentReportRepository reportRepository;
     private final PaymentSearchRepository searchRepository;
     private final UserRepository userRepository;
+    private final PaymentTypeRepository paymentTypeRepository;
+    private final InvestmentService investmentService;
 
-    public PaymentService(PaymentRepository repository, PaymentReportRepository reportRepository, PaymentSearchRepository searchRepository, UserRepository userRepository) {
+    public PaymentService(PaymentRepository repository, PaymentReportRepository reportRepository, PaymentSearchRepository searchRepository, UserRepository userRepository, PaymentTypeRepository paymentTypeRepository, InvestmentService investmentService) {
         this.repository = repository;
         this.reportRepository = reportRepository;
         this.searchRepository = searchRepository;
         this.userRepository = userRepository;
+        this.paymentTypeRepository = paymentTypeRepository;
+        this.investmentService = investmentService;
     }
 
     @Override
@@ -52,10 +66,31 @@ public class PaymentService extends CRUDService<Payment> {
 
     @Override
     public Payment add(Payment payment) {
-        payment.setCode(Math.abs(UUID.randomUUID().getMostSignificantBits()));
+        payment.setCode(Long.valueOf(generateCode()));
         if (payment.getShamsiDate() == null || payment.getShamsiDate().isEmpty())
             payment.setShamsiDate(DateUtils.getTodayJalali());
-        return super.add(payment);
+
+        return paymentTypeRepository.findById(payment.getPaymentType().getId())
+                .filter(paymentType -> paymentType.getId().equals(PaymentType.INVESTMENT.getId()))
+                .map(paymentType -> {
+                    final InvestmentDto investmentDto = new InvestmentDto();
+                    investmentDto.setUser(payment.getUser());
+                    investmentDto.setChange(new CoinInfo(InvestmentType.RIAL, payment.getAmount(), BigDecimal.ONE));
+                    return investmentService.add(investmentDto);
+                })
+                .map(investment -> {
+                    payment.setInvestmentCode(investment.getCode());
+                    payment.setDescription("سرمایه گذاری");
+                    return super.add(payment);
+                })
+                .map(p -> {
+                    Payment settlement = p.settlement();
+                    settlement.setAmount(settlement.getAmount().negate());
+                    settlement.setParent(p);
+                    settlement.setCode(Long.valueOf(generateCode()));
+                    super.add(settlement);
+                    return p;
+                }).orElseGet(() -> super.add(payment));
     }
 
     @Override

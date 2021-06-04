@@ -45,6 +45,9 @@ public class Payment extends ParentEntity implements Serializable {
     @Column(name = "code", nullable = false)
     private Long code;
 
+    @Column(name = "investment_code")
+    private String investmentCode;
+
     @CreationTimestamp
     private LocalDateTime created_at;
 

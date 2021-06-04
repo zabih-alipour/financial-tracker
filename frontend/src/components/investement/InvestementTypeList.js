@@ -88,7 +88,7 @@ export default class InvestementTypeList extends React.Component {
 
   onChange = (event) => {
     const { name, value } = event.target;
-    var searchCriteria = null;
+    let searchCriteria = null;
     if (value !== null && value !== "") {
       searchCriteria = {
         searchArias: [

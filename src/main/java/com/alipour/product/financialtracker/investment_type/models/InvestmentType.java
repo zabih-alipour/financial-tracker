@@ -21,6 +21,9 @@ import java.math.BigDecimal;
 @Table(name = "investment_type")
 public class InvestmentType extends ParentEntity {
 
+    public static final InvestmentType RIAL = new InvestmentType(1L);
+    public static final InvestmentType DOLOR = new InvestmentType(8L);
+
     @Column(name = "name", nullable = false)
     private String name;
 
