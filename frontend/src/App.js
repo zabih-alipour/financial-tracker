@@ -8,7 +8,15 @@ import UserList from "./components/user/UserList";
 import PersonalAccountant from "./components/accountant/PersonalAccountant";
 import Investement from "./components/investement/Investement";
 import TabPanel from "./components/utils/TabPanel";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import SettingsPowerIcon from "@material-ui/icons/SettingsPower";
+import { shutdown } from './components/utils/apis'
+import {
+  Box,
+  createMuiTheme,
+  IconButton,
+  ThemeProvider,
+} from "@material-ui/core";
+import { ShutterSpeedTwoTone } from "@material-ui/icons";
 
 const useStyles = makeStyles({
   root: {
@@ -33,20 +41,35 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <div className={classes.App}>
         <Paper className={classes.root} variant="elevation">
-          <Tabs
-            selectionFollowsFocus
-            value={value}
-            onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            centered
-          >
-            <Tab label="صفحه اصلی" />
-            <Tab label="کاربران" />
-            <Tab label="حساب ها شخصی" />
-            <Tab label="سرمایه گذاری" />
-          </Tabs>
+          <Box display="flex">
+            <Box width="97%">
+              <Tabs
+                selectionFollowsFocus
+                value={value}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                centered
+              >
+                <Tab label="صفحه اصلی" />
+                <Tab label="کاربران" />
+                <Tab label="حساب ها شخصی" />
+                <Tab label="سرمایه گذاری" />
+              </Tabs>
+            </Box>
+            <Box width="3%">
+              <IconButton>
+                <SettingsPowerIcon
+                  style={{ color: "white" }}
+                  title={"پرداخت ها"}
+                  onClick={() => shutdown()}
+                  
+                />
+              </IconButton>
+            </Box>
+          </Box>
         </Paper>
+
         <TabPanel value={value} index={0} component={<Home />} />
         <TabPanel value={value} index={1} component={<UserList />} />
         <TabPanel value={value} index={2} component={<PersonalAccountant />} />

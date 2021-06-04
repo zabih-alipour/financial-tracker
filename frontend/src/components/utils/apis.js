@@ -6,6 +6,10 @@ export function getPaymentTypes() {
     });
 }
 
+export function shutdown() {
+  return fetch("/shutdown");
+}
+
 export function update_market_statics(callback) {
   fetch("/api/investment_types/update/all", {
     method: "PUT",
@@ -112,8 +116,6 @@ export function user_payment_type_datails(user, callback) {
       callback(data);
     });
 }
-
-
 
 export function delete_payment_type(type, callback) {
   const requestOptions = {
