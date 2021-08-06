@@ -2,6 +2,7 @@ package com.alipour.product.financialtracker.investment_type.controller;
 
 import com.alipour.product.financialtracker.api_caller.NobitexApiCaller;
 import com.alipour.product.financialtracker.common.CRUDController;
+import com.alipour.product.financialtracker.investment_type.dto.InvestmentUserSummary;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
 import com.alipour.product.financialtracker.payment.model.Payment;
@@ -10,6 +11,8 @@ import com.alipour.product.financialtracker.utils.SearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controller：
@@ -44,5 +47,11 @@ public class InvestmentTypeController extends CRUDController<InvestmentType> {
     @ResponseBody
     public Page<InvestmentType> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
         return ((InvestmentTypeService) service).search(searchCriteria);
+    }
+
+    @PostMapping("/summary/{id}")
+    @ResponseBody
+    public List<InvestmentUserSummary> search(@PathVariable("id") Long id) {
+        return ((InvestmentTypeService) service).summary(id);
     }
 }

@@ -1,5 +1,7 @@
 package com.alipour.product.financialtracker.common;
 
+import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

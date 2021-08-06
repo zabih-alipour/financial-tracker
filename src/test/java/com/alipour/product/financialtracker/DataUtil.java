@@ -63,7 +63,9 @@ class DataUtil {
 
     public User getUser(boolean first) {
         List<User> all = userService.findAll();
-        return first ? all.get(1) : all.get(2);
+        return first
+                ? all.get(0)
+                : all.get(all.size() - 1);
     }
 
     public InvestmentType getInvestmentType(String code) {
