@@ -205,7 +205,7 @@ export default class InvestmentList extends React.Component {
 
           <TableCell align="center">
             <IconButton
-              onClick={() => this.dialogHandler("INVESTMENT_DETAIL", row)}
+              onClick={() => this.dialogHandler('INVESTMENT_DETAIL', row)}
             >
               <TuneIcon style={{ color: blue[400] }} />
             </IconButton>

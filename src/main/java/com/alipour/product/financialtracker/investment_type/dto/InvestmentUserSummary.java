@@ -11,4 +11,5 @@ import java.math.BigDecimal;
 public class InvestmentUserSummary {
     private User user;
     private BigDecimal amount;
+    private BigDecimal spentAmount;
 }

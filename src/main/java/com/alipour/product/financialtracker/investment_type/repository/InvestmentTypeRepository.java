@@ -27,7 +27,7 @@ public interface InvestmentTypeRepository extends JpaRepository<InvestmentType, 
     @Query(value = "update investment_type set latest_price=:latestPrice where code=:code", nativeQuery = true)
     int updatePrice(@Param("code") String code, @Param("latestPrice") BigDecimal latestPrice);
 
-    @Query("select new com.alipour.product.financialtracker.investment_type.dto.InvestmentUserSummary(vw.user, sum (vw.amount)) from VwInvestment vw " +
+    @Query("select new com.alipour.product.financialtracker.investment_type.dto.InvestmentUserSummary(vw.user, sum (vw.amount), sum(vw.spentAmount)) from VwInvestment vw " +
             "where vw.investmentType.id=:id " +
             "group by vw.user ")
     List<InvestmentUserSummary> userSummary(@Param("id") Long id);

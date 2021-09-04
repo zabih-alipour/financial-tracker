@@ -56,8 +56,16 @@ export default function InvestmentTypeUserDetail(params) {
             {investmentType.name}
           </Box>
           <Box mb={1}>
-            <AmountDecorate amount={getSum("amount")} label={"کل دارایی: "} />
+            <AmountDecorate amount={getSum("amount")} label={"کل دارایی خریداری شده: "} />
           </Box>
+          <Box mb={1}>
+            <AmountDecorate amount={getSum("spentAmount")} label={"کل دارایی استفاده شده: "} />
+          </Box>
+          <Box mb={1}>
+            <AmountDecorate amount={getSum("amount") + getSum("spentAmount") } label={"موجودی: "} />
+          </Box>
+
+
         </Box>
         <Box>
           <TableContainer component={Paper} style={{ direction: "rtl" }}>
@@ -66,7 +74,8 @@ export default function InvestmentTypeUserDetail(params) {
                 <TableRow>
                   <TableCell align="center">ردیف</TableCell>
                   <TableCell align="center"> کاربر </TableCell>
-                  <TableCell align="center">مبلغ</TableCell>
+                  <TableCell align="center">مقدار خریداری شده</TableCell>
+                  <TableCell align="center">مقدار خرج شده</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -78,6 +87,10 @@ export default function InvestmentTypeUserDetail(params) {
                       <TableCell align="center">
                         <AmountDecorate amount={row.amount} />
                       </TableCell>
+                      <TableCell align="center">
+                        <AmountDecorate amount={row.spentAmount} />
+                      </TableCell>
+
                     </TableRow>
                   );
                 })}
