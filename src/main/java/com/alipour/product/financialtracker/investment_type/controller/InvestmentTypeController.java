@@ -49,7 +49,7 @@ public class InvestmentTypeController extends CRUDController<InvestmentType> {
         return ((InvestmentTypeService) service).search(searchCriteria);
     }
 
-    @PostMapping("/summary/{id}")
+    @GetMapping("/summary/{id}")
     @ResponseBody
     public List<InvestmentUserSummary> search(@PathVariable("id") Long id) {
         return ((InvestmentTypeService) service).summary(id);

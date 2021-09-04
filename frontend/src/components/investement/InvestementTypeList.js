@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   IconButton,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -19,7 +20,7 @@ import ReceiptIcon from "@material-ui/icons/Receipt";
 import { update_market_statics } from "../utils/apis";
 import { Pagination } from "@material-ui/lab";
 import { investment_types_search } from "../utils/apis";
-import { ShowDialog } from "../utils/Dialogs";
+import { INVESTMENT_TYPE_USER_DETAIL_KEY, ShowDialog } from "../utils/Dialogs";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import ListPagination from "../utils/ListPagination";
 import InvestmentTypeAutoComplete from "./InvestmentTypeAutoComplete";
@@ -116,7 +117,11 @@ export default class InvestementTypeList extends React.Component {
       return (
         <TableRow key={idx}>
           <TableCell align="center">{idx + 1}</TableCell>
-          <TableCell align="center">{type.name}</TableCell>
+          <TableCell align="center">
+            <Link button onClick={() => this.dialogHandler(INVESTMENT_TYPE_USER_DETAIL_KEY, type)}>
+              {type.name}
+            </Link>
+          </TableCell>
           <TableCell align="center">{type.code}</TableCell>
           <TableCell align="center">{type.latestPrice}</TableCell>
           <TableCell align="center">{"20%"}</TableCell>

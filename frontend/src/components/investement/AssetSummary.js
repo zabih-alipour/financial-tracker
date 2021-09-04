@@ -1,8 +1,9 @@
-import { Box, Paper } from "@material-ui/core";
+import { Box, Paper, Link } from "@material-ui/core";
 import { blue, green, grey, teal } from "@material-ui/core/colors";
 import { useEffect, useState } from "react";
 import AmountDecorate from "../utils/AmountDecorate";
 import { asset_summary } from "../utils/apis";
+import { INVESTMENT_TYPE_USER_DETAIL_KEY, ShowDialog } from "../utils/Dialogs";
 
 export default function AssetSummary(props) {
   const [data, setData] = useState([]);

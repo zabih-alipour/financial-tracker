@@ -9,6 +9,7 @@ import PaymentSettlementForm from "../accountant/PaymentSettlementForm";
 import PaymentDetail from "../accountant/PaymentDetails";
 import PaymenttypeUserDetail from "../accountant/PaymentTypeUserDetail";
 import UserPaymentTypeDetail from "../accountant/UserPaumentTypeDetail";
+import InvestementTypeUserDetail from "../investement/InvestementTypeUserDetail";
 
 export const INVESTMENT_FORM_KEY = "INVESTMENT_FORM";
 export const INVESTMENT_SPECIFIC_DETAIL_KEY = "INVESTMENT_SPECIFIC_DETAIL";
@@ -21,6 +22,8 @@ export const PAYMENT_SETTLEMENT_KEY = "PAYMENT_SETTLEMENT";
 export const PAYMENT_LIST_DETAIL_KEY = "PAYMENT_LIST_DETAIL";
 export const PAYMENT_TYPE_USER_DETAIL_KEY = "PAYMENT_TYPE_USER_DETAIL";
 export const USER_PAYMENT_TYPE_DETAIL_KEY = "USER_PAYMENT_TYPE_DETAIL";
+export const INVESTMENT_TYPE_USER_DETAIL_KEY = "INVESTMENT_TYPE_USER_DETAIL";
+
 
 export function ShowDialog(info, onCloseCallback) {
   const { dialog } = info;
@@ -46,8 +49,23 @@ export function ShowDialog(info, onCloseCallback) {
     return PAYMENT_TYPE_USER_DETAIL(info, onCloseCallback);
   } else if (dialog === USER_PAYMENT_TYPE_DETAIL_KEY) {
     return USER_PAYMENT_TYPE_DETAIL(info, onCloseCallback);
+  } else if (dialog === INVESTMENT_TYPE_USER_DETAIL_KEY) {
+    return INVESTMENT_TYPE_USER_DETAIL(info, onCloseCallback);
   }
+
+
 }
+
+function INVESTMENT_TYPE_USER_DETAIL(info, onCloseCallback) {
+  return (
+    <InvestementTypeUserDetail
+      investmentType={info.type}
+      openDialog={true}
+      onClose={onCloseCallback}
+    />
+  );
+}
+
 
 function USER_PAYMENT_TYPE_DETAIL(info, onCloseCallback) {
   return (

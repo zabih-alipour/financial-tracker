@@ -108,6 +108,13 @@ export function payment_type_user_datails(paymentType, callback) {
       callback(data);
     });
 }
+export function investment_type_user_datails(investmentType, callback) {
+  fetch("/api/investment_types/summary/" + investmentType.id)
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}
 
 export function user_payment_type_datails(user, callback) {
   fetch("/api/users/payment-type/" + user.id)

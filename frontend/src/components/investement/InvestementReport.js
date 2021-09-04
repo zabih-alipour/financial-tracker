@@ -1,10 +1,10 @@
-import { Box, Container, Paper } from "@material-ui/core";
+import { Box, Container, Paper, Link } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import React from "react";
 import InvestmentReportDetail from "./InvestmentReportDetails";
 import UserAutoComplete from "../user/UserAutoComplete";
 import AmountDecorate from "../utils/AmountDecorate";
-import { ShowDialog } from "../utils/Dialogs";
+import { INVESTMENT_TYPE_USER_DETAIL_KEY, ShowDialog } from "../utils/Dialogs";
 import {
   investment_report_summary,
   investment_report_by_user,
@@ -72,7 +72,9 @@ export default class InvestmentReport extends React.Component {
             borderRight={1}
             bgcolor={grey[300]}
           >
-            {p.investmentType.name}
+              <Link button onClick={() => this.onDetailClick(null, p.investmentType, INVESTMENT_TYPE_USER_DETAIL_KEY)}>
+                {p.investmentType.name}
+              </Link>
           </Box>
           <Box
             fontSize={15}
