@@ -5,6 +5,7 @@ import {
   DialogTitle,
   IconButton,
   Paper,
+  Link,
   Table,
   TableBody,
   TableCell,
@@ -25,6 +26,7 @@ import InvestmentDetail from "./InvestmentDetails";
 import ListPagination from "../utils/ListPagination";
 import InvestmentListSearch from "./InvestmentListSearch";
 import { investment_search } from "../utils/apis";
+import { INVESTMENT_TYPE_USER_DETAIL_KEY, ShowDialog } from "../utils/Dialogs";
 
 export default class InvestmentList extends React.Component {
   constructor(props) {
@@ -155,6 +157,14 @@ export default class InvestmentList extends React.Component {
           onClose={this.onClose}
         />
       );
+    } else {
+      if(selectedInvestment){
+        const { dialog, selectedInvestment } = this.state;
+        return ShowDialog(
+          { type: selectedInvestment.investmentType, user: null, dialog: dialog },
+          this.onClose
+        );
+      }
     }
   };
 
@@ -192,7 +202,11 @@ export default class InvestmentList extends React.Component {
         <TableRow key={idx}>
           <TableCell align="center">{idx + 1}</TableCell>
           <TableCell align="center">{user.name}</TableCell>
-          <TableCell align="center">{investmentType.name}</TableCell>
+          <TableCell align="center">
+            <Link button onClick={() => this.dialogHandler(INVESTMENT_TYPE_USER_DETAIL_KEY, row)}>
+              {investmentType.name}
+            </Link>
+          </TableCell>
           <TableCell align="center">{row.shamsiDate}</TableCell>
           <TableCell align="center">
             <AmountDecorate amount={row.amount} />
