@@ -1,6 +1,5 @@
 package com.alipour.product.financialtracker.payment_type.models;
 
-import com.alipour.product.financialtracker.user.models.User;
 import lombok.Data;
 
 import java.math.BigDecimal;

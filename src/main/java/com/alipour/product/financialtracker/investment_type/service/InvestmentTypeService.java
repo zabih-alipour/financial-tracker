@@ -2,13 +2,13 @@ package com.alipour.product.financialtracker.investment_type.service;
 
 import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.investment_type.dto.InvestmentUserSummary;
+import com.alipour.product.financialtracker.investment_type.dto.UserInvestmentTypeSummary;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.repository.InvestmentTypeRepository;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
 import com.alipour.product.financialtracker.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +49,11 @@ public class InvestmentTypeService extends CRUDService<InvestmentType> {
         return repository.findAll(specificationBuilder.specification(), pageable);
     }
 
-    public List<InvestmentUserSummary> summary(Long id) {
-        return repository.userSummary(id);
+    public List<InvestmentUserSummary> typePerUserSummary(Long typeId) {
+        return repository.typePerUserSummary(typeId);
+    }
+
+    public List<UserInvestmentTypeSummary> userPerTypeSummary(Long userId) {
+        return repository.userPerTypeSummary(userId);
     }
 }

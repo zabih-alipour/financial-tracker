@@ -3,6 +3,7 @@ package com.alipour.product.financialtracker.investment_type.controller;
 import com.alipour.product.financialtracker.api_caller.NobitexApiCaller;
 import com.alipour.product.financialtracker.common.CRUDController;
 import com.alipour.product.financialtracker.investment_type.dto.InvestmentUserSummary;
+import com.alipour.product.financialtracker.investment_type.dto.UserInvestmentTypeSummary;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import com.alipour.product.financialtracker.investment_type.service.InvestmentTypeService;
 import com.alipour.product.financialtracker.payment.model.Payment;
@@ -49,9 +50,15 @@ public class InvestmentTypeController extends CRUDController<InvestmentType> {
         return ((InvestmentTypeService) service).search(searchCriteria);
     }
 
-    @GetMapping("/summary/{id}")
+    @GetMapping("/type/{id}")
     @ResponseBody
-    public List<InvestmentUserSummary> search(@PathVariable("id") Long id) {
-        return ((InvestmentTypeService) service).summary(id);
+    public List<InvestmentUserSummary> typePerUserSummary(@PathVariable("id") Long id) {
+        return ((InvestmentTypeService) service).typePerUserSummary(id);
+    }
+
+    @GetMapping("/user/{id}")
+    @ResponseBody
+    public List<UserInvestmentTypeSummary> userPerTypeSummary(@PathVariable("id") Long id) {
+        return ((InvestmentTypeService) service).userPerTypeSummary(id);
     }
 }

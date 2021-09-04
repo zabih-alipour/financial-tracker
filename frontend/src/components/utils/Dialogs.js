@@ -10,6 +10,7 @@ import PaymentDetail from "../accountant/PaymentDetails";
 import PaymenttypeUserDetail from "../accountant/PaymentTypeUserDetail";
 import UserPaymentTypeDetail from "../accountant/UserPaumentTypeDetail";
 import InvestementTypeUserDetail from "../investement/InvestementTypeUserDetail";
+import UserPerInvestementTypeDetail from "../investement/UserPerInvestementTypeDetail";
 
 export const INVESTMENT_FORM_KEY = "INVESTMENT_FORM";
 export const INVESTMENT_SPECIFIC_DETAIL_KEY = "INVESTMENT_SPECIFIC_DETAIL";
@@ -23,6 +24,7 @@ export const PAYMENT_LIST_DETAIL_KEY = "PAYMENT_LIST_DETAIL";
 export const PAYMENT_TYPE_USER_DETAIL_KEY = "PAYMENT_TYPE_USER_DETAIL";
 export const USER_PAYMENT_TYPE_DETAIL_KEY = "USER_PAYMENT_TYPE_DETAIL";
 export const INVESTMENT_TYPE_USER_DETAIL_KEY = "INVESTMENT_TYPE_USER_DETAIL";
+export const USER_INVESTMENT_TYPE_DETAIL_KEY = "USER_INVESTMENT_TYPE_DETAIL";
 
 
 export function ShowDialog(info, onCloseCallback) {
@@ -51,9 +53,20 @@ export function ShowDialog(info, onCloseCallback) {
     return USER_PAYMENT_TYPE_DETAIL(info, onCloseCallback);
   } else if (dialog === INVESTMENT_TYPE_USER_DETAIL_KEY) {
     return INVESTMENT_TYPE_USER_DETAIL(info, onCloseCallback);
+  } else if (dialog === USER_INVESTMENT_TYPE_DETAIL_KEY) {
+    return USER_INVESTMENT_TYPE_DETAIL(info, onCloseCallback);
   }
 
+}
 
+function USER_INVESTMENT_TYPE_DETAIL(info, onCloseCallback) {
+  return (
+    <UserPerInvestementTypeDetail
+      user={info.user}
+      openDialog={true}
+      onClose={onCloseCallback}
+    />
+  );
 }
 
 function INVESTMENT_TYPE_USER_DETAIL(info, onCloseCallback) {

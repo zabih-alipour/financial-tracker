@@ -1,6 +1,7 @@
 package com.alipour.product.financialtracker.investment_type.repository;
 
 import com.alipour.product.financialtracker.investment_type.dto.InvestmentUserSummary;
+import com.alipour.product.financialtracker.investment_type.dto.UserInvestmentTypeSummary;
 import com.alipour.product.financialtracker.investment_type.models.InvestmentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -30,5 +31,13 @@ public interface InvestmentTypeRepository extends JpaRepository<InvestmentType, 
     @Query("select new com.alipour.product.financialtracker.investment_type.dto.InvestmentUserSummary(vw.user, sum (vw.amount), sum(vw.spentAmount)) from VwInvestment vw " +
             "where vw.investmentType.id=:id " +
             "group by vw.user ")
-    List<InvestmentUserSummary> userSummary(@Param("id") Long id);
+    List<InvestmentUserSummary> typePerUserSummary(@Param("id") Long id);
+
+    @Query("select new com.alipour.product.financialtracker.investment_type.dto.UserInvestmentTypeSummary( " +
+            " vw.investmentType, sum (vw.amount), sum(vw.spentAmount) " +
+            ") " +
+            "from VwInvestment vw " +
+            "where vw.user.id=:id " +
+            "group by vw.investmentType ")
+    List<UserInvestmentTypeSummary> userPerTypeSummary(@Param("id") Long id);
 }

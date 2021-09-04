@@ -109,12 +109,21 @@ export function payment_type_user_datails(paymentType, callback) {
     });
 }
 export function investment_type_user_datails(investmentType, callback) {
-  fetch("/api/investment_types/summary/" + investmentType.id)
+  fetch("/api/investment_types/type/" + investmentType.id)
     .then((response) => response.json())
     .then((data) => {
       callback(data);
     });
 }
+
+export function user_per_invest_type_datails(user, callback) {
+  fetch("/api/investment_types/user/" + user.id)
+    .then((response) => response.json())
+    .then((data) => {
+      callback(data);
+    });
+}
+
 
 export function user_payment_type_datails(user, callback) {
   fetch("/api/users/payment-type/" + user.id)

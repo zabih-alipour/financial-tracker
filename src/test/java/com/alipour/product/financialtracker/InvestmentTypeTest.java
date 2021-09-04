@@ -120,14 +120,14 @@ class InvestmentTypeTest {
         investment_bitcoin = investmentService.add(investment_bitcoin_dto);
         assertThat(investment_bitcoin.getId()).isGreaterThan(0);
 
-        final List<InvestmentUserSummary> rialSummary = investmentTypeService.summary(dataUtil.getInvestmentType("RIAL").getId());
+        final List<InvestmentUserSummary> rialSummary = investmentTypeService.typePerUserSummary(dataUtil.getInvestmentType("RIAL").getId());
         assertThat(rialSummary.size()).isEqualTo(2);
 
-        final List<InvestmentUserSummary> liteCoinSummary = investmentTypeService.summary(dataUtil.getInvestmentType("LITCOIN").getId());
+        final List<InvestmentUserSummary> liteCoinSummary = investmentTypeService.typePerUserSummary(dataUtil.getInvestmentType("LITCOIN").getId());
         assertThat(liteCoinSummary.size()).isEqualTo(1);
         assertThat(liteCoinSummary.get(0).getUser().getId()).isEqualTo(user_1.getId());
 
-        final List<InvestmentUserSummary> bitcoinSummary = investmentTypeService.summary(dataUtil.getInvestmentType("BITCOIN").getId());
+        final List<InvestmentUserSummary> bitcoinSummary = investmentTypeService.typePerUserSummary(dataUtil.getInvestmentType("BITCOIN").getId());
         assertThat(bitcoinSummary.size()).isEqualTo(2);
     }
 }

@@ -26,7 +26,7 @@ import InvestmentDetail from "./InvestmentDetails";
 import ListPagination from "../utils/ListPagination";
 import InvestmentListSearch from "./InvestmentListSearch";
 import { investment_search } from "../utils/apis";
-import { INVESTMENT_TYPE_USER_DETAIL_KEY, ShowDialog } from "../utils/Dialogs";
+import { INVESTMENT_TYPE_USER_DETAIL_KEY,USER_INVESTMENT_TYPE_DETAIL_KEY, ShowDialog } from "../utils/Dialogs";
 
 export default class InvestmentList extends React.Component {
   constructor(props) {
@@ -161,7 +161,7 @@ export default class InvestmentList extends React.Component {
       if(selectedInvestment){
         const { dialog, selectedInvestment } = this.state;
         return ShowDialog(
-          { type: selectedInvestment.investmentType, user: null, dialog: dialog },
+          { type: selectedInvestment.investmentType, user: selectedInvestment.user, dialog: dialog },
           this.onClose
         );
       }
@@ -201,7 +201,11 @@ export default class InvestmentList extends React.Component {
       return (
         <TableRow key={idx}>
           <TableCell align="center">{idx + 1}</TableCell>
-          <TableCell align="center">{user.name}</TableCell>
+          <TableCell align="center">
+            <Link button onClick={() => this.dialogHandler(USER_INVESTMENT_TYPE_DETAIL_KEY, row)}>
+              {user.name}
+            </Link>
+          </TableCell>
           <TableCell align="center">
             <Link button onClick={() => this.dialogHandler(INVESTMENT_TYPE_USER_DETAIL_KEY, row)}>
               {investmentType.name}
