@@ -76,6 +76,7 @@ export default function InvestmentTypeUserDetail(params) {
                   <TableCell align="center"> کاربر </TableCell>
                   <TableCell align="center">مقدار خریداری شده</TableCell>
                   <TableCell align="center">مقدار خرج شده</TableCell>
+                  <TableCell align="center">مانده</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -89,6 +90,9 @@ export default function InvestmentTypeUserDetail(params) {
                       </TableCell>
                       <TableCell align="center">
                         <AmountDecorate amount={row.spentAmount} />
+                      </TableCell>
+                      <TableCell align="center">
+                        <AmountDecorate amount={row.amount + row.spentAmount} />
                       </TableCell>
 
                     </TableRow>
