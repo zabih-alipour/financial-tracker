@@ -6,7 +6,7 @@ import Tab from "@material-ui/core/Tab";
 import Home from "./components/home/Home";
 import UserList from "./components/user/UserList";
 import PersonalAccountant from "./components/accountant/PersonalAccountant";
-import Investement from "./components/investement/Investement";
+import Investment from "./components/investement/Investment";
 import TabPanel from "./components/utils/TabPanel";
 import SettingsPowerIcon from "@material-ui/icons/SettingsPower";
 import { shutdown } from './components/utils/apis'
@@ -73,7 +73,7 @@ export default function App() {
         <TabPanel value={value} index={0} component={<Home />} />
         <TabPanel value={value} index={1} component={<UserList />} />
         <TabPanel value={value} index={2} component={<PersonalAccountant />} />
-        <TabPanel value={value} index={3} component={<Investement />} />
+        <TabPanel value={value} index={3} component={<Investment />} />
       </div>
     </ThemeProvider>
   );

@@ -10,7 +10,7 @@ const useStyles = makeStyles({
     direction: "rtl  ",
   },
 });
-export default function Investement(props) {
+export default function Investment(props) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 

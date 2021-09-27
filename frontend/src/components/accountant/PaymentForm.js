@@ -23,6 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default class PaymentForm extends React.Component {
   constructor(props) {
     super(props);
+    console.log(props.payment)
     this.state = {
       open: props.openDialog,
       onClose: props.onClose,
@@ -38,6 +39,7 @@ export default class PaymentForm extends React.Component {
               description: "",
             },
     };
+    console.log('#########: ' + this.state.payment)
   }
 
   persistPayment = () => {
