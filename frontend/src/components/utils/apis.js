@@ -31,6 +31,16 @@ export function delete_users(user, callback) {
     callApi("/api/users/" + user.id, requestOptions, {show: true}, callback);
 }
 
+export function save_payment(payment, callback) {
+
+    const requestOptions = {
+        method: payment.id == null ? "POST" : "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payment),
+    };
+    callApi("/api/payments", requestOptions, {show: true}, callback);
+}
+
 
 export function update_market_statics(callback) {
     fetch("/api/investment_types/update/all", {
@@ -114,11 +124,7 @@ export function payment_type_persist(type, callback) {
 }
 
 export function get_payment_types(callback) {
-    fetch("/api/paymentTypes")
-        .then((response) => response.json())
-        .then((data) => {
-            callback(data);
-        });
+    callApi("/api/paymentTypes", null, {show: false}, callback)
 }
 
 export function payment_type_user_datails(paymentType, callback) {
@@ -179,13 +185,35 @@ function callApi(url, init, notification, callback) {
                     })
                 }
                 callback(response.data)
+            } else if (response.status === "BAD_REQUEST") {
+                toast.error(errors(response.message), {
+                    position: toast.POSITION.BOTTOM_LEFT
+                })
             } else {
-                toast.error(response.message)
+                toast.error(response.message, {
+                    position: toast.POSITION.BOTTOM_LEFT
+                })
             }
         })
         .catch(reason => {
             console.error('Error:', reason);
         });
+}
+
+function errors(message) {
+    let split = message.split("\n");
+    if (split.length === 1) {
+        return <div style={{marginTop: 8, color: "red"}}> {split[0]}</div>;
+    } else {
+        return <ul>
+            {
+                split.map((val, idx) => {
+                    return <li key={idx} style={{marginTop: 8, color: "red"}}> {val}</li>
+                })
+            }
+        </ul>
+    }
+
 }
 
 export function payment_by_id(payment, callback) {

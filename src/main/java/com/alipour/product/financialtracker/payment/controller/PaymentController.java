@@ -1,6 +1,7 @@
 package com.alipour.product.financialtracker.payment.controller;
 
 import com.alipour.product.financialtracker.common.CRUDController;
+import com.alipour.product.financialtracker.common.Response;
 import com.alipour.product.financialtracker.investment.service.InvestmentService;
 import com.alipour.product.financialtracker.investment.views.VwInvestment;
 import com.alipour.product.financialtracker.payment.dtos.PaymentReportDto;
@@ -11,6 +12,7 @@ import com.alipour.product.financialtracker.payment.views.PaymentSearch;
 import com.alipour.product.financialtracker.utils.SearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -68,7 +70,10 @@ public class PaymentController extends CRUDController<Payment> {
 
     @PostMapping("/search")
     @ResponseBody
-    public Page<PaymentSearch> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
-        return ((PaymentService) service).search(searchCriteria);
+    public Response<Page<PaymentSearch>> search(@RequestBody(required = false) SearchCriteria searchCriteria) {
+        Response.ResponseBuilder<Page<PaymentSearch>> builder = Response.builder();
+        builder.status(HttpStatus.OK)
+                .data(((PaymentService) service).search(searchCriteria));
+        return builder.build();
     }
 }

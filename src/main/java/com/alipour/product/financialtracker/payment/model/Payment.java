@@ -10,6 +10,9 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,6 +29,7 @@ public class Payment extends ParentEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_of_payment"))
+    @NotNull(message = "کاربر نمی تواند خالی باشد")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,10 +37,12 @@ public class Payment extends ParentEntity implements Serializable {
     private Payment parent;
 
     @Column(name = "amount", nullable = false)
+    @Digits(message = "مبلغ باید عدد باشد", fraction = 10, integer = 20)
     private BigDecimal amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_type_id", nullable = false, foreignKey = @ForeignKey(name = "fk_type_of_payment"))
+    @NotNull(message = "نوع پرداخت نمی تواند خالی باشد")
     private PaymentType paymentType;
 
     @Column(name = "shamsi_date", nullable = false)

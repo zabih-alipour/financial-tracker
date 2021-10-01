@@ -3,6 +3,7 @@ package com.alipour.product.financialtracker.common;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public class CRUDController<T extends ParentEntity> {
 
     @PostMapping
     @ResponseBody
-    public Response<T> add(@RequestBody T entity) {
+    public Response<T> add(@Valid @RequestBody T entity) {
         Response.ResponseBuilder<T> builder = Response.builder();
         builder.status(HttpStatus.OK)
                 .data(service.add(entity))

@@ -43,7 +43,7 @@ export default function PaymentTypeAutoComplete(props) {
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="سرگروه"
+          placeholder="نوع پرداخت"
           variant="standard"
           margin="normal"
         />

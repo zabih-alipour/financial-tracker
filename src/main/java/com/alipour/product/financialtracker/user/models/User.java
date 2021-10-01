@@ -6,12 +6,14 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name="user")
 @Getter
 @Setter
 public class User extends ParentEntity {
+    @NotEmpty(message = "نام کاربری نمیتواند خالی باشد")
     private String name;
 
     public User(Long id) {
