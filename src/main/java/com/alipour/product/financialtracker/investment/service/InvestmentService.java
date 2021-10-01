@@ -30,7 +30,6 @@ import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -126,8 +125,9 @@ public class InvestmentService extends CRUDService<Investment> {
             Investment subtractInvestment = dto.getSubtractInvestment();
 
             BigDecimal exchange = changeInvestment.getAmount().multiply(changeInvestment.getExecutedPrice()).round(MathContext.DECIMAL64);
-            BigDecimal subtract = subtractInvestment.getAmount().multiply(subtractInvestment.getExecutedPrice()).abs();
-            if (exchange.equals(subtract)) {
+            BigDecimal subtract = subtractInvestment.getAmount().multiply(subtractInvestment.getExecutedPrice()).abs().round(MathContext.DECIMAL64);
+
+            if (exchange.subtract(subtract).compareTo(BigDecimal.valueOf(100000L)) > 0) {
                 throw new BusinessException(String.format("مقدار کوین دریافتی %f با مقدار کوین مصرفی %f همخوانی ندارد", exchange, subtract));
             }
         }
@@ -192,6 +192,7 @@ public class InvestmentService extends CRUDService<Investment> {
             return criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("user").get("id"), userId),
                     criteriaBuilder.greaterThan(root.get("amount"), 0),
+                    criteriaBuilder.notEqual(root.get("investmentType").get("id"), InvestmentType.SETTLEMENT.getId()),
                     predicate
             );
         };

@@ -1,9 +1,10 @@
 package com.alipour.product.financialtracker.common;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CRUDController<T extends ParentEntity> {
 
@@ -15,32 +16,54 @@ public class CRUDController<T extends ParentEntity> {
 
     @GetMapping
     @ResponseBody
-    public List<T> findAll() {
-        return service.findAll();
+    public Response<List<T>> findAll() {
+        Response.ResponseBuilder<List<T>> builder = Response.builder();
+        builder.status(HttpStatus.OK)
+                .data(service.findAll());
+        return builder.build();
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public T findOne(@PathVariable(name = "id") Long id) {
-        return service.get(id).orElseThrow(NotFoundException::new);
+    public Response<T> findOne(@PathVariable(name = "id") Long id) {
+        final Optional<T> entity = service.get(id);
+        return entity.map(t -> {
+                    Response.ResponseBuilder<T> builder = Response.builder();
+                    builder.status(HttpStatus.OK)
+                            .data(t);
+                    return builder.build();
+                })
+                .orElseThrow(NotFoundException::new);
     }
 
     @PostMapping
     @ResponseBody
-    public T add(@RequestBody T entity) {
-        return service.add(entity);
+    public Response<T> add(@RequestBody T entity) {
+        Response.ResponseBuilder<T> builder = Response.builder();
+        builder.status(HttpStatus.OK)
+                .data(service.add(entity))
+                .message("عملیات ذخیره با موفقیت انجام شد");
+        return builder.build();
     }
 
     @PutMapping
     @ResponseBody
-    public T edit(@RequestBody T entity) {
-        return service.edit(entity);
+    public Response<T> edit(@RequestBody T entity) {
+        Response.ResponseBuilder<T> builder = Response.builder();
+        builder.status(HttpStatus.OK)
+                .data(service.edit(entity))
+                .message("رکورد مورد نظر ویرایش شد.");
+
+        return builder.build();
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
+    public Response<String> delete(@PathVariable("id") Long id) {
         service.delete(id);
-        return ResponseEntity.ok("Entity Successfully deleted");
+        Response.ResponseBuilder<String> builder = Response.builder();
+        builder.status(HttpStatus.OK)
+                .message("رکورد مورد نظر حذف گردید");
+        return builder.build();
     }
 }

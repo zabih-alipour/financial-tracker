@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import { forwardRef, useEffect, useState } from "react";
 import AmountDecorate from "../utils/AmountDecorate";
-import { investment_type_user_datails } from "../utils/apis";
+import { investment_type_user_details } from "../utils/apis";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -25,7 +25,7 @@ export default function InvestmentTypeUserDetail(params) {
 
   useEffect(() => {
     if (investmentType) {
-      investment_type_user_datails(investmentType, (data) => {
+      investment_type_user_details(investmentType, (data) => {
         console.log(data);
         setDetails(data);
       }

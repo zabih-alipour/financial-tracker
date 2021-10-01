@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import { forwardRef, useEffect, useState } from "react";
 import AmountDecorate from "../utils/AmountDecorate";
-import { user_payment_type_datails } from "../utils/apis";
+import { user_payment_type_details } from "../utils/apis";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -25,7 +25,7 @@ export default function UserPaymentTypeDetail(params) {
 
   useEffect(() => {
     if (user) {
-      user_payment_type_datails(user, (data) => setDetails(data));
+      user_payment_type_details(user, (data) => setDetails(data));
     }
   }, [user]);
 
