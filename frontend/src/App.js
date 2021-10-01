@@ -16,8 +16,8 @@ import {
   IconButton,
   ThemeProvider,
 } from "@material-ui/core";
-import {NotificationContainer} from "react-notifications";
-import 'react-notifications/lib/notifications.css';
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
@@ -74,7 +74,7 @@ export default function App() {
         <TabPanel value={value} index={1} component={<UserList />} />
         <TabPanel value={value} index={2} component={<PersonalAccountant />} />
         <TabPanel value={value} index={3} component={<Investment />} />
-        <NotificationContainer/>
+        <ToastContainer autoClose={10000}/>
       </div>
     </ThemeProvider>
   );

@@ -1,5 +1,6 @@
 package com.alipour.product.financialtracker.user.controllers;
 
+import com.alipour.product.financialtracker.common.BusinessException;
 import com.alipour.product.financialtracker.common.CRUDController;
 import com.alipour.product.financialtracker.common.Response;
 import com.alipour.product.financialtracker.payment_type.models.UserPaymentTypeDetail;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController extends CRUDController<User> {

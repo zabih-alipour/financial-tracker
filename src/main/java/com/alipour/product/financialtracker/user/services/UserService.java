@@ -1,5 +1,6 @@
 package com.alipour.product.financialtracker.user.services;
 
+import com.alipour.product.financialtracker.common.BadRequestException;
 import com.alipour.product.financialtracker.common.CRUDService;
 import com.alipour.product.financialtracker.payment_type.models.UserPaymentTypeDetail;
 import com.alipour.product.financialtracker.user.models.User;
@@ -30,6 +31,9 @@ public class UserService extends CRUDService<User> {
 
     @Override
     public User add(User user) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            throw new BadRequestException("نام کاربر نمیتواند خالی باشد");
+        }
         return super.add(user);
     }
 
@@ -37,7 +41,7 @@ public class UserService extends CRUDService<User> {
         return userSummaryRepository.findAll();
     }
 
-   public List<UserPaymentTypeDetail> userPaymentDetail(Long userId) {
+    public List<UserPaymentTypeDetail> userPaymentDetail(Long userId) {
         return repository.userPaymentTypeDetail(userId);
     }
 }

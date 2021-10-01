@@ -1,12 +1,7 @@
 package com.alipour.product.financialtracker.common;
 
 
-import org.springframework.http.HttpStatus;
-
-/**
- * Created by Saeed Zarinfam on 5/21/2014.
- */
-public class BadRequestException extends ZaException {
+public class BadRequestException extends RuntimeException {
 
     public static final String INVALID_REQUEST_STRUCTURE = "در خواست ارسال شده معتبر نمی باشد.";
     public static final String EDIT_SYSTEMIC_DATA_NOT_ALLOWED = "ویرایش داده های سیستمی مجاز نمی باشد";
@@ -27,10 +22,7 @@ public class BadRequestException extends ZaException {
     }
 
     public BadRequestException(String description, Throwable e) {
-        super("درخواست اشتباه", description, HttpStatus.BAD_REQUEST, e);
+        super(description, e);
     }
 
-    public BadRequestException(String title, String description, Throwable e) {
-        super(title, description, HttpStatus.BAD_REQUEST, e);
-    }
 }

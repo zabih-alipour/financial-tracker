@@ -1,8 +1,8 @@
-import {NotificationManager} from 'react-notifications';
+import {toast} from 'react-toastify';
 
 export function shutdown() {
     return fetch("/shutdown")
-        .then(NotificationManager.success("Server successfully shutdown", "Shutdown System", 5000, () => window.close(), true))
+        .then((res) => toast.success("Server successfully shutdown"))
         .finally(() => window.close());
 }
 
@@ -143,7 +143,7 @@ export function user_per_invest_type_details(user, callback) {
 
 
 export function user_payment_type_details(user, callback) {
-    callApi("/api/users/payment-type/" + user.id, {}, {show:false}, callback)
+    callApi("/api/users/payment-type/" + user.id, {}, {show: false}, callback)
 }
 
 export function delete_payment_type(type, callback) {
@@ -174,11 +174,13 @@ function callApi(url, init, notification, callback) {
             console.log(response)
             if (response.status === "OK") {
                 if (notification.show) {
-                    NotificationManager.success(response.message, null, 5000, null, true)
+                    toast.success(response.message, {
+                        position: toast.POSITION.BOTTOM_LEFT
+                    })
                 }
                 callback(response.data)
             } else {
-                NotificationManager.error(response.message, response.title, 10000, null, false)
+                toast.error(response.message)
             }
         })
         .catch(reason => {
